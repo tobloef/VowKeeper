@@ -1,63 +1,86 @@
 <script lang="ts">
-  import Quill from "quill";
-  import {onMount} from "svelte";
-  import "quill/dist/quill.snow.css"
-  import "./quill-snow-overrides.css"
-
-  let editor;
+  import { onMount } from "svelte";
+  import { EditorState } from "prosemirror-state";
+  import { EditorView } from "prosemirror-view";
+  import { schema } from "prosemirror-schema-basic";
+  import { baseKeymap } from "prosemirror-commands";
+  // noinspection TypeScriptCheckImport
+  import { exampleSetup } from "prosemirror-example-setup";
+  import {
+    undo,
+    redo,
+    history,
+  } from "prosemirror-history";
+  import { keymap } from "prosemirror-keymap";
+  import "prosemirror-menu/style/menu.css";
 
   onMount(() => {
-    editor = new Quill("#editor", {
-      placeholder: "Write your story...",
-      theme: "snow",
-      modules: {
-        toolbar: [['bold', 'italic'], ['link', 'image']]
-      }
+    const editorElement = document.querySelector("#editor");
+    const state = EditorState.create({
+      schema,
+      plugins: exampleSetup({ schema }),
+    });
+    const view = new EditorView(editorElement, {
+      state,
     });
   });
-
-  async function handleKeydown(event: KeyboardEvent) {
-    if ((event.metaKey || event.ctrlKey) && event.key === "s") {
-
-    }
-  }
 </script>
 
-<svelte:window on:keydown={handleKeydown}/>
-
 <main>
-    <div id="container">
-        <div id="editor"/>
-    </div>
+	<h1>VowKeeper.io</h1>
+	<div id="container">
+		<div id="editor"/>
+	</div>
 </main>
 
 <style>
-    main {
-        background: rgb(248, 249, 250);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+  main {
+    background: rgb(248, 249, 250);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-    :root {
-        --container-margin: 30px;
-    }
+    padding: 0px 0px 30px 0px;
+    box-sizing: border-box;
 
-    #container {
-        flex: 1;
-        margin: var(--container-margin) 0;
-        width: 600px;
-        background: white;
-        box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-        display: flex;
-        flex-direction: column;
-        height: calc(100% - var(--container-margin) * 2);
-    }
+    font-family: "Merriweather", serif;
+  }
 
-    #editor {
-        font-family: "Merriweather", serif;
-        overflow-y: auto;
-        flex: 1;
-    }
+  #container {
+    width: 600px;
+    background: white;
+    box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    display: flex;
+    flex-direction: column;
+	  position: relative;
+    flex: 1;
+  }
+
+  #editor {
+    overflow-y: auto;
+    flex: 1;
+	  position: absolute;
+	  top: 0;
+	  left: 0;
+	  height: 100%;
+	  width: 100%;
+  }
+
+  :global(#editor .ProseMirror-menubar-wrapper) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  :global(#editor .ProseMirror-menubar) {
+    padding: 7px 5px;
+  }
+
+  :global(#editor div[contenteditable="true"].ProseMirror) {
+    padding: 10px 20px;
+    flex: 1;
+    overflow: auto;
+	  min-height: 400px;
+  }
 </style>
