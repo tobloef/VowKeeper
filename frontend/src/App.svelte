@@ -28,9 +28,7 @@
 
 <main>
 	<h1>VowKeeper.io</h1>
-	<div id="container">
-		<div id="editor"/>
-	</div>
+	<div id="editor"/>
 </main>
 
 <style>
@@ -40,31 +38,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
     padding: 0px 0px 30px 0px;
     box-sizing: border-box;
-
     font-family: "Merriweather", serif;
   }
 
-  #container {
+  #editor {
     width: 600px;
     background: white;
     box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-    display: flex;
-    flex-direction: column;
-	  position: relative;
-    flex: 1;
-  }
-
-  #editor {
     overflow-y: auto;
-    flex: 1;
-	  position: absolute;
-	  top: 0;
-	  left: 0;
-	  height: 100%;
-	  width: 100%;
   }
 
   :global(#editor .ProseMirror-menubar-wrapper) {
