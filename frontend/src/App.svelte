@@ -13,7 +13,7 @@
 	</div>
 </main>
 
-<Route path="/" redirect="/character"/>
+<Route path="/" redirect="/log"/>
 
 <style>
   main {
