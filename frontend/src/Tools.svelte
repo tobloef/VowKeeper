@@ -1,21 +1,42 @@
 <script>
-  import { Route } from 'tinro';
+  import { Route, router, active } from 'tinro';
   import Log from './tools/Log.svelte';
   import Character from './tools/Character.svelte';
   import Notes from './tools/Notes.svelte';
   import Combat from './tools/Combat.svelte';
   import Map from './tools/Map.svelte';
   import Oracles from './tools/Oracles.svelte';
+  import Fa from 'svelte-fa'
+  import { faList } from '@fortawesome/free-solid-svg-icons'
+  import { faUser } from '@fortawesome/free-solid-svg-icons'
+  import { faStickyNote } from '@fortawesome/free-solid-svg-icons'
+  import { faFistRaised } from '@fortawesome/free-solid-svg-icons'
+  import { faMap } from '@fortawesome/free-solid-svg-icons'
+  import { faDice } from '@fortawesome/free-solid-svg-icons'
+
+  router.mode.hash();
 </script>
 
 <div id="tools">
 	<nav>
-		<a href="/log">Log</a>
-		<a href="/character">Character</a>
-		<a href="/notes">Notes</a>
-		<a href="/combat">Combat</a>
-		<a href="/map">Map</a>
-		<a href="/oracles">Oracles</a>
+		<a href="/#/log" use:active>
+			<span><Fa icon={faList} />Log</span>
+		</a>
+		<a href="/#/character" use:active>
+			<span><Fa icon={faUser} />Character</span>
+		</a>
+		<a href="/#/notes" use:active>
+			<span><Fa icon={faStickyNote} />Notes</span>
+		</a>
+		<a href="/#/combat" use:active>
+			<span><Fa icon={faFistRaised} />Combat</span>
+		</a>
+		<a href="/#/map" use:active>
+			<span><Fa icon={faMap} />Map</span>
+		</a>
+		<a href="/#/oracles" use:active>
+			<span><Fa icon={faDice} />Oracles</span>
+		</a>
 	</nav>
 	<section>
 		<Route path="/log">
@@ -53,10 +74,32 @@
   nav {
     border-bottom: 1px solid lightgrey;
 	  padding: 5px 10px;
+	  display: flex;
+	  flex-wrap: wrap;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: dimgrey;
+  }
+
+  nav span {
+    display: inline-block;
+	  width: 100px;
+	  line-height: 1.5em;
   }
 
   nav a:not(:last-child) {
-	  margin-right: 10px;
+    margin-right: 15px;
+  }
+
+  :global(nav a.active span){
+    font-weight: bold;
+    color: black;
+  }
+
+  :global(nav svg){
+    margin-right: 5px;
   }
 
   section {
