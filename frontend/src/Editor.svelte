@@ -3,85 +3,76 @@
   import { EditorState } from "prosemirror-state";
   import { EditorView } from "prosemirror-view";
   import { schema } from "prosemirror-schema-basic";
-  // noinspection TypeScriptCheckImport
   import { exampleSetup, buildMenuItems } from "prosemirror-example-setup";
   import "prosemirror-menu/style/menu.css";
   import { Schema } from 'prosemirror-model';
   import {MenuItem} from "prosemirror-menu"
 
-  const testNodeToDom = (node) => {
-    return [
+  const testNodeSpec = {
+    attrs: { isChecked: { default: false } },
+    inline: true,
+    group: "inline",
+    draggable: true,
+    toDOM: node => [
       "input",
-	    {
-	      "checked": node.attrs.isChecked,
+      {
         type: "checkbox",
-		    class: "testNode"
-	    }
+        class: "testNode",
+        checked: node.attrs.isChecked ? "" : undefined
+      }
+    ],
+    parseDOM: [
+      {
+        tag: "input[type=checkbox]",
+        getAttrs: dom => ({
+          isChecked: dom.getAttribute("isChecked")
+        })
+      }
     ]
   };
 
-  const testNodeParseDom = [{
-    tag: `input[type="checkbox"].testNode`,
-    getAttrs: dom => {
-      let checked = dom.getAttribute("checked")
-      return {
-        isChecked: checked,
-      }
-    }
-  }]
-
-  const testNodeSpec = {
-    attrs: {
-      isChecked: {
-        default: false,
-      }
-    },
-    inline: true,
-	  group: "inline",
-	  draggable: true,
-	  toDOM: testNodeToDom,
-	  parseDOM: testNodeParseDom,
-  }
-
-  const testNodeSchema = new Schema({
-    nodes: schema.spec.nodes.addBefore("image", "testNode", testNodeSpec),
+  const testSchema = new Schema({
+    nodes: schema.spec.nodes.addBefore("image", "test", testNodeSpec),
     marks: schema.spec.marks
-  })
+  });
 
-  const testNode = testNodeSchema.nodes.testNode;
+  let test = testSchema.nodes.test;
 
-  const insertTestNode = (isChecked) => (state, dispatch) => {
-    const { $from: from } = state.selection;
-    const index = from.index();
-    if (!from.parent.canReplaceWith(index, index, testNode)) {
-      return false;
-    }
-	  if (dispatch !== undefined) {
-	    dispatch(state.tr.replaceSelectionWith(testNode.create({ isChecked })))
-	  }
-	  return true;
+  function insertTest(isChecked) {
+    return function(state, dispatch) {
+      let { $from } = state.selection,
+        index = $from.index();
+      if (!$from.parent.canReplaceWith(index, index, test)) {
+        return false;
+      }
+      if (dispatch) {
+        dispatch(state.tr.replaceSelectionWith(test.create({ isChecked })));
+      }
+      return true;
+    };
   }
 
-  let menu = buildMenuItems(testNodeSchema)
-  menu.insertMenu.content.push(new MenuItem({
-    title: "Insert testNode (checked)",
-    label: "Checked testNode",
-    enable: state => insertTestNode(true)(state),
-    run: insertTestNode(true)
-  }))
-  menu.insertMenu.content.push(new MenuItem({
-    title: "Insert testNode (unchecked)",
-    label: "Unchecked testNode",
-    enable: state => insertTestNode(false)(state),
-    run: insertTestNode(false)
-  }))
+  let menu = buildMenuItems(testSchema);
+  [false, true].forEach(isChecked => {
+    const name = `Test (${isChecked ? "Checked" : "Unchecked"})`;
+    return menu.insertMenu.content.push(
+      new MenuItem({
+        title: `Insert ${name}`,
+        label: name,
+        enable(state) {
+          return insertTest(isChecked)(state);
+        },
+        run: insertTest(isChecked)
+      })
+    );
+  });
 
   onMount(() => {
     const editorElement = document.querySelector("#editor");
     const state = EditorState.create({
-      testNodeSchema,
+      schema: testSchema,
       plugins: exampleSetup({
-	      schema: testNodeSchema,
+	      schema: testSchema,
 	      menuContent: menu.fullMenu,
       }),
     });
