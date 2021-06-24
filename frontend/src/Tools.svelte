@@ -85,7 +85,6 @@
 
   nav span {
     display: inline-block;
-	  width: 100px;
 	  line-height: 1.5em;
   }
 

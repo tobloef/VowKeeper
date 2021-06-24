@@ -4,14 +4,86 @@
   import { EditorView } from "prosemirror-view";
   import { schema } from "prosemirror-schema-basic";
   // noinspection TypeScriptCheckImport
-  import { exampleSetup } from "prosemirror-example-setup";
+  import { exampleSetup, buildMenuItems } from "prosemirror-example-setup";
   import "prosemirror-menu/style/menu.css";
+  import { Schema } from 'prosemirror-model';
+  import {MenuItem} from "prosemirror-menu"
+
+  const testNodeToDom = (node) => {
+    return [
+      "input",
+	    {
+	      "checked": node.attrs.isChecked,
+        type: "checkbox",
+		    class: "testNode"
+	    }
+    ]
+  };
+
+  const testNodeParseDom = [{
+    tag: `input[type="checkbox"].testNode`,
+    getAttrs: dom => {
+      let checked = dom.getAttribute("checked")
+      return {
+        isChecked: checked,
+      }
+    }
+  }]
+
+  const testNodeSpec = {
+    attrs: {
+      isChecked: {
+        default: false,
+      }
+    },
+    inline: true,
+	  group: "inline",
+	  draggable: true,
+	  toDOM: testNodeToDom,
+	  parseDOM: testNodeParseDom,
+  }
+
+  const testNodeSchema = new Schema({
+    nodes: schema.spec.nodes.addBefore("image", "testNode", testNodeSpec),
+    marks: schema.spec.marks
+  })
+
+  const testNode = testNodeSchema.nodes.testNode;
+
+  const insertTestNode = (isChecked) => (state, dispatch) => {
+    const { $from: from } = state.selection;
+    const index = from.index();
+    if (!from.parent.canReplaceWith(index, index, testNode)) {
+      return false;
+    }
+	  if (dispatch !== undefined) {
+	    dispatch(state.tr.replaceSelectionWith(testNode.create({ isChecked })))
+	  }
+	  return true;
+  }
+
+  let menu = buildMenuItems(testNodeSchema)
+  menu.insertMenu.content.push(new MenuItem({
+    title: "Insert testNode (checked)",
+    label: "Checked testNode",
+    enable: state => insertTestNode(true)(state),
+    run: insertTestNode(true)
+  }))
+  menu.insertMenu.content.push(new MenuItem({
+    title: "Insert testNode (unchecked)",
+    label: "Unchecked testNode",
+    enable: state => insertTestNode(false)(state),
+    run: insertTestNode(false)
+  }))
 
   onMount(() => {
     const editorElement = document.querySelector("#editor");
     const state = EditorState.create({
-      schema,
-      plugins: exampleSetup({ schema }),
+      testNodeSchema,
+      plugins: exampleSetup({
+	      schema: testNodeSchema,
+	      menuContent: menu.fullMenu,
+      }),
     });
     const view = new EditorView(editorElement, {
       state,
