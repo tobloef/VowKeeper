@@ -5,3 +5,15 @@ html, body {
 	margin: 0;
 	padding: 0;
 }
+
+.cool-component-root {
+	display: inline-block;
+}
+
+.ProseMirror-selectednode {
+	outline: 1px solid -webkit-focus-ring-color;
+}
+
+.ProseMirror.ProseMirror-focused {
+	outline: none;
+}

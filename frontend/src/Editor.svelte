@@ -1,7 +1,7 @@
 <script lang="typescript">
   import {onMount} from "svelte";
   import {EditorState} from "prosemirror-state";
-  import {EditorView} from "prosemirror-view";
+  import {EditorView, NodeView} from "prosemirror-view";
   import {schema} from "prosemirror-schema-basic";
   // noinspection TypeScriptCheckImport
   import {exampleSetup, buildMenuItems} from "prosemirror-example-setup";
@@ -14,6 +14,7 @@
   const coolComponentSpec = {
     attrs: {number: {default: 30}},
     inline: true,
+    atom: false,
     group: "inline",
     draggable: true,
     toDOM: node => [
@@ -41,15 +42,17 @@
 
   const insertCoolComponent = (number) => {
     return (state, dispatch) => {
-      let {$from: from} = state.selection,
-        index = from.index();
+      let {$from: from} = state.selection;
+      let index = from.index();
       if (!from.parent.canReplaceWith(index, index, coolComponent)) {
         return false;
       }
       if (dispatch) {
-        dispatch(state.tr.replaceSelectionWith(coolComponent.create({
-          number
-        })));
+        dispatch(
+          state.tr.replaceSelectionWith(
+            coolComponent.create({ number })
+          )
+        );
       }
       return true;
     };
@@ -77,19 +80,35 @@
     })
   );
 
-  class CoolComponentView {
+  class CoolComponentView implements NodeView {
     dom;
     component;
 
     constructor(node) {
-      console.log("node", node);
       this.dom = document.createElement("div");
+      this.dom.classList.add("cool-component-root");
       this.component = new CoolComponent({
         target: this.dom,
         props: {
           number: node.attrs.number
         }
       });
+    }
+
+    selectNode() {
+      this.dom.classList.add("ProseMirror-selectednode")
+    }
+
+    deselectNode() {
+      this.dom.classList.remove("ProseMirror-selectednode")
+    }
+
+    ignoreMutation() {
+      return true;
+    }
+
+    setSelection(anchor: number, head: number, root: Document) {
+      console.log("setSelection", anchor, head);
     }
   }
 
@@ -137,9 +156,5 @@
     flex: 1;
     overflow: auto;
     min-height: 400px;
-  }
-
-  #hidden-components {
-      display: none;
   }
 </style>
