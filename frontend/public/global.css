@@ -6,10 +6,6 @@ html, body {
 	padding: 0;
 }
 
-.cool-component-root {
-	display: inline-block;
-}
-
 .ProseMirror-selectednode {
 	outline: 1px solid -webkit-focus-ring-color;
 }

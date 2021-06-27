@@ -1,7 +1,7 @@
 <script lang="typescript">
   import {onMount} from "svelte";
-  import {EditorState} from "prosemirror-state";
-  import {EditorView, NodeView} from "prosemirror-view";
+  import {EditorState, Plugin} from "prosemirror-state";
+  import {EditorView} from "prosemirror-view";
   import {schema} from "prosemirror-schema-basic";
   // noinspection TypeScriptCheckImport
   import {exampleSetup, buildMenuItems} from "prosemirror-example-setup";
@@ -9,122 +9,59 @@
   import {Schema} from "prosemirror-model";
   import {MenuItem} from "prosemirror-menu"
   import OrderedMap = require("orderedmap");
-  import CoolComponent from "./CoolComponent.svelte";
+  import {coolComponentSpec, CoolComponentView} from "./cool-component/coolComponent";
+  import _ from "lodash";
 
-  const coolComponentSpec = {
-    attrs: {number: {default: 30}},
-    inline: true,
-    atom: false,
-    group: "inline",
-    draggable: true,
-    toDOM: node => [
-      "coolComponent",
-      {
-        number: node.attrs.number
-      }
-    ],
-    parseDOM: [
-      {
-        tag: "coolComponent",
-        getAttrs: dom => ({
-          number: dom.getAttribute("number")
-        })
-      }
-    ]
-  };
-
-  const coolComponentSchema = new Schema({
-    nodes: (schema.spec.nodes as OrderedMap).addBefore("image", "coolComponent", coolComponentSpec),
+  const mySchema = new Schema({
+    nodes: (schema.spec.nodes as OrderedMap)
+      .addBefore("image", "coolComponent", coolComponentSpec),
     marks: schema.spec.marks
   });
 
-  let coolComponent = coolComponentSchema.nodes.coolComponent;
-
-  const insertCoolComponent = (number) => {
+  const insertNode = (node, params = {}) => {
     return (state, dispatch) => {
       let {$from: from} = state.selection;
       let index = from.index();
-      if (!from.parent.canReplaceWith(index, index, coolComponent)) {
+      if (!from.parent.canReplaceWith(index, index, node)) {
         return false;
       }
       if (dispatch) {
         dispatch(
           state.tr.replaceSelectionWith(
-            coolComponent.create({ number })
+            node.create(params)
           )
         );
       }
       return true;
-    };
-  };
-
-  let menu = buildMenuItems(coolComponentSchema);
-  menu.insertMenu.content.push(
-    new MenuItem({
-      title: `Insert 10`,
-      label: `Cool component (10)`,
-      enable(state) {
-        return insertCoolComponent(10)(state);
-      },
-      run: insertCoolComponent(10)
-    })
-  );
-  menu.insertMenu.content.push(
-    new MenuItem({
-      title: `Insert 20`,
-      label: `Cool component (20)`,
-      enable(state) {
-        return insertCoolComponent(20)(state);
-      },
-      run: insertCoolComponent(20)
-    })
-  );
-
-  class CoolComponentView implements NodeView {
-    dom;
-    component;
-
-    constructor(node) {
-      this.dom = document.createElement("div");
-      this.dom.classList.add("cool-component-root");
-      this.component = new CoolComponent({
-        target: this.dom,
-        props: {
-          number: node.attrs.number
-        }
-      });
-    }
-
-    selectNode() {
-      this.dom.classList.add("ProseMirror-selectednode")
-    }
-
-    deselectNode() {
-      this.dom.classList.remove("ProseMirror-selectednode")
-    }
-
-    ignoreMutation() {
-      return true;
-    }
-
-    setSelection(anchor: number, head: number, root: Document) {
-      console.log("setSelection", anchor, head);
     }
   }
+
+  let menu = buildMenuItems(mySchema);
+  menu.insertMenu.content.push(
+    new MenuItem({
+      title: `Insert Cool Component`,
+      label: `Cool component`,
+      enable: (state) => insertNode(mySchema.nodes.coolComponent)(state),
+      run: (state, dispatch) => insertNode(
+        mySchema.nodes.coolComponent,
+        { number: _.random(1, 20) }
+      )(state, dispatch)
+    })
+  );
 
   onMount(() => {
     const editorElement = document.querySelector("#editor");
     const state = EditorState.create({
-      schema: coolComponentSchema,
+      schema: mySchema,
       plugins: exampleSetup({
-        schema: coolComponentSchema,
+        schema: mySchema,
         menuContent: menu.fullMenu,
       }),
     });
     const view = new EditorView(editorElement, {
       state,
       nodeViews: {
-        coolComponent: (node) => new CoolComponentView(node),
+        coolComponent: CoolComponentView.create,
       }
     });
   });
@@ -156,5 +93,10 @@
     flex: 1;
     overflow: auto;
     min-height: 400px;
+  }
+
+  :global(#editor .ProseMirror p) {
+      display: flex;
+      align-items: flex-end;
   }
 </style>

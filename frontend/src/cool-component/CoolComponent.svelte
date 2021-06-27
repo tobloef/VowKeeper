@@ -1,7 +1,7 @@
 <script>
     export let number;
 
-    import { dice } from "./stores";
+    import { dice } from "../stores";
 </script>
 
 <div id="wrapper">
