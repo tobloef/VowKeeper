@@ -1,14 +1,21 @@
 <script>
     export let number;
 
+    let local = 0;
+
     import { dice } from "../stores";
 </script>
 
 <div id="wrapper">
-    <span>Number: {number}</span>
-    <div id="dice">
+    <span>Parameter: {number}</span>
+    <div class="counter">
+        <button on:click={() => local--}>-</button>
+        <span>Local: {local}</span>
+        <button on:click={() => local++}>+</button>
+    </div>
+    <div class="counter">
         <button on:click={() => dice.update((x) => x - 1)}>-</button>
-        <span>Dice: {$dice}</span>
+        <span>Global: {$dice}</span>
         <button on:click={() => dice.update((x) => x + 1)}>+</button>
     </div>
 </div>
@@ -19,10 +26,18 @@
         display: flex;
         flex-direction: column;
         width: fit-content;
+        padding: 10px;
+        border: 1px solid lightgrey;
     }
 
-    #dice {
+    .counter {
         display: flex;
         flex-direction: row;
+        margin-top: 10px;
+    }
+
+    .counter span {
+        margin: 0px 5px;
+        flex: 1;
     }
 </style>

@@ -94,9 +94,4 @@
     overflow: auto;
     min-height: 400px;
   }
-
-  :global(#editor .ProseMirror p) {
-      display: flex;
-      align-items: flex-end;
-  }
 </style>
