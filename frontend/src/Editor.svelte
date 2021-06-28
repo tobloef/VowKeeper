@@ -3,18 +3,18 @@
   import {Editor} from "@tiptap/core"
   import StarterKit from "@tiptap/starter-kit"
 
-  let element;
+  let editorElement;
   let editor;
 
   onMount(() => {
     editor = new Editor({
-      element,
+      element: editorElement,
       extensions: [
         StarterKit,
       ],
       content: '<p>Hello World! 🌍️ </p>',
       onTransaction: () => {
-        // force re-render so `editor.isActive` works as expected
+        // Force re-render so `editor.isActive` works as expected
         editor = editor
       },
     })
@@ -42,7 +42,7 @@
   };
 </script>
 
-<menu>
+<div>
     {#if editor}
         <button
             on:click={menu.h1}
@@ -63,9 +63,9 @@
             P
         </button>
     {/if}
-</menu>
+</div>
 
-<div id="editor" bind:this={element}></div>
+<div id="editor" bind:this={editorElement}></div>
 
 <style>
     #editor {
@@ -74,5 +74,10 @@
         box-sizing: border-box;
         background: white;
         box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    }
+
+    button.active {
+        background: black;
+        color: white;
     }
 </style>
