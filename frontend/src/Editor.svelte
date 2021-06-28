@@ -1,97 +1,78 @@
 <script lang="typescript">
-  import {onMount} from "svelte";
-  import {EditorState, Plugin} from "prosemirror-state";
-  import {EditorView} from "prosemirror-view";
-  import {schema} from "prosemirror-schema-basic";
-  // noinspection TypeScriptCheckImport
-  import {exampleSetup, buildMenuItems} from "prosemirror-example-setup";
-  import "prosemirror-menu/style/menu.css";
-  import {Schema} from "prosemirror-model";
-  import {MenuItem} from "prosemirror-menu"
-  import OrderedMap = require("orderedmap");
-  import {coolComponentSpec, CoolComponentView} from "./cool-component/coolComponent";
-  import _ from "lodash";
+  import {onDestroy, onMount} from "svelte";
+  import {Editor} from "@tiptap/core"
+  import StarterKit from "@tiptap/starter-kit"
 
-  const mySchema = new Schema({
-    nodes: (schema.spec.nodes as OrderedMap)
-      .addBefore("image", "coolComponent", coolComponentSpec),
-    marks: schema.spec.marks
-  });
-
-  const insertNode = (node, params = {}) => {
-    return (state, dispatch) => {
-      let {$from: from} = state.selection;
-      let index = from.index();
-      if (!from.parent.canReplaceWith(index, index, node)) {
-        return false;
-      }
-      if (dispatch) {
-        dispatch(
-          state.tr.replaceSelectionWith(
-            node.create(params)
-          )
-        );
-      }
-      return true;
-    }
-  }
-
-  let menu = buildMenuItems(mySchema);
-  menu.insertMenu.content.push(
-    new MenuItem({
-      title: `Insert Cool Component`,
-      label: `Cool component`,
-      enable: (state) => insertNode(mySchema.nodes.coolComponent)(state),
-      run: (state, dispatch) => insertNode(
-        mySchema.nodes.coolComponent,
-        { number: _.random(1, 20) }
-      )(state, dispatch)
-    })
-  );
+  let element;
+  let editor;
 
   onMount(() => {
-    const editorElement = document.querySelector("#editor");
-    const state = EditorState.create({
-      schema: mySchema,
-      plugins: exampleSetup({
-        schema: mySchema,
-        menuContent: menu.fullMenu,
-      }),
-    });
-    const view = new EditorView(editorElement, {
-      state,
-      nodeViews: {
-        coolComponent: CoolComponentView.create,
-      }
-    });
+    editor = new Editor({
+      element,
+      extensions: [
+        StarterKit,
+      ],
+      content: '<p>Hello World! 🌍️ </p>',
+      onTransaction: () => {
+        // force re-render so `editor.isActive` works as expected
+        editor = editor
+      },
+    })
   });
+
+  onDestroy(() => {
+    if (editor) {
+      editor.destroy()
+    }
+  })
+
+  const menu = {
+    paragraph: () => editor.chain()
+      .focus()
+      .setParagraph()
+      .run(),
+    h1: () => editor.chain()
+      .focus()
+      .toggleHeading({level: 1})
+      .run(),
+    h2: () => editor.chain()
+      .focus()
+      .toggleHeading({level: 2})
+      .run(),
+  };
 </script>
 
-<div id="editor"></div>
+<menu>
+    {#if editor}
+        <button
+            on:click={menu.h1}
+            class:active={editor.isActive('heading', { level: 1 })}
+        >
+            H1
+        </button>
+        <button
+            on:click={menu.h2}
+            class:active={editor.isActive('heading', { level: 2 })}
+        >
+            H2
+        </button>
+        <button
+            on:click={menu.paragraph}
+            class:active={editor.isActive('paragraph')}
+        >
+            P
+        </button>
+    {/if}
+</menu>
+
+<div id="editor" bind:this={element}></div>
 
 <style>
-  #editor {
-    height: 100%;
-    overflow-y: auto;
-    box-sizing: border-box;
-    background: white;
-    box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-  }
-
-  :global(#editor .ProseMirror-menubar-wrapper) {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  :global(#editor .ProseMirror-menubar) {
-    padding: 7px 5px;
-  }
-
-  :global(#editor div[contenteditable="true"].ProseMirror) {
-    padding: 10px 20px;
-    flex: 1;
-    overflow: auto;
-    min-height: 400px;
-  }
+    #editor {
+        height: 100%;
+        overflow-y: auto;
+        box-sizing: border-box;
+        background: white;
+        box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    }
 </style>
