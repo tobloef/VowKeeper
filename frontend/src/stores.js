@@ -1,3 +1,3 @@
 import { writable } from 'svelte/store';
 
-export const dice = writable(10);
+export const global = writable(10);

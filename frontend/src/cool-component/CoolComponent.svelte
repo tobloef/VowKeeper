@@ -3,7 +3,7 @@
 
     let local = 0;
 
-    import { dice } from "../stores";
+    import { global } from "../stores";
 </script>
 
 <div id="wrapper">
@@ -14,9 +14,9 @@
         <button on:click={() => local++}>+</button>
     </div>
     <div class="counter">
-        <button on:click={() => dice.update((x) => x - 1)}>-</button>
-        <span>Global: {$dice}</span>
-        <button on:click={() => dice.update((x) => x + 1)}>+</button>
+        <button on:click={() => global.update((x) => x - 1)}>-</button>
+        <span>Global: {$global}</span>
+        <button on:click={() => global.update((x) => x + 1)}>+</button>
     </div>
 </div>
 
