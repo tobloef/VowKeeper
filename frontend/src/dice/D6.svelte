@@ -1,3 +1,40 @@
+<script lang="ts">
+  export let number: number;
+
+  const numberParams = {
+    1: {
+      x: "24%",
+      y: "75%",
+      fontSize: "60%",
+    },
+    2: {
+      x: "24%",
+      y: "75%",
+      fontSize: "60%",
+    },
+    3: {
+      x: "24%",
+      y: "75%",
+      fontSize: "60%",
+    },
+    4: {
+      x: "24%",
+      y: "75%",
+      fontSize: "60%",
+    },
+    5: {
+      x: "24%",
+      y: "75%",
+      fontSize: "60%",
+    },
+    6: {
+      x: "24%",
+      y: "75%",
+      fontSize: "60%",
+    },
+  };
+</script>
+
 <svg width="92.3" height="76.2" viewBox="0 0 24.4 20.2" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <clipPath clipPathUnits="userSpaceOnUse" id="a">
@@ -13,4 +50,13 @@
               fill="#77787b"/>
         <path d="M323.6 470c1.7 0 4.4.5 6 1.2l14.8 6.3h-32.1c-1.7 0-4.4-.5-6-1.1l-16.6-6.4z" fill="#bcbec0"/>
     </g>
+    <text
+            x={numberParams[number].x}
+            y={numberParams[number].y}
+            font-size={numberParams[number].fontSize}
+            font-family="sans-serif"
+            fill="#3e3e3f"
+            font-weight="bold"
+            textLength="30%"
+    >{number}</text>
 </svg>
