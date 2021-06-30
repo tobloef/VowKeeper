@@ -3,7 +3,7 @@
 
     let local = 0;
 
-    import { global } from "../stores";
+    import { global } from "../../stores";
 </script>
 
 <div id="wrapper">

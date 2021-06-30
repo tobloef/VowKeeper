@@ -2,7 +2,7 @@
   import {onDestroy, onMount} from "svelte";
   import {Editor} from "@tiptap/core"
   import StarterKit from "@tiptap/starter-kit"
-  import CoolComponentView from "./cool-component/CoolComponentView";
+  import CoolComponentView from "./node-views/cool-component/CoolComponentView";
 
   let documentElement;
   let editor;

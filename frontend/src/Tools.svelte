@@ -63,7 +63,6 @@
 <style>
   #tools {
     height: 100%;
-    overflow-y: auto;
     box-sizing: border-box;
     background: white;
     box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
@@ -73,9 +72,9 @@
 
   nav {
     border-bottom: 1px solid lightgrey;
-	  padding: 5px 10px;
-	  display: flex;
-	  flex-wrap: wrap;
+	padding: 5px 10px;
+	display: flex;
+	flex-wrap: wrap;
   }
 
   nav a {
@@ -103,6 +102,7 @@
 
   section {
     flex: 1;
-	  padding: 10px;
+  	padding: 10px;
+	overflow-y: auto;
   }
 </style>
