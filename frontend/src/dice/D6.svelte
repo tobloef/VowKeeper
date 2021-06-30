@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let number: number;
+  export let number: 1 | 2 | 3 | 4 | 5 | 6;
 
   const numberParams = {
     1: {

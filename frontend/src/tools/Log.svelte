@@ -1,9 +1,15 @@
 <script>
   import D10 from "../dice/D10.svelte";
   import D6 from "../dice/D6.svelte";
+  import ProgressBox from "../dice/ProgressBox.svelte";
 
   let d10Count = 0;
   let d6Count = 0;
+  let progress = 0;
+
+  const onProgressClick = () => {
+    progress = (progress + 1) % 5;
+  }
 </script>
 
 <div>
@@ -19,6 +25,7 @@
     </div>
 
     <div class="dice-log">
+        <ProgressBox progress={progress} on:click={onProgressClick} />
         {#each Array(d10Count) as _, i}
             <D10 number={i + 1} />
         {/each}
