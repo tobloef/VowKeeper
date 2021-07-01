@@ -25,6 +25,8 @@
     </div>
 
     <div class="dice-log">
+        <D10 number={10} />
+        <D6 number={6} />
         <ProgressBox progress={progress} on:click={onProgressClick} />
         {#each Array(d10Count) as _, i}
             <D10 number={i + 1} />
@@ -41,7 +43,7 @@
         flex-direction: column;
     }
 
-    :global(.dice-log > svg) {
+    :global(.dice-log > div) {
         width: 100px;
     }
 </style>
