@@ -12,12 +12,14 @@
     "@tiptap/core": "^2.0.0-beta.85",
     "@tiptap/starter-kit": "^2.0.0-beta.81",
     "lodash": "^4.17.21",
+    "nanoid": "^3.1.23",
     "svelte-fa": "^2.2.0",
     "tinro": "^0.6.4"
   },
   "devDependencies": {
     "@tsconfig/svelte": "^2.0.0",
     "@types/lodash": "^4.14.170",
+    "@types/nanoid": "^3.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^5.2.6",
     "mini-css-extract-plugin": "^1.6.0",

@@ -1,22 +1,35 @@
-<script>
-    export let number;
+<script lang="ts">
+    import {getElementStore, dragElement, ElementType} from "../../stores";
 
-    let local = 0;
+    export type CoolComponentProps = {
+      global: number,
+    }
 
-    import { global } from "../../stores";
+    export let id: string;
+
+    const type = ElementType.CoolComponent;
+
+    const store = getElementStore<CoolComponentProps>(id, {
+      global: 0,
+    });
 </script>
 
-<div id="wrapper">
-    <span>Parameter: {number}</span>
+<div
+        id="wrapper"
+        draggable="true"
+        on:dragstart={() => dragElement.set({id, type})}
+        on:dragend={() => dragElement.set(undefined)}
+>
     <div class="counter">
-        <button on:click={() => local--}>-</button>
-        <span>Local: {local}</span>
-        <button on:click={() => local++}>+</button>
-    </div>
-    <div class="counter">
-        <button on:click={() => global.update((x) => x - 1)}>-</button>
-        <span>Global: {$global}</span>
-        <button on:click={() => global.update((x) => x + 1)}>+</button>
+        <button on:click={() => store.update((x) => ({
+            ...x,
+            global: x.global - 1,
+        }))}>-</button>
+        <span>Global: {$store.global}</span>
+        <button on:click={() => store.update((x) => ({
+            ...x,
+            global: x.global + 1,
+        }))}>+</button>
     </div>
 </div>
 
@@ -28,6 +41,8 @@
         width: fit-content;
         padding: 10px;
         border: 1px solid lightgrey;
+
+        user-select: none;
     }
 
     .counter {

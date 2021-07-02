@@ -1,6 +1,9 @@
 import {Node, mergeAttributes} from '@tiptap/core'
 import CoolComponent from "./CoolComponent.svelte";
 import _ from "lodash";
+import {nanoid} from "nanoid";
+
+export const coolComponentTag = "cool-component";
 
 export default Node.create({
   name: "CoolComponent",
@@ -9,17 +12,15 @@ export default Node.create({
   draggable: true,
 
   addAttributes: () => ({
-    number: {
-      default: _.random(1, 20),
-    },
+    id: {},
   }),
 
   parseHTML: () => [{
-    tag: "cool-component",
+    tag: coolComponentTag,
   }],
 
   renderHTML: ({HTMLAttributes}) => [
-    "cool-component",
+    coolComponentTag,
     mergeAttributes(HTMLAttributes)
   ],
 
@@ -32,7 +33,7 @@ export default Node.create({
     new CoolComponent({
       target: dom,
       props: {
-        number: node.attrs.number
+        id: node.attrs.id
       }
     });
     return {

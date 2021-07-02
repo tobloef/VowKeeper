@@ -1,8 +1,13 @@
 <script lang="typescript">
   import {onDestroy, onMount} from "svelte";
-  import {Editor} from "@tiptap/core"
+  import {Editor, Extension} from "@tiptap/core"
   import StarterKit from "@tiptap/starter-kit"
-  import CoolComponentView from "./node-views/cool-component/CoolComponentView";
+  import CoolComponentView, {coolComponentTag} from "./node-views/cool-component/CoolComponentView";
+  import {nanoid} from "nanoid";
+  import {get} from "svelte/store";
+  import {dragElement, ElementType} from "./stores";
+  import {Plugin} from 'prosemirror-state';
+  import {DropElement} from "./DropElementPlugin";
 
   let documentElement;
   let editor;
@@ -13,6 +18,7 @@
       extensions: [
         StarterKit,
         CoolComponentView,
+        DropElement
       ],
       content: '',
       autofocus: true,
@@ -44,7 +50,7 @@
       .run(),
     coolComponent: () => editor.chain()
       .focus()
-      .insertContent(`<cool-component number="${_.random(1, 20)}"></cool-component>`)
+      .insertContent(`<cool-component id={${nanoid()}} />`)
       .run(),
   };
 </script>
@@ -52,14 +58,14 @@
     <div id="menu">
         {#if editor !== undefined}
             <button
-                on:click={menu.h1}
-                class:active={editor.isActive('heading', { level: 1 })}
+                    on:click={menu.h1}
+                    class:active={editor.isActive('heading', { level: 1 })}
             >
                 H1
             </button>
             <button
-                on:click={menu.h2}
-                class:active={editor.isActive('heading', { level: 2 })}
+                    on:click={menu.h2}
+                    class:active={editor.isActive('heading', { level: 2 })}
             >
                 H2
             </button>
