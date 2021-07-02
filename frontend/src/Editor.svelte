@@ -15,6 +15,7 @@
         CoolComponentView,
       ],
       content: '',
+      autofocus: true,
       onTransaction: () => {
         // Force re-render so `editor.isActive` works as expected
         editor = editor
@@ -76,7 +77,10 @@
         {/if}
     </div>
 
-    <div id="document" bind:this={documentElement}></div>
+    <div
+            id="document"
+            bind:this={documentElement}
+    ></div>
 </div>
 
 <style>
