@@ -33,7 +33,8 @@ export default Node.create({
     new CoolComponent({
       target: dom,
       props: {
-        id: node.attrs.id
+        id: node.attrs.id,
+        draggable: false,
       }
     });
     return {

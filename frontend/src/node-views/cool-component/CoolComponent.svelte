@@ -1,35 +1,37 @@
-<script lang="ts">
-    import {getElementStore, dragElement, ElementType} from "../../stores";
+<script lang="ts" context="module">
+  import {ElementType, draggableElement} from "../../customElements";
 
-    export type CoolComponentProps = {
-      global: number,
-    }
+  export type CoolComponentProps = {
+    num: number,
+  }
 
-    export let id: string;
-
-    const type = ElementType.CoolComponent;
-
-    const store = getElementStore<CoolComponentProps>(id, {
-      global: 0,
-    });
+  const type = ElementType.CoolComponent;
 </script>
 
-<div
-        id="wrapper"
-        draggable="true"
-        on:dragstart={() => dragElement.set({id, type})}
-        on:dragend={() => dragElement.set(undefined)}
->
+<script lang="ts">
+  import {getElementStore} from "../../customElements";
+
+  export let id: string;
+  export let draggable: boolean | undefined;
+
+  let store = getElementStore<CoolComponentProps>(id, {
+    num: 0,
+  });
+</script>
+
+<div id="wrapper" use:draggableElement={{draggable, id, type}}>
     <div class="counter">
         <button on:click={() => store.update((x) => ({
             ...x,
-            global: x.global - 1,
-        }))}>-</button>
-        <span>Global: {$store.global}</span>
+            num: x.num - 1,
+        }))}>-
+        </button>
+        <span>Number: {$store.num}</span>
         <button on:click={() => store.update((x) => ({
             ...x,
-            global: x.global + 1,
-        }))}>+</button>
+            num: x.num + 1,
+        }))}>+
+        </button>
     </div>
 </div>
 
@@ -41,8 +43,6 @@
         width: fit-content;
         padding: 10px;
         border: 1px solid lightgrey;
-
-        user-select: none;
     }
 
     .counter {

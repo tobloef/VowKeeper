@@ -1,13 +1,10 @@
 <script lang="typescript">
   import {onDestroy, onMount} from "svelte";
-  import {Editor, Extension} from "@tiptap/core"
+  import {Editor} from "@tiptap/core"
   import StarterKit from "@tiptap/starter-kit"
-  import CoolComponentView, {coolComponentTag} from "./node-views/cool-component/CoolComponentView";
+  import CoolComponentView from "./node-views/cool-component/CoolComponentView";
   import {nanoid} from "nanoid";
-  import {get} from "svelte/store";
-  import {dragElement, ElementType} from "./stores";
-  import {Plugin} from 'prosemirror-state';
-  import {DropElement} from "./DropElementPlugin";
+  import {DropElement} from "./customElements";
 
   let documentElement;
   let editor;
