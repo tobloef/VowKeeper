@@ -1,25 +1,23 @@
 <script lang="ts" context="module">
-  import {ElementType, draggableElement} from "../../customElements";
-
   export type CoolComponentProps = {
     num: number,
   }
-
-  const type = ElementType.CoolComponent;
 </script>
 
 <script lang="ts">
-  import {getElementStore} from "../../customElements";
+  import {CustomElementType, getCustomElementStore, draggableElement} from "../customElements";
 
   export let id: string;
-  export let draggable: boolean | undefined;
+  export let canDropInsert: boolean | undefined;
 
-  let store = getElementStore<CoolComponentProps>(id, {
+  let store = getCustomElementStore<CoolComponentProps>(id, {
     num: 0,
   });
+
+  const type = CustomElementType.CoolComponent;
 </script>
 
-<div id="wrapper" use:draggableElement={{draggable, id, type}}>
+<div id="wrapper" use:draggableElement={{canDropInsert, id, type}}>
     <div class="counter">
         <button on:click={() => store.update((x) => ({
             ...x,

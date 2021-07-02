@@ -1,26 +1,36 @@
 <script>
-  import {ElementType} from "../customElements";
+  import {CustomElementType, customElementTypeToComponent, getCustomElementStore} from "../customElements";
   import {nanoid} from "nanoid";
-  import CoolComponent from "../node-views/cool-component/CoolComponent.svelte";
+  import _ from "lodash";
 
   let log = [];
 
   const rollD10 = () => {
+    const id = nanoid();
+    const number = _.random(1, 6);
+    getCustomElementStore(id, {
+      number,
+    });
     log = [
       ...log,
       {
-        type: ElementType.CoolComponent,
-        id: nanoid(),
+        type: CustomElementType.D10,
+        id: id,
       }
     ]
   };
 
   const rollD6 = () => {
+    const id = nanoid();
+    const number = _.random(1, 6);
+    getCustomElementStore(id, {
+      number,
+    });
     log = [
       ...log,
       {
-        type: ElementType.CoolComponent,
-        id: nanoid(),
+        type: CustomElementType.D6,
+        id,
       }
     ]
   }
@@ -34,9 +44,11 @@
             <button on:click={rollD10}>Roll D10</button>
         </div>
         {#each log as {id, type}}
-            {#if type === ElementType.CoolComponent}
-                <CoolComponent {id} draggable={true} />
-            {/if}
+            <svelte:component
+                    this={customElementTypeToComponent(type)}
+                    {id}
+                    canDropInsert={true}
+            />
         {/each}
     </div>
 </div>
@@ -49,5 +61,9 @@
 
     :global(.list > :not(:last-child)) {
         margin-bottom: 10px;
+    }
+
+    :global(.list > *) {
+        width: 100px;
     }
 </style>

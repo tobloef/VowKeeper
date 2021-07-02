@@ -1,37 +1,41 @@
 import {get, Writable, writable} from 'svelte/store';
-import {coolComponentTag} from "./node-views/cool-component/CoolComponentView";
-import {Extension} from "@tiptap/core";
+import {Extension, mergeAttributes, Node} from "@tiptap/core";
 import {Plugin} from "prosemirror-state";
+import CoolComponent from "./custom-elements/CoolComponent.svelte"
+import D10 from "./custom-elements/D10.svelte"
+import D6 from "./custom-elements/D6.svelte"
 
-const elementStores: { [key: string]: Writable<any> } = {};
+const customElementStores: { [key: string]: Writable<any> } = {};
 
-export enum ElementType {
+export enum CustomElementType {
   CoolComponent,
+  D10,
+  D6,
 }
 
-export const getElementStore = <T>(id: string, defaultValue: T): Writable<T> => {
-  if (elementStores[id] === undefined) {
-    elementStores[id] = writable(defaultValue);
+export const getCustomElementStore = <T>(id: string, defaultValue: T = {} as T): Writable<T> => {
+  if (customElementStores[id] === undefined) {
+    customElementStores[id] = writable(defaultValue);
   }
-  return elementStores[id];
+  return customElementStores[id];
 }
 
-export const draggedElement = writable<undefined | {
+const draggedCustomElementStore = writable<undefined | {
   id: string,
-  type: ElementType,
+  type: CustomElementType,
 }>(undefined)
 
-export const draggableElement = <T>(node, { draggable, id, type }) => {
-  if (!draggable) {
+export const draggableElement = <T>(node, { canDropInsert, id, type }) => {
+  if (!canDropInsert) {
     return {};
   }
 
   const handleDragStart = () => {
-    draggedElement.set({id, type})
+    draggedCustomElementStore.set({id, type})
   };
 
   const handleDragEnd = () => {
-    draggedElement.set(undefined)
+    draggedCustomElementStore.set(undefined)
   };
 
   node.style.userSelect = "none";
@@ -49,32 +53,45 @@ export const draggableElement = <T>(node, { draggable, id, type }) => {
   }
 };
 
-const elementTypeToTag = (type: ElementType): string | undefined => {
+export const customElementTypeToTag = (type: CustomElementType): string => {
   switch (type) {
-    case ElementType.CoolComponent:
-      return coolComponentTag;
+    case CustomElementType.CoolComponent:
+      return "cool-component";
+    case CustomElementType.D10:
+      return "d10";
+    case CustomElementType.D6:
+      return "d6";
     default:
-      return undefined;
+      throw new Error(`Invalid CustomElementType "${type}"`);
+  }
+}
+
+export const customElementTypeToComponent = (type: CustomElementType) => {
+  switch (type) {
+    case CustomElementType.CoolComponent:
+      return CoolComponent;
+    case CustomElementType.D10:
+      return D10;
+    case CustomElementType.D6:
+      return D6;
+    default:
+      throw new Error(`Invalid CustomElementType "${type}"`);
   }
 }
 
 // noinspection TypeScriptValidateTypes
-export const DropElement = Extension.create({
+export const DropInsertCustomElement = Extension.create({
   addProseMirrorPlugins() {
     return [
       new Plugin({
         props: {
           handleDOMEvents: {
             drop: (view, event) => {
-              if (get(draggedElement) === undefined) {
+              if (get(draggedCustomElementStore) === undefined) {
                 return false;
               }
-              const {id, type} = get(draggedElement);
-              const tag = elementTypeToTag(type);
-
-              if (tag === undefined) {
-                return false;
-              }
+              const {id, type} = get(draggedCustomElementStore);
+              const tag = customElementTypeToTag(type);
 
               const dropPosition = this.editor.view.posAtCoords({
                 left: event.clientX,
@@ -94,4 +111,48 @@ export const DropElement = Extension.create({
       })
     ]
   }
-})
+});
+
+export const createNodeView = (type: CustomElementType) => {
+  const Component = customElementTypeToComponent(type);
+  const tag = customElementTypeToTag(type);
+
+  return Node.create({
+    name: Component.name,
+    group: "inline",
+    inline: true,
+    draggable: true,
+
+    addAttributes: () => ({
+      id: {},
+      canDropInsert: {},
+    }),
+
+    parseHTML: () => [{
+      tag,
+    }],
+
+    renderHTML: ({HTMLAttributes}) => [
+      tag,
+      mergeAttributes(HTMLAttributes)
+    ],
+
+    addNodeView: () => ({
+      node,
+    }) => {
+      const dom = document.createElement("span");
+      dom.style.display = "inline-flex";
+      dom.style.verticalAlign = "bottom";
+      new Component({
+        target: dom,
+        props: {
+          id: node.attrs.id,
+          canDropInsert: false,
+        }
+      });
+      return {
+        dom,
+      }
+    },
+  });
+};

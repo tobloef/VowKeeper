@@ -2,9 +2,8 @@
   import {onDestroy, onMount} from "svelte";
   import {Editor} from "@tiptap/core"
   import StarterKit from "@tiptap/starter-kit"
-  import CoolComponentView from "./node-views/cool-component/CoolComponentView";
   import {nanoid} from "nanoid";
-  import {DropElement} from "./customElements";
+  import {createNodeView, CustomElementType, customElementTypeToTag, DropInsertCustomElement} from "./customElements";
 
   let documentElement;
   let editor;
@@ -14,8 +13,10 @@
       element: documentElement,
       extensions: [
         StarterKit,
-        CoolComponentView,
-        DropElement
+        createNodeView(CustomElementType.CoolComponent),
+        createNodeView(CustomElementType.D10),
+        createNodeView(CustomElementType.D6),
+        DropInsertCustomElement
       ],
       content: '',
       autofocus: true,
@@ -47,7 +48,15 @@
       .run(),
     coolComponent: () => editor.chain()
       .focus()
-      .insertContent(`<cool-component id={${nanoid()}} />`)
+      .insertContent(`<${customElementTypeToTag(CustomElementType.CoolComponent)} id={${nanoid()}} />`)
+      .run(),
+    d10: () => editor.chain()
+      .focus()
+      .insertContent(`<${customElementTypeToTag(CustomElementType.D10)} id={${nanoid()}} />`)
+      .run(),
+    d6: () => editor.chain()
+      .focus()
+      .insertContent(`<${customElementTypeToTag(CustomElementType.D6)} id={${nanoid()}} />`)
       .run(),
   };
 </script>
@@ -76,6 +85,16 @@
                     on:click={menu.coolComponent}
             >
                 Cool Component
+            </button>
+            <button
+                    on:click={menu.d10}
+            >
+                D10
+            </button>
+            <button
+                    on:click={menu.d6}
+            >
+                D6
             </button>
         {/if}
     </div>
@@ -111,5 +130,11 @@
         background: white;
         box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
         padding: 10px 20px;
+    }
+
+    :global(#document .dice) {
+        width: 2.5em;
+        align-items: flex-end;
+        display: flex;
     }
 </style>

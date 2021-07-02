@@ -1,7 +1,22 @@
-<script lang="ts">
-  export let number: 1 | 2 | 3 | 4 | 5 | 6;
+<script lang="ts" context="module">
+  export type D6Props = {
+    number: 1 | 2 | 3 | 4 | 5 | 6,
+  }
+</script>
 
-  const numberParams = {
+<script lang="ts">
+  import {CustomElementType, getCustomElementStore, draggableElement} from "../customElements";
+
+  export let id: string;
+  export let canDropInsert: boolean | undefined;
+
+  let store = getCustomElementStore<D6Props>(id, {
+    number: _.random(1, 6)
+  });
+
+  const type = CustomElementType.D6;
+
+  const numberPositions = {
     1: {
       x: "24%",
       y: "75%",
@@ -35,7 +50,10 @@
   };
 </script>
 
-<div>
+<div
+        class="d6 dice"
+        use:draggableElement={{canDropInsert, id, type}}
+>
     <svg
             viewBox="0 0 24.4 20.2"
             xmlns="http://www.w3.org/2000/svg"
@@ -55,13 +73,13 @@
             <path d="M323.6 470c1.7 0 4.4.5 6 1.2l14.8 6.3h-32.1c-1.7 0-4.4-.5-6-1.1l-16.6-6.4z" fill="#bcbec0"/>
         </g>
         <text
-                x={numberParams[number].x}
-                y={numberParams[number].y}
-                font-size={numberParams[number].fontSize}
+                x={numberPositions[$store.number].x}
+                y={numberPositions[$store.number].y}
+                font-size={numberPositions[$store.number].fontSize}
                 font-family="sans-serif"
                 fill="#3e3e3f"
                 font-weight="bold"
                 textLength="30%"
-        >{number}</text>
+        >{$store.number}</text>
     </svg>
 </div>
