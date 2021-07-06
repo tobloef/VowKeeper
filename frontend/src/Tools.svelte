@@ -1,7 +1,7 @@
 <script>
   import {Route, router, active} from 'tinro';
   import Log from './tools/Log.svelte';
-  import Character from './tools/Character.svelte';
+  import Character from './tools/character/Character.svelte';
   import Notes from './tools/Notes.svelte';
   import Combat from './tools/Combat.svelte';
   import Map from './tools/Map.svelte';

@@ -42,6 +42,7 @@
         <div>
             <button on:click={rollD6}>Roll D6</button>
             <button on:click={rollD10}>Roll D10</button>
+            <button on:click={actionRoll}>Action Roll</button>
         </div>
         {#each log as {id, type}}
             <svelte:component
