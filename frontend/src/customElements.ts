@@ -1,16 +1,12 @@
 import {get, Writable, writable} from 'svelte/store';
 import {Extension, mergeAttributes, Node} from "@tiptap/core";
 import {Plugin} from "prosemirror-state";
-import CoolComponent from "./custom-elements/CoolComponent.svelte"
-import D10 from "./custom-elements/D10.svelte"
-import D6 from "./custom-elements/D6.svelte"
+import ActionRoll from "./custom-elements/ActionRoll.svelte";
 
 const customElementStores: { [key: string]: Writable<any> } = {};
 
 export enum CustomElementType {
-  CoolComponent,
-  D10,
-  D6,
+  ActionRoll,
 }
 
 export const getCustomElementStore = <T>(id: string, defaultValue: T = {} as T): Writable<T> => {
@@ -55,12 +51,8 @@ export const draggableElement = <T>(node, { canDropInsert, id, type }) => {
 
 export const customElementTypeToTag = (type: CustomElementType): string => {
   switch (type) {
-    case CustomElementType.CoolComponent:
-      return "cool-component";
-    case CustomElementType.D10:
-      return "d10";
-    case CustomElementType.D6:
-      return "d6";
+    case CustomElementType.ActionRoll:
+      return "action-roll";
     default:
       throw new Error(`Invalid CustomElementType "${type}"`);
   }
@@ -68,12 +60,8 @@ export const customElementTypeToTag = (type: CustomElementType): string => {
 
 export const customElementTypeToComponent = (type: CustomElementType) => {
   switch (type) {
-    case CustomElementType.CoolComponent:
-      return CoolComponent;
-    case CustomElementType.D10:
-      return D10;
-    case CustomElementType.D6:
-      return D6;
+    case CustomElementType.ActionRoll:
+      return ActionRoll;
     default:
       throw new Error(`Invalid CustomElementType "${type}"`);
   }

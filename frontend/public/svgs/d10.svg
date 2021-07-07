@@ -1,66 +1,4 @@
-<script lang="ts">
-  export let number; 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
-  export let isHit: boolean;
-  export let isMiss: boolean; 
-
-  const numberPositions = {
-    1: {
-      x: "41%",
-      y: "45%",
-      fontSize: "55%",
-    },
-    2: {
-      x: "41%",
-      y: "45%",
-      fontSize: "55%",
-    },
-    3: {
-      x: "41%",
-      y: "45%",
-      fontSize: "55%",
-    },
-    4: {
-      x: "40%",
-      y: "45%",
-      fontSize: "55%",
-    },
-    5: {
-      x: "41%",
-      y: "45%",
-      fontSize: "55%",
-    },
-    6: {
-      x: "41%",
-      y: "45%",
-      fontSize: "55%",
-    },
-    7: {
-      x: "41%",
-      y: "45%",
-      fontSize: "55%",
-    },
-    8: {
-      x: "41%",
-      y: "45%",
-      fontSize: "55%",
-    },
-    9: {
-      x: "41%",
-      y: "45%",
-      fontSize: "55%",
-    },
-    10: {
-      x: "34.5%",
-      y: "46%",
-      fontSize: "50%",
-    },
-  };
-</script>
-
-<svg
-        viewBox="0 0 26.81 28.43"
-        xmlns="http://www.w3.org/2000/svg"
->
+<svg viewBox="0 0 26.81 28.43" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <clipPath clipPathUnits="userSpaceOnUse" id="d10">
             <path d="M50.4 400.07h306v104.48h-306z"/>
@@ -78,13 +16,4 @@
               fill="#77787b"/>
         <path d="M71.74 469.32c1.61.7 3.8 2.54 4.77 4l13.2 19.97-25.23-27.15z" fill="#939598"/>
     </g>
-    <text
-            x={numberPositions[number].x}
-            y={numberPositions[number].y}
-            font-size={numberPositions[number].fontSize}
-            font-family="sans-serif"
-            fill="#3e3e3f"
-            font-weight="bold"
-            textLength="30%"
-    >{number}</text>
 </svg>

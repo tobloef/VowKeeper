@@ -1,11 +1,13 @@
-<script lang="ts" context="module">
-  export type ActionRollProps = {
-    roll: ActionRoll,
-  }
-</script>
-
 <script lang="ts">
   import {CustomElementType, getCustomElementStore, draggableElement} from "../customElements";
+  import D10 from "../components/D10.svelte";
+  import ActionScore from "../components/ActionScore.svelte";
+  import type {ActionRoll} from "../tools/rolls";
+  import D6 from "../components/D6.svelte";
+
+  type ActionRollProps = {
+    roll: ActionRoll,
+  }
 
   export let id: string;
   export let canDropInsert: boolean | undefined;
@@ -15,29 +17,73 @@
   const type = CustomElementType.ActionRoll;
 </script>
 
-<div id="popup">
-    <D6 />
-    <span class="plus">+</span>
-    <div class="stat">
-        <span class="value">{$store.roll.stat.value}</span>
-        <span class="type">{$store.roll.stat.type}</span>
+<div class="wrapper" use:draggableElement={{canDropInsert, id, type}}>
+    <div class="actionScoreWrapper">
+        <ActionScore actionScore={$store.roll.actionScore} />
     </div>
-    <span class="plus">+</span>
-    <span class="add">{$store.roll.add}</span>
-</div>
-
-<div id="wrapper" use:draggableElement={{canDropInsert, id, type}}>
-    <ActionScore />
     <span class="vs">vs</span>
-    <D10 />
+    <div class="challengeDiceWrapper">
+        <D10
+                number={$store.roll.challengeDice[0].value}
+                isHit={$store.roll.challengeDice[0].isHit}
+        />
+    </div>
     {#if $store.roll.isMatch}
-        <span class="equals">=</span>
+        <div class="matchWrapper">
+            <span class="match">Match!</span>
+            <span class="equals">=</span>
+        </div>
     {/if}
-    <D10 />
+    <div class="challengeDiceWrapper">
+        <D10
+                number={$store.roll.challengeDice[1].value}
+                isHit={$store.roll.challengeDice[1].isHit}
+        />
+    </div>
 </div>
 
 <style>
-    #wrapper {
-        
+    .wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 4em;
+        width: fit-content;
+        padding: 0 3px 0 5px;
+        font-size: 0.8em;
+    }
+
+    .actionScoreWrapper {
+        height: 100%;
+        padding: 0.75em 0;
+        box-sizing: border-box;
+    }
+
+    .challengeDiceWrapper {
+        height: 100%;
+        margin-right: 0.2em;
+    }
+
+    .vs {
+        font-weight: bold;
+        margin: 0 0.5em;
+    }
+
+    .matchWrapper {
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+
+    .equals {
+        font-size: 2em;
+        margin: 0 0.22em 0 0.1em;
+        font-family: cursive;
+    }
+
+    .match {
+        position: absolute;
+        bottom: 3em;
+        font-size: 0.75em;
     }
 </style>

@@ -1,41 +1,9 @@
 <script lang="ts">
   export let number: 1 | 2 | 3 | 4 | 5 | 6;
-
-  const numberPositions = {
-    1: {
-      x: "24%",
-      y: "75%",
-      fontSize: "60%",
-    },
-    2: {
-      x: "24%",
-      y: "75%",
-      fontSize: "60%",
-    },
-    3: {
-      x: "24%",
-      y: "75%",
-      fontSize: "60%",
-    },
-    4: {
-      x: "24%",
-      y: "75%",
-      fontSize: "60%",
-    },
-    5: {
-      x: "24%",
-      y: "75%",
-      fontSize: "60%",
-    },
-    6: {
-      x: "24%",
-      y: "75%",
-      fontSize: "60%",
-    },
-  };
 </script>
 
 <svg
+        height="100%"
         viewBox="0 0 24.4 20.2"
         xmlns="http://www.w3.org/2000/svg"
 >
@@ -54,12 +22,13 @@
         <path d="M323.6 470c1.7 0 4.4.5 6 1.2l14.8 6.3h-32.1c-1.7 0-4.4-.5-6-1.1l-16.6-6.4z" fill="#bcbec0"/>
     </g>
     <text
-            x={numberPositions[number].x}
-            y={numberPositions[number].y}
-            font-size={numberPositions[number].fontSize}
+            x="8.5px"
+            y="15px"
+            font-size="10px"
             font-family="sans-serif"
             fill="#3e3e3f"
             font-weight="bold"
             textLength="30%"
+            text-anchor="middle"
     >{number}</text>
 </svg>

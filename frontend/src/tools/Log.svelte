@@ -1,48 +1,37 @@
-<script>
+<script lang="ts">
   import {CustomElementType, customElementTypeToComponent, getCustomElementStore} from "../customElements";
   import {nanoid} from "nanoid";
-  import _ from "lodash";
+  import {rollActionRoll} from "./rolls";
+  import type {Stat} from "./rolls";
 
   let log = [];
 
-  const rollD10 = () => {
+  const makeActionRoll = () => {
+    const stat: Stat = {
+      type: "iron",
+      value: 4,
+    };
+
     const id = nanoid();
-    const number = _.random(1, 6);
+    const actionRoll = rollActionRoll(stat, 0);
     getCustomElementStore(id, {
-      number,
+      roll: actionRoll,
     });
     log = [
       ...log,
       {
-        type: CustomElementType.D10,
         id: id,
+        type: CustomElementType.ActionRoll,
       }
     ]
   };
-
-  const rollD6 = () => {
-    const id = nanoid();
-    const number = _.random(1, 6);
-    getCustomElementStore(id, {
-      number,
-    });
-    log = [
-      ...log,
-      {
-        type: CustomElementType.D6,
-        id,
-      }
-    ]
-  }
 </script>
 
 <div>
     <h1>Log</h1>
     <div class="list">
         <div>
-            <button on:click={rollD6}>Roll D6</button>
-            <button on:click={rollD10}>Roll D10</button>
-            <button on:click={actionRoll}>Action Roll</button>
+            <button on:click={makeActionRoll}>Action Roll</button>
         </div>
         {#each log as {id, type}}
             <svelte:component
@@ -58,13 +47,10 @@
     .list {
         display: flex;
         flex-direction: column;
+        font-size: 1.25em;
     }
 
     :global(.list > :not(:last-child)) {
         margin-bottom: 10px;
-    }
-
-    :global(.list > *) {
-        width: 100px;
     }
 </style>

@@ -4,7 +4,7 @@ export type OneToSix = 1 | 2 | 3 | 4 | 5 | 6;
 
 export type OneToTen = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
-export StatType =
+export type StatType =
   | "edge"
   | "heart"
   | "iron"
@@ -16,37 +16,43 @@ export type ActionRollResult =
   | "weak hit"
   | "miss";
 
-export type ActionRoll = {
+export type Stat = {
+  type: StatType,
+  value: number,
+};
+
+export type ActionScore = {
+  value: number,
   actionDie: OneToSix,
-  stat: {
-    type: StatType,
-    value: number,
-  },
-  add: number,
-  actionScore: number,
+  stat: Stat,
+  adds: number,
+  isMaxed: boolean,
+}
+
+export type ActionRoll = {
+  actionScore: ActionScore,
   result: ActionRollResult,
   isMatch: boolean,
-  isMaxed: boolean,
   challengeDice: [
     {
-      roll: OneToTen,
+      value: OneToTen,
       isHit: boolean,
     },
     {
-      roll: OneToTen,
+      value: OneToTen,
       isHit: boolean,
     },
   ]
 }
 
-const rollD10 = (): OneToTen => _.random(1, 10);
-const rollD6 = (): OneToSix => _.random(1, 6);
+const rollD10 = (): OneToTen => _.random(1, 10) as OneToTen;
+const rollD6 = (): OneToSix => _.random(1, 6) as OneToSix;
 
-const actionRoll = (stat, adds): ActionRoll => {
+export const rollActionRoll = (stat: Stat, adds: number): ActionRoll => {
   const challengeDice1: OneToTen = rollD10();
   const challengeDice2: OneToTen = rollD10();
   const actionDie: OneToSix = rollD6();
-  const unboundedActionScore = actionDie + stat + adds;
+  const unboundedActionScore = actionDie + stat.value + adds;
   const actionScore: number = Math.min(unboundedActionScore, 10);
 
   const challengeDice1Hit: boolean = actionDie > challengeDice1;
@@ -65,18 +71,22 @@ const actionRoll = (stat, adds): ActionRoll => {
   const isMaxed: boolean = unboundedActionScore > actionScore;
 
   return {
-    actionDie,
-    actionScore,
+    actionScore: {
+      value: actionScore,
+      actionDie,
+      stat,
+      adds,
+      isMaxed,
+    },
     result,
     isMatch,
-    isMaxed,
     challengeDice: [
       {
-        roll: challengeDice1,
+        value: challengeDice1,
         isHit: challengeDice1Hit,
       },
       {
-        roll: challengeDice2,
+        value: challengeDice2,
         isHit: challengeDice2Hit,
       },
     ]

@@ -2,7 +2,6 @@
   import {onDestroy, onMount} from "svelte";
   import {Editor} from "@tiptap/core"
   import StarterKit from "@tiptap/starter-kit"
-  import {nanoid} from "nanoid";
   import {createNodeView, CustomElementType, customElementTypeToTag, DropInsertCustomElement} from "./customElements";
 
   let documentElement;
@@ -13,9 +12,7 @@
       element: documentElement,
       extensions: [
         StarterKit,
-        createNodeView(CustomElementType.CoolComponent),
-        createNodeView(CustomElementType.D10),
-        createNodeView(CustomElementType.D6),
+        createNodeView(CustomElementType.ActionRoll),
         DropInsertCustomElement
       ],
       content: '',
@@ -46,18 +43,6 @@
       .focus()
       .toggleHeading({level: 2})
       .run(),
-    coolComponent: () => editor.chain()
-      .focus()
-      .insertContent(`<${customElementTypeToTag(CustomElementType.CoolComponent)} id={${nanoid()}} />`)
-      .run(),
-    d10: () => editor.chain()
-      .focus()
-      .insertContent(`<${customElementTypeToTag(CustomElementType.D10)} id={${nanoid()}} />`)
-      .run(),
-    d6: () => editor.chain()
-      .focus()
-      .insertContent(`<${customElementTypeToTag(CustomElementType.D6)} id={${nanoid()}} />`)
-      .run(),
   };
 </script>
 <div id="editor">
@@ -80,21 +65,6 @@
                     class:active={editor.isActive('paragraph')}
             >
                 P
-            </button>
-            <button
-                    on:click={menu.coolComponent}
-            >
-                Cool Component
-            </button>
-            <button
-                    on:click={menu.d10}
-            >
-                D10
-            </button>
-            <button
-                    on:click={menu.d6}
-            >
-                D6
             </button>
         {/if}
     </div>
