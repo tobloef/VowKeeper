@@ -3,7 +3,6 @@
   import D10 from "../components/D10.svelte";
   import ActionScore from "../components/ActionScore.svelte";
   import type {ActionRoll} from "../tools/rolls";
-  import D6 from "../components/D6.svelte";
 
   type ActionRollProps = {
     roll: ActionRoll,

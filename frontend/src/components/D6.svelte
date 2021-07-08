@@ -1,4 +1,6 @@
 <script lang="ts">
+  import {darkGrey} from "../colors";
+
   export let number: 1 | 2 | 3 | 4 | 5 | 6;
 </script>
 
@@ -26,7 +28,7 @@
             y="15px"
             font-size="10px"
             font-family="sans-serif"
-            fill="#3e3e3f"
+            fill={darkGrey}
             font-weight="bold"
             textLength="30%"
             text-anchor="middle"

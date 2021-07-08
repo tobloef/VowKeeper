@@ -1,4 +1,6 @@
 <script lang="ts">
+  import {darkGrey} from "../colors";
+
   export let number: number;
   export let isHit: true | false | undefined;
 
@@ -77,7 +79,7 @@
             y={numberPositions[number].y}
             font-size={number >= 10 ? "8.5px" : "10px"}
             font-family="sans-serif"
-            fill="#3e3e3f"
+            fill={darkGrey}
             font-weight="bold"
             textLength="8.5px"
             text-anchor="middle"

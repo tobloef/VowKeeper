@@ -13,7 +13,7 @@
     };
 
     const id = nanoid();
-    const actionRoll = rollActionRoll(stat, 0);
+    const actionRoll = rollActionRoll(stat, 1);
     getCustomElementStore(id, {
       roll: actionRoll,
     });
