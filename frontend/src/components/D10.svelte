@@ -1,9 +1,14 @@
 <script lang="ts">
-  export let number;
-  1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+  import {ZeroToNine, OneToTen} from "../tools/rolls";
+
+  export let number: OneToTen | ZeroToNine;
   export let isHit: true | false | undefined;
 
   const numberPositions = {
+    0: {
+      x: "13.5px",
+      y: "13px",
+    },
     1: {
       x: "13.5px",
       y: "13px",
