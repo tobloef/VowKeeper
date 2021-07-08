@@ -1,9 +1,5 @@
 import _ from "lodash";
 
-export type OneToSix = 1 | 2 | 3 | 4 | 5 | 6;
-export type OneToTen = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
-export type ZeroToNine = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-
 export type StatType =
   | "edge"
   | "heart"
@@ -23,7 +19,7 @@ export type Stat = {
 
 export type ActionScore = {
   value: number,
-  actionDie: OneToSix,
+  actionDie: number,
   stat: Stat,
   adds: number,
   isMaxed: boolean,
@@ -35,23 +31,23 @@ export type ActionRoll = {
   isMatch: boolean,
   challengeDice: [
     {
-      value: OneToTen,
+      value: number,
       isHit: boolean,
     },
     {
-      value: OneToTen,
+      value: number,
       isHit: boolean,
     },
   ]
 }
 
-const rollD10 = (): OneToTen => _.random(1, 10) as OneToTen;
-const rollD6 = (): OneToSix => _.random(1, 6) as OneToSix;
+const rollD10 = (): number => _.random(1, 10);
+const rollD6 = (): number => _.random(1, 6);
 
 export const rollActionRoll = (stat: Stat, adds: number): ActionRoll => {
-  const challengeDice1: OneToTen = rollD10();
-  const challengeDice2: OneToTen = rollD10();
-  const actionDie: OneToSix = rollD6();
+  const challengeDice1: number = rollD10();
+  const challengeDice2: number = rollD10();
+  const actionDie: number = rollD6();
   const unboundedActionScore = actionDie + stat.value + adds;
   const actionScore: number = Math.min(unboundedActionScore, 10);
 

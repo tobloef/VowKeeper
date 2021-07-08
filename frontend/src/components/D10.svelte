@@ -1,7 +1,5 @@
 <script lang="ts">
-  import {ZeroToNine, OneToTen} from "../tools/rolls";
-
-  export let number: OneToTen | ZeroToNine;
+  export let number: number;
   export let isHit: true | false | undefined;
 
   const numberPositions = {
