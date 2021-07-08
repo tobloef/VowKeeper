@@ -79,4 +79,49 @@
             textLength="8.5px"
             text-anchor="middle"
     >{number}</text>
+    {#if isHit === true}
+        <svg
+                x="15px"
+                y="6px"
+                width="12px"
+                viewBox="0 0 6.3888 6.3885"
+                xmlns="http://www.w3.org/2000/svg"
+        >
+            <defs>
+                <clipPath clipPathUnits="userSpaceOnUse" id="hit">
+                    <path d="M31.5 517.639H297v64.824H31.5z"/>
+                </clipPath>
+            </defs>
+            <g clip-path="url(#hit)" transform="matrix(.35278 0 0 -.35278 -97.7255 195.5202)">
+                <path d="M294.1907 545.1761c0-4.484-3.635-8.118-8.119-8.118-4.483 0-8.118 3.634-8.118 8.118s3.635 8.118 8.118 8.118c4.484 0 8.119-3.634 8.119-8.118"
+                      fill="#fff"/>
+                <path d="M294.1907 545.1761c0-4.484-3.635-8.118-8.119-8.118-4.483 0-8.118 3.634-8.118 8.118s3.635 8.118 8.118 8.118c4.484 0 8.119-3.634 8.119-8.118z"
+                      fill="none" stroke="#393536" stroke-width="1.873" stroke-miterlimit="10"/>
+                <path d="M285.1126 540.1478l-4.225 3.228 1.084 1.42 2.807-2.146 5.06 6.624 1.419-1.084z" fill="#393536"/>
+            </g>
+        </svg>
+    {/if}
+    {#if isHit === false}
+        <svg
+                x="15px"
+                y="6px"
+                width="12px"
+                viewBox="0 0 6.39 6.39"
+                xmlns="http://www.w3.org/2000/svg"
+        >
+            <defs>
+                <clipPath clipPathUnits="userSpaceOnUse" id="miss">
+                    <path d="M31.5 517.64H297v64.82H31.5z"/>
+                </clipPath>
+            </defs>
+            <g clip-path="url(#miss)" transform="matrix(.35278 0 0 -.35278 -97.71 195.53)">
+                <path d="M294.16 545.2a8.12 8.12 0 10-16.24 0 8.12 8.12 0 0016.24 0" fill="#fff"/>
+                <path d="M294.16 545.2a8.12 8.12 0 10-16.24 0 8.12 8.12 0 0016.24 0z" fill="none" stroke="#393536"
+                      stroke-width="1.87" stroke-miterlimit="10"/>
+                <path d="M290.59 542.19l-1.44-1.5-3.11 2.82-3.12-2.82-1.43 1.5 3 2.73-3 2.72 1.33 1.6 3.22-2.92 3.21 2.93 1.34-1.61-3-2.72z"
+                      fill="#393536"/>
+            </g>
+        </svg>
+
+    {/if}
 </svg>

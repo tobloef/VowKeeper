@@ -55,8 +55,8 @@ export const rollActionRoll = (stat: Stat, adds: number): ActionRoll => {
   const unboundedActionScore = actionDie + stat.value + adds;
   const actionScore: number = Math.min(unboundedActionScore, 10);
 
-  const challengeDice1Hit: boolean = actionDie > challengeDice1;
-  const challengeDice2Hit: boolean = actionDie > challengeDice2;
+  const challengeDice1Hit: boolean = actionScore > challengeDice1;
+  const challengeDice2Hit: boolean = actionScore > challengeDice2;
 
   let result: ActionRollResult;
   if (challengeDice1Hit && challengeDice2Hit) {
