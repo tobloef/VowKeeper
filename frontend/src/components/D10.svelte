@@ -58,11 +58,11 @@
         xmlns="http://www.w3.org/2000/svg"
 >
     <defs>
-        <clipPath clipPathUnits="userSpaceOnUse" id="d10">
+        <clipPath clipPathUnits="userSpaceOnUse">
             <path d="M50.4 400.07h306v104.48h-306z"/>
         </clipPath>
     </defs>
-    <g clip-path="url(#d10)" transform="matrix(.35278 0 0 -.35278 -20.56 178)">
+    <g transform="matrix(.35278 0 0 -.35278 -20.56 178)">
         <path d="M133.26 466.57l-34.13 36.74a3.86 3.86 0 01-5.66 0l-34.14-36.74a3.86 3.86 0 01.02-5.28l34.14-36.13a3.86 3.86 0 015.61 0l34.14 36.13a3.86 3.86 0 01.02 5.28"
               fill="#414042"/>
         <path d="M99.18 463.33l13.9 6c.64.28 1.1.75 1.26 1.34.18.59.07 1.23-.32 1.8l-16.45 24.89c-.36.55-.81.85-1.27.85-.46 0-.91-.3-1.28-.85l-16.45-24.89a2.14 2.14 0 01-.32-1.8c.17-.59.62-1.06 1.25-1.34l13.91-6c.74-.32 1.8-.5 2.89-.5s2.14.18 2.88.5"
@@ -93,11 +93,11 @@
                 xmlns="http://www.w3.org/2000/svg"
         >
             <defs>
-                <clipPath clipPathUnits="userSpaceOnUse" id="hit">
+                <clipPath clipPathUnits="userSpaceOnUse">
                     <path d="M31.5 517.639H297v64.824H31.5z"/>
                 </clipPath>
             </defs>
-            <g clip-path="url(#hit)" transform="matrix(.35278 0 0 -.35278 -97.7255 195.5202)">
+            <g transform="matrix(.35278 0 0 -.35278 -97.7255 195.5202)">
                 <path d="M294.1907 545.1761c0-4.484-3.635-8.118-8.119-8.118-4.483 0-8.118 3.634-8.118 8.118s3.635 8.118 8.118 8.118c4.484 0 8.119-3.634 8.119-8.118"
                       fill="#fff"/>
                 <path d="M294.1907 545.1761c0-4.484-3.635-8.118-8.119-8.118-4.483 0-8.118 3.634-8.118 8.118s3.635 8.118 8.118 8.118c4.484 0 8.119-3.634 8.119-8.118z"
@@ -115,11 +115,11 @@
                 xmlns="http://www.w3.org/2000/svg"
         >
             <defs>
-                <clipPath clipPathUnits="userSpaceOnUse" id="miss">
+                <clipPath clipPathUnits="userSpaceOnUse">
                     <path d="M31.5 517.64H297v64.82H31.5z"/>
                 </clipPath>
             </defs>
-            <g clip-path="url(#miss)" transform="matrix(.35278 0 0 -.35278 -97.71 195.53)">
+            <g transform="matrix(.35278 0 0 -.35278 -97.71 195.53)">
                 <path d="M294.16 545.2a8.12 8.12 0 10-16.24 0 8.12 8.12 0 0016.24 0" fill="#fff"/>
                 <path d="M294.16 545.2a8.12 8.12 0 10-16.24 0 8.12 8.12 0 0016.24 0z" fill="none" stroke="#393536"
                       stroke-width="1.87" stroke-miterlimit="10"/>

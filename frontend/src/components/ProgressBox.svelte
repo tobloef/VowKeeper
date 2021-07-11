@@ -6,11 +6,11 @@
 
 <svg viewBox="0.5 -6 33 33" xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <clipPath clipPathUnits="userSpaceOnUse" id="pb">
+        <clipPath clipPathUnits="userSpaceOnUse">
             <path d="M31.5 420.5h27v26.3h-27z"/>
         </clipPath>
     </defs>
-    <g clip-path="url(#pb)" transform="matrix(1.33333, 0, 0, -1.33333, -42.987354, 587.929871)">
+    <g transform="matrix(1.33333, 0, 0, -1.33333, -42.987354, 587.929871)">
         <path d="M56 422.3H33.6v22.4H56z" fill="white" stroke="#444141" stroke-width="1.7" stroke-miterlimit="10"/>
         {#if progress >= 1}
             <path d="M52.5 425.2l-.4.1c-5.8 4.4-11.4 9.3-16.5 14.5-.4.4-.3 1-.1 1.5.2.5.6.8.8.8l.3-.1a145 145 0 0116.7-14.6c.5-.4.3-1 .2-1.2-.1-.6-.6-1-1-1"

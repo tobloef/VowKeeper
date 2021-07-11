@@ -49,7 +49,7 @@
         height: 4em;
         width: fit-content;
         padding: 0 3px 0 5px;
-        font-size: 0.8em;
+        font-size: 0.75em;
     }
 
     .actionScoreWrapper {

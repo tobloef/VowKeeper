@@ -2,46 +2,45 @@
   import D6 from "./D6.svelte";
   import {darkGrey} from "../colors";
   import type {ActionScore} from "../tools/rolls";
+  import Portal from "svelte-portal/src/Portal.svelte";
 
   export let actionScore: ActionScore;
 
+  let popupAnchor;
+  let popup;
+
+  let popupAnchorRect;
+  let popupRect;
+
   let popupOpen: boolean = false;
+
+  const updatePopupPosition = () => {
+    popupAnchorRect = popupAnchor?.getBoundingClientRect();
+    popupRect = popup?.getBoundingClientRect();
+  }
 </script>
 
 <div
         class="wrapper"
-        on:mouseenter={() => popupOpen = true}
+        on:mouseenter={() => {
+          popupOpen = true;
+          updatePopupPosition();
+        }}
         on:mouseleave={() => popupOpen = false}
+        on:wheel={() => popupOpen = false}
+        bind:this={popupAnchor}
 >
-    <div class="popup" class:visible={popupOpen}>
-        {#if actionScore.isMaxed}
-            <span class="maxed">(Max 10)</span>
-        {/if}
-        <div class="calculation">
-            <div class="d6Wrapper">
-                <D6 number={actionScore.actionDie} />
-            </div>
-            <span class="plus">+</span>
-            <div class="stat">
-                <span class="value">{actionScore.stat.value}</span>
-                <span class="type">{actionScore.stat.type}</span>
-            </div>
-            <span class="plus">+</span>
-            <span class="adds">{actionScore.adds}</span>
-        </div>
-    </div>
-
     <svg
             height="100%"
             viewBox="0 0 33.69 33.69"
             xmlns="http://www.w3.org/2000/svg"
     >
         <defs>
-            <clipPath clipPathUnits="userSpaceOnUse" id="action_score">
+            <clipPath clipPathUnits="userSpaceOnUse">
                 <path d="M31.5 517.64H297v64.82H31.5z"/>
             </clipPath>
         </defs>
-        <g clip-path="url(#action_score)" transform="matrix(1.33333 0 0 -1.33333 -228.76 749.7)" fill="#fff">
+        <g transform="matrix(1.33333 0 0 -1.33333 -228.76 749.7)" fill="#fff">
             <path d="M195.9 549.63a11.7 11.7 0 10-23.4 0 11.7 11.7 0 0023.4 0z" stroke="#393536" stroke-width="1.87"
                   stroke-miterlimit="10"/>
         </g>
@@ -60,11 +59,39 @@
     </svg>
 </div>
 
+<Portal>
+    <div
+            class="popup"
+            class:visible={popupOpen}
+            bind:this={popup}
+            style="
+            left: {popupAnchorRect?.x}px;
+            top: {popupAnchorRect?.y}px;
+            transform: translate(calc(-50% + {popupAnchorRect?.width / 2}px), -{popupRect?.height + 10}px);
+        "
+    >
+        {#if actionScore.isMaxed}
+            <span class="maxed">(Max 10)</span>
+        {/if}
+        <div class="calculation">
+            <div class="d6Wrapper">
+                <D6 number={actionScore.actionDie} />
+            </div>
+            <span class="plus">+</span>
+            <div class="stat">
+                <span class="value">{actionScore.stat.value}</span>
+                <span class="type">{actionScore.stat.type}</span>
+            </div>
+            <span class="plus">+</span>
+            <span class="adds">{actionScore.adds}</span>
+        </div>
+    </div>
+</Portal>
+
 <style>
     .wrapper {
         height: 100%;
         position: relative;
-        margin-left: 300px;
     }
 
     .popup {
@@ -75,16 +102,17 @@
         background: white;
         border: 2px solid #3e3e3f;
         align-items: center;
-        bottom: 3.5em;
-        transform: translate(-50%, 0%);
         padding: 0.6em 1.3em 0.8em 1.3em;
         box-sizing: border-box;
-        left: 50%;
         border-radius: 5px;
+        box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.25);
+    }
+
+    .popup:not(.visible) {
+        visibility: hidden;
     }
 
     .popup:after, .popup:before {
-        top: 100%;
         left: 50%;
         border: solid transparent;
         content: "";
@@ -99,16 +127,15 @@
         border-top-color: white;
         border-width: 6px;
         margin-left: -6px;
-    }
-    .popup:before {
-        border-color: transparent;
-        border-top-color: black;
-        border-width: 8px;
-        margin-left: -8px;
+        top: calc(100% - 1px)
     }
 
-    .popup:not(.visible) {
-        display: none;
+    .popup:before {
+        border-color: transparent;
+        border-top-color: #3e3e3f;
+        border-width: 8px;
+        margin-left: -8px;
+        top: 100%;
     }
 
     .calculation {
@@ -134,7 +161,7 @@
     }
 
     .adds {
-        font-size: 2em;
+        font-size: 1.8em;
         margin-left: 0.25em;
     }
 
@@ -143,10 +170,12 @@
         display: flex;
         flex-direction: column;
         text-transform: capitalize;
-        margin: 0 0.35em
+        margin: 0 0.35em;
+        line-height: 1em;
     }
 
     .stat > .value {
-        font-size: 1.5em;
+        font-size: 1.8em;
+        line-height: 1em;
     }
 </style>

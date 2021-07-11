@@ -1,7 +1,10 @@
 <script lang="ts">
   import {darkGrey} from "../colors";
+  import {nanoid} from "nanoid";
 
   export let number: 1 | 2 | 3 | 4 | 5 | 6;
+
+  const id = nanoid();
 </script>
 
 <svg
@@ -10,11 +13,11 @@
         xmlns="http://www.w3.org/2000/svg"
 >
     <defs>
-        <clipPath clipPathUnits="userSpaceOnUse" id="d6">
+        <clipPath clipPathUnits="userSpaceOnUse">
             <path d="M50.4 400h306v104.5h-306z"/>
         </clipPath>
     </defs>
-    <g clip-path="url(#d6)" transform="matrix(.35278 0 0 -.35278 -99.6 169.7)">
+    <g transform="matrix(.35278 0 0 -.35278 -99.6 169.7)">
         <path d="M285.8 424h41c.6 0 1 0 1.5.3l21 9.3c1.3.6 2.2 1.9 2.2 3.3v40.6c0 2-1.6 3.6-3.6 3.6H309c-.5 0-1-.1-1.3-.3l-23.2-9a3.6 3.6 0 01-2.3-3.3v-41c0-2 1.6-3.6 3.5-3.6"
               fill="#414042"/>
         <path d="M323.6 467.8h-34.5a2.5 2.5 0 01-2.5-2.5v-34.6c0-1.3 1-2.5 2.5-2.5h34.5c1.4 0 2.5 1.2 2.5 2.5v34.6c0 1.4-1 2.5-2.5 2.5"

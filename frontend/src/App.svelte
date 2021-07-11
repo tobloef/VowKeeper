@@ -5,11 +5,11 @@
 </script>
 
 <main>
-	<div id="tools-wrapper">
-		<Tools/>
-	</div>
 	<div id="editor-wrapper">
 		<Editor/>
+	</div>
+	<div id="tools-wrapper">
+		<Tools/>
 	</div>
 </main>
 
@@ -29,13 +29,13 @@
 
   #editor-wrapper {
     height: 100%;
-    width: 800px;
+    width: 900px;
+	margin-right: 20px;
   }
 
   #tools-wrapper {
     height: 100%;
     min-width: 400px;
     flex: 1;
-    margin-right: 20px;
   }
 </style>
