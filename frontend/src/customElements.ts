@@ -67,7 +67,6 @@ export const customElementTypeToComponent = (type: CustomElementType) => {
   }
 }
 
-// noinspection TypeScriptValidateTypes
 export const DropInsertCustomElement = Extension.create({
   addProseMirrorPlugins() {
     return [
@@ -125,21 +124,26 @@ export const createNodeView = (type: CustomElementType) => {
       mergeAttributes(HTMLAttributes)
     ],
 
-    addNodeView: () => ({
-      node,
-    }) => {
+    addNodeView: () => ({ node }) => {
       const dom = document.createElement("span");
       dom.style.display = "inline-flex";
       dom.style.verticalAlign = "bottom";
-      new Component({
+
+      const component = new Component({
         target: dom,
         props: {
           id: node.attrs.id,
           canDropInsert: false,
         }
       });
+
+      const destroy = () => {
+        component.$destroy();
+      }
+
       return {
         dom,
+        destroy,
       }
     },
   });

@@ -28,6 +28,7 @@
         }}
         on:mouseleave={() => popupOpen = false}
         on:wheel={() => popupOpen = false}
+        on:mousedown={() => popupOpen = false}
         bind:this={popupAnchor}
 >
     <svg
@@ -67,7 +68,10 @@
             style="
             left: {popupAnchorRect?.x}px;
             top: {popupAnchorRect?.y}px;
-            transform: translate(calc(-50% + {popupAnchorRect?.width / 2}px), -{popupRect?.height + 10}px);
+            transform: translate(
+                {-popupRect?.width / 2 + popupAnchorRect?.width / 2}px,
+                {-popupRect?.height + 10}px
+            );
         "
     >
         {#if actionScore.isMaxed}
@@ -92,6 +96,8 @@
     .wrapper {
         height: 100%;
         position: relative;
+        display: flex;
+        justify-content: center;
     }
 
     .popup {
