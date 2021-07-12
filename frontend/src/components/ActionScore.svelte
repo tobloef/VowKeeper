@@ -18,6 +18,11 @@
     popupAnchorRect = popupAnchor?.getBoundingClientRect();
     popupRect = popup?.getBoundingClientRect();
   }
+
+  $: originalPopupX = popupAnchorRect?.x + popupAnchorRect?.width / 2 - popupRect?.width / 2;
+  $: popupX = Math.max(10, originalPopupX);
+  $: popupY = popupAnchorRect?.y - popupRect?.height - 10;
+  $: triangleOffset = originalPopupX - popupX;
 </script>
 
 <div
@@ -66,13 +71,10 @@
             class:visible={popupOpen}
             bind:this={popup}
             style="
-            left: {popupAnchorRect?.x}px;
-            top: {popupAnchorRect?.y}px;
-            transform: translate(
-                {-popupRect?.width / 2 + popupAnchorRect?.width / 2}px,
-                {-popupRect?.height + 10}px
-            );
-        "
+                left: {popupX}px;
+                top: {popupY}px;
+                --triangleOffset: {triangleOffset}px;
+            "
     >
         {#if actionScore.isMaxed}
             <span class="maxed">(Max 10)</span>
@@ -119,7 +121,8 @@
     }
 
     .popup:after, .popup:before {
-        left: 50%;
+        /*noinspection CssUnresolvedCustomProperty*/
+        left: calc(50% + var(--triangleOffset));
         border: solid transparent;
         content: "";
         height: 0;
