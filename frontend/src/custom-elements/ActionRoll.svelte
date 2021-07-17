@@ -2,7 +2,7 @@
   import {CustomElementType, getCustomElementStore, draggableElement} from "../customElements";
   import D10 from "../components/D10.svelte";
   import ActionScore from "../components/ActionScore.svelte";
-  import type {ActionRoll} from "../tools/rolls";
+  import type {ActionRoll} from "../mechanics/rolls";
   import {onDestroy} from "svelte";
 
   type ActionRollProps = {

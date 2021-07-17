@@ -1,7 +1,7 @@
 <script lang="ts">
   import D6 from "./D6.svelte";
   import {darkGrey} from "../colors";
-  import type {ActionScore} from "../tools/rolls";
+  import type {ActionScore} from "../mechanics/rolls";
   import Portal from "svelte-portal/src/Portal.svelte";
 
   export let actionScore: ActionScore;

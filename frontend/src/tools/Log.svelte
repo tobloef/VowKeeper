@@ -1,8 +1,8 @@
 <script lang="ts">
   import {CustomElementType, customElementTypeToComponent, getCustomElementStore} from "../customElements";
   import {nanoid} from "nanoid";
-  import {rollActionRoll} from "./rolls";
-  import type {Stat} from "./rolls";
+  import {rollActionRoll} from "../mechanics/rolls";
+  import type {Stat} from "../mechanics/rolls";
 
   let log = [];
 
