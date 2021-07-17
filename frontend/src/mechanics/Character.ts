@@ -1,41 +1,29 @@
 import {minMaxValidator, Stat} from "./Stat";
 import {ChallengeRanks, ProgressTrack} from "./Progress";
 import type {Asset} from "./Asset";
+import type {Optional} from "../utils";
 
 export class Character {
   name = "";
 
   bonds = ProgressTrack.create({
-    name: "Bonds",
     rank: ChallengeRanks.Epic,
   })
 
   experience = Stat.create({
-    name: "Experience",
     validate: minMaxValidator(0, 50),
   });
 
   stats = {
-    edge: Stat.create({
-      name: "Edge",
-    }),
-    heart: Stat.create({
-      name: "Heart",
-    }),
-    iron: Stat.create({
-      name: "Iron",
-    }),
-    shadow: Stat.create({
-      name: "Shadow",
-    }),
-    wits: Stat.create({
-      name: "Wits",
-    }),
+    edge: Stat.create(),
+    heart: Stat.create(),
+    iron: Stat.create(),
+    shadow: Stat.create(),
+    wits: Stat.create(),
   };
 
   momentum = {
     value: Stat.create({
-      name: "Momentum",
       baseValue: 2,
       validate: (stat, char) => (
         minMaxValidator(
@@ -45,15 +33,12 @@ export class Character {
       )
     }),
     max: Stat.create({
-      name: "Maximum Momentum",
       baseValue: 10,
     }),
     min: Stat.create({
-      name: "Minimum Momentum",
       baseValue: -6,
     }),
     reset: Stat.create({
-      name: "Momentum Reset",
       baseValue: 2,
       validate: minMaxValidator(0),
     }),
@@ -61,17 +46,14 @@ export class Character {
 
   statuses = {
     health: Stat.create({
-      name: "Health",
       baseValue: 5,
       validate: minMaxValidator(0, 5)
     }),
     spirit: Stat.create({
-      name: "Spirit",
       baseValue: 5,
       validate: minMaxValidator(0, 5)
     }),
     supply: Stat.create({
-      name: "Supply",
       baseValue: 5,
       validate: minMaxValidator(0, 5)
     }),
@@ -94,48 +76,12 @@ export class Character {
     },
   };
 
-  assets = [];
+  assets: Asset[] = [];
 
-  static create(props?: {
-    name: string,
-    experience: Stat,
-    stats: {
-      edge: Stat,
-      heart: Stat,
-      iron: Stat,
-      shadow: Stat,
-      wits: Stat,
-    },
-    momentum: {
-      value: Stat,
-      min: Stat,
-      max: Stat,
-      reset: Stat,
-    },
-    statuses: {
-      health: Stat,
-      spirit: Stat,
-      supply: Stat,
-    },
-    debilities: {
-      conditions: {
-        wounded: boolean,
-        unprepared: boolean,
-        shaken: boolean,
-        encumbered: boolean,
-      },
-      banes: {
-        maimed: boolean,
-        corrupted: boolean,
-      },
-      burdens: {
-        cursed: boolean,
-        tormented: boolean,
-      },
-    },
-    assets: Asset[]
-  }): Character {
-    return Object.assign(new Character(), props ?? {})
+  vows: ProgressTrack[] = [];
+
+  static create(props: Optional<Character> = {}): Character {
+    return Object.assign(new Character(), props)
   }
 
   public clone(): Character {
@@ -176,7 +122,8 @@ export class Character {
           tormented: this.debilities.burdens.tormented,
         },
       },
-      assets: this.assets.map((a) => a.clone())
+      assets: this.assets.map((a) => a.clone()),
+      vows: this.vows.map((v) => v.clone()),
     });
   }
 }

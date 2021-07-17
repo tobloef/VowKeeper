@@ -27,24 +27,20 @@ export const ChallengeRanks = {
 }
 
 export class ProgressTrack {
-  name: string;
+  name: string = "";
   rank: ChallengeRank;
   ticks: number = 0;
 
   static create(props: {
-    name: string;
     rank: ChallengeRank;
+    name?: string;
     ticks?: number;
   }): ProgressTrack {
     return Object.assign(new ProgressTrack(), props);
   }
 
   public clone(): ProgressTrack {
-    return ProgressTrack.create({
-      name: this.name,
-      rank: this.rank,
-      ticks: this.ticks,
-    });
+    return ProgressTrack.create(this);
   }
 
   public toReadableProgress(): string {

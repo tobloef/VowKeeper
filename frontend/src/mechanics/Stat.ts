@@ -4,23 +4,20 @@ import type {Character} from "./Character";
 type StatValidator = (stat: Stat, character: Character) => string | undefined;
 
 export class Stat {
-  name: string = "";
   baseValue: number = 0;
   modifiers: Modifier[] = [];
   validate: StatValidator = () => undefined;
 
   static create(props: {
-    name: string,
     baseValue?: number,
     modifiers?: Modifier[],
     validate?: StatValidator,
-  }): Stat {
+  } = {}): Stat {
     return Object.assign(new Stat(), props);
   }
 
   public clone(): Stat {
     return Stat.create({
-      name: this.name,
       baseValue: this.baseValue,
       modifiers: this.modifiers.map((m) => m.clone()),
       validate: this.validate,

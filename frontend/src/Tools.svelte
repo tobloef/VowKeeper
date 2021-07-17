@@ -1,12 +1,12 @@
 <script>
-  import {Route, router, active} from 'tinro';
-  import Log from './tools/Log.svelte';
-  import Character from './tools/character/Character.svelte';
-  import Notes from './tools/Notes.svelte';
-  import Combat from './tools/Combat.svelte';
-  import Map from './tools/Map.svelte';
-  import Oracles from './tools/Oracles.svelte';
-  import Fa from 'svelte-fa'
+  import {Route, router, active} from "tinro";
+  import Log from "./tools/Log.svelte";
+  import CharacterTool from "./tools/CharacterTool.svelte";
+  import Notes from "./tools/Notes.svelte";
+  import Combat from "./tools/Combat.svelte";
+  import Map from "./tools/Map.svelte";
+  import Oracles from "./tools/Oracles.svelte";
+  import Fa from "svelte-fa"
   import {
     faList,
     faUser,
@@ -14,7 +14,8 @@
     faFistRaised,
     faMap,
     faDice,
-  } from '@fortawesome/free-solid-svg-icons'
+  } from "@fortawesome/free-solid-svg-icons";
+  import {characterStore} from "./stores";
 
   router.mode.hash();
 </script>
@@ -45,7 +46,7 @@
             <Log/>
         </Route>
         <Route path="/character">
-            <Character/>
+            <CharacterTool characterStore={characterStore} />
         </Route>
         <Route path="/notes">
             <Notes/>
