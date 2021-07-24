@@ -3,232 +3,227 @@
   import {Character} from "../mechanics/Character";
   import ProgressTrack from "../components/ProgressTrackComponent.svelte";
   import {Writable} from "svelte/store";
+  import StatInput from "../components/StatInput.svelte";
+  import {capitalizeFirstLetter} from "../utils";
+  import Divider from "../components/Divider.svelte";
+  import {nanoid} from "nanoid";
+  import {rollActionRoll} from "../mechanics/rolls";
+  import {CustomElementType, getCustomElementStore} from "../customElements";
+  import {logStore} from "../stores";
 
   export let characterStore: Writable<Character>;
+
+  const makeActionRoll = (stat) => {
+    const id = nanoid();
+    const actionRoll = rollActionRoll(stat, 1);
+    getCustomElementStore(id, {
+      roll: actionRoll,
+    });
+    logStore.update((prevLog) => [
+      ...prevLog,
+      {
+        id: id,
+        type: CustomElementType.ActionRoll,
+      }
+    ]);
+  };
 </script>
 
 <div class="character">
-    <div class="header">
-        <div class="name">
-            <label>Character</label>
-            <input bind:value={$characterStore.name}>
-        </div>
-
-        <div class="experience">
-            <label>Experience</label>
-            <input type="number" value={$characterStore.experience.getValue()}>
-        </div>
+  <div class="header">
+    <div class="name">
+      <label>Character</label>
+      <input bind:value={$characterStore.name}>
     </div>
 
-    <div class="stats">
-        <div class="edge">
-            <label>Edge</label>
-            <input type="number" value={$characterStore.stats.edge.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.stats.edge.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.stats.edge.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-        <div>
-            <label>Heart</label>
-            <input type="number" value={$characterStore.stats.heart.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.stats.heart.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.stats.heart.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-        <div>
-            <label>Iron</label>
-            <input type="number" value={$characterStore.stats.iron.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.stats.iron.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.stats.iron.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-        <div>
-            <label>Shadow</label>
-            <input type="number" value={$characterStore.stats.shadow.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.stats.shadow.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.stats.shadow.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-        <div>
-            <label>Wits</label>
-            <input type="number" value={$characterStore.stats.wits.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.stats.wits.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.stats.wits.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
+    <div class="experience">
+      <label>Experience</label>
+      <input type="number" value={$characterStore.experience.getValue()}>
     </div>
+  </div>
 
+  <Divider text="Stats"/>
+
+  <div class="stats stats-wrapper">
+    {#each ["edge", "heart", "iron", "shadow", "wits"] as stat}
+      <StatInput
+        stat={$characterStore.stats[stat]}
+        showButtons={false}
+        showSign={true}
+        canEdit={true}
+        clickable={true}
+        onClick={makeActionRoll}
+      />
+    {/each}
+  </div>
+
+  <Divider text="Status"/>
+
+  <div class="statuses stats-wrapper">
+    {#each ["health", "spirit", "supply"] as status}
+      <StatInput
+        stat={$characterStore.statuses[status]}
+        showButtons={true}
+        showSign={true}
+        canEdit={true}
+        clickable={true}
+      />
+    {/each}
+  </div>
+
+  <Divider text="Momentum"/>
+
+  <div class="momentum stats-wrapper">
+    <StatInput
+      stat={$characterStore.momentum.value}
+      showButtons={true}
+      showSign={true}
+      canEdit={true}
+      clickable={true}
+      label="Current"
+    />
+    <Divider vertical={true}/>
+    <StatInput
+      stat={$characterStore.momentum.max}
+      showButtons={false}
+      showSign={true}
+      canEdit={true}
+      label="Max"
+    />
+    <StatInput
+      stat={$characterStore.momentum.reset}
+      showButtons={false}
+      showSign={true}
+      canEdit={true}
+      label="Reset"
+    />
+  </div>
+
+  <Divider text="Bonds"/>
+
+  <div>
+    <ProgressTrack progressTrack={$characterStore.bonds}/>
+  </div>
+
+  <Divider text="Vows"/>
+
+  <div>
+    {#each $characterStore.vows as track}
+      <div>
+        <input bind:value={track.name}>
+        <select bind:value={track.rank}>
+          {#each Object.values(ChallengeRanks) as rank}
+            <option value={rank}>{rank.name}</option>
+          {/each}
+        </select>
+        <ProgressTrack progressTrack={track}/>
+      </div>
+    {/each}
+  </div>
+
+  <Divider text="Debilities"/>
+
+  <div>
     <div>
-        <label>Bonds</label>
-        <ProgressTrack progressTrack={$characterStore.bonds} />
+      <label>Conditions</label>
+      <div>
+        <input type="checkbox" bind:checked={$characterStore.debilities.conditions.wounded}>
+        <label>Wounded</label>
+      </div>
+      <div>
+        <input type="checkbox" bind:checked={$characterStore.debilities.conditions.unprepared}>
+        <label>Unprepared</label>
+      </div>
+      <div>
+        <input type="checkbox" bind:checked={$characterStore.debilities.conditions.shaken}>
+        <label>Shaken</label>
+      </div>
+      <div>
+        <input type="checkbox" bind:checked={$characterStore.debilities.conditions.encumbered}>
+        <label>Encumbered</label>
+      </div>
     </div>
-
     <div>
-        <div>
-            <label>Momentum</label>
-            <input type="number" value={$characterStore.momentum.value.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.momentum.value.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.momentum.value.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-        <div>
-            <label>Maximum Momentum</label>
-            <input type="number" value={$characterStore.momentum.max.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.momentum.max.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.momentum.max.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-        <div>
-            <label>Momentum Reset</label>
-            <input type="number" value={$characterStore.momentum.reset.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.momentum.reset.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.momentum.reset.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
+      <label>Banes</label>
+      <div>
+        <input type="checkbox" bind:checked={$characterStore.debilities.banes.maimed}>
+        <label>Maimed</label>
+      </div>
+      <div>
+        <input type="checkbox" bind:checked={$characterStore.debilities.banes.corrupted}>
+        <label>Corrupted</label>
+      </div>
     </div>
-
     <div>
-        <div>
-            <label>Health</label>
-            <input type="number" value={$characterStore.statuses.health.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.statuses.health.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.statuses.health.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-        <div>
-            <label>Spirit</label>
-            <input type="number" value={$characterStore.statuses.spirit.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.statuses.spirit.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.statuses.spirit.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-        <div>
-            <label>Supply</label>
-            <input type="number" value={$characterStore.statuses.supply.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.statuses.supply.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.statuses.supply.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
+      <label>Burdens</label>
+      <div>
+        <input type="checkbox" bind:checked={$characterStore.debilities.burdens.cursed}>
+        <label>Cursed</label>
+      </div>
+      <div>
+        <input type="checkbox" bind:checked={$characterStore.debilities.burdens.tormented}>
+        <label>Tormented</label>
+      </div>
     </div>
-
-    <div>
-        {#each $characterStore.vows as track}
-            <div>
-                <input bind:value={track.name}>
-                <select bind:value={track.rank}>
-                    {#each Object.values(ChallengeRanks) as rank}
-                        <option value={rank}>{rank.name}</option>
-                    {/each}
-                </select>
-                <ProgressTrack progressTrack={track} />
-            </div>
-        {/each}
-    </div>
-
-    <div>
-        <label>Debilities</label>
-        <div>
-            <label>Conditions</label>
-            <div>
-                <input type="checkbox" bind:checked={$characterStore.debilities.conditions.wounded}>
-                <label>Wounded</label>
-            </div>
-            <div>
-                <input type="checkbox" bind:checked={$characterStore.debilities.conditions.unprepared}>
-                <label>Unprepared</label>
-            </div>
-            <div>
-                <input type="checkbox" bind:checked={$characterStore.debilities.conditions.shaken}>
-                <label>Shaken</label>
-            </div>
-            <div>
-                <input type="checkbox" bind:checked={$characterStore.debilities.conditions.encumbered}>
-                <label>Encumbered</label>
-            </div>
-        </div>
-        <div>
-            <label>Banes</label>
-            <div>
-                <input type="checkbox" bind:checked={$characterStore.debilities.banes.maimed}>
-                <label>Maimed</label>
-            </div>
-            <div>
-                <input type="checkbox" bind:checked={$characterStore.debilities.banes.corrupted}>
-                <label>Corrupted</label>
-            </div>
-        </div>
-        <div>
-            <label>Burdens</label>
-            <div>
-                <input type="checkbox" bind:checked={$characterStore.debilities.burdens.cursed}>
-                <label>Cursed</label>
-            </div>
-            <div>
-                <input type="checkbox" bind:checked={$characterStore.debilities.burdens.tormented}>
-                <label>Tormented</label>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 
 <style>
-    :global(.character div) {
-        border: 1px solid black;
-        padding: 5px;
-    }
+  .character {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  :global(.character > *) {
+    width: 100%;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .experience {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .name {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+  }
+
+  .stats {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 1em;
+  }
+
+  :global(.character .separator:not(.vertical)) {
+    margin: 20px 0px 10px 0px;
+  }
+
+  .statuses {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 1em;
+  }
+
+  .momentum {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    font-size: 1em;
+    align-items: center;
+  }
+
+  :global(.momentum .separator) {
+    align-self: stretch;
+  }
 </style>

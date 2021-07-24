@@ -11,51 +11,82 @@ export class Character {
   })
 
   experience = Stat.create({
-    validate: minMaxValidator(0, 50),
+    name: "Experience",
+    validator: minMaxValidator(0, 50),
+    character: this,
   });
 
   stats = {
-    edge: Stat.create(),
-    heart: Stat.create(),
-    iron: Stat.create(),
-    shadow: Stat.create(),
-    wits: Stat.create(),
+    edge: Stat.create({
+      name: "Edge",
+      character: this,
+    }),
+    heart: Stat.create({
+      name: "Heart",
+      character: this,
+    }),
+    iron: Stat.create({
+      name: "Iron",
+      character: this,
+    }),
+    shadow: Stat.create({
+      name: "Shadow",
+      character: this,
+    }),
+    wits: Stat.create({
+      name: "Wits",
+      character: this,
+    }),
   };
 
   momentum = {
     value: Stat.create({
+      name: "Momentum",
       baseValue: 2,
-      validate: (stat, char) => (
+      validator: (stat) => (
         minMaxValidator(
-          char.momentum.min.getValue(),
-          char.momentum.max.getValue()
-        )(stat, char)
-      )
+          stat.character.momentum.min.getValue(),
+          stat.character.momentum.max.getValue()
+        )(stat)
+      ),
+      character: this,
     }),
     max: Stat.create({
+      name: "Max Momentum",
       baseValue: 10,
+      character: this,
     }),
     min: Stat.create({
+      name: "Min Momentum",
       baseValue: -6,
+      character: this,
     }),
     reset: Stat.create({
+      name: "Momentum Reset",
       baseValue: 2,
-      validate: minMaxValidator(0),
+      validator: minMaxValidator(0),
+      character: this,
     }),
   };
 
   statuses = {
     health: Stat.create({
+      name: "Health",
       baseValue: 5,
-      validate: minMaxValidator(0, 5)
+      validator: minMaxValidator(0, 5),
+      character: this,
     }),
     spirit: Stat.create({
+      name: "Spirit",
       baseValue: 5,
-      validate: minMaxValidator(0, 5)
+      validator: minMaxValidator(0, 5),
+      character: this,
     }),
     supply: Stat.create({
+      name: "Supply",
       baseValue: 5,
-      validate: minMaxValidator(0, 5)
+      validator: minMaxValidator(0, 5),
+      character: this,
     }),
   };
 

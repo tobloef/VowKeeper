@@ -2,34 +2,18 @@
   import D6 from "./D6.svelte";
   import {darkGrey} from "../colors";
   import type {ActionScore} from "../mechanics/rolls";
-  import Portal from "svelte-portal/src/Portal.svelte";
+  import Popup from "./Popup.svelte";
 
   export let actionScore: ActionScore;
 
-  let popupAnchor;
-  let popup;
-
-  let popupAnchorRect;
-  let popupRect;
-
   let popupOpen: boolean = false;
-
-  const updatePopupPosition = () => {
-    popupAnchorRect = popupAnchor?.getBoundingClientRect();
-    popupRect = popup?.getBoundingClientRect();
-  }
-
-  $: originalPopupX = popupAnchorRect?.x + popupAnchorRect?.width / 2 - popupRect?.width / 2;
-  $: popupX = Math.max(10, originalPopupX);
-  $: popupY = popupAnchorRect?.y - popupRect?.height - 10;
-  $: triangleOffset = originalPopupX - popupX;
+  let popupAnchor;
 </script>
 
 <div
         class="wrapper"
-        on:mouseenter={() => {
+        on:mousemove={() => {
           popupOpen = true;
-          updatePopupPosition();
         }}
         on:mouseleave={() => popupOpen = false}
         on:wheel={() => popupOpen = false}
@@ -65,17 +49,11 @@
     </svg>
 </div>
 
-<Portal>
-    <div
-            class="popup"
-            class:visible={popupOpen}
-            bind:this={popup}
-            style="
-                left: {popupX}px;
-                top: {popupY}px;
-                --triangleOffset: {triangleOffset}px;
-            "
-    >
+<Popup
+    anchor={popupAnchor}
+    isOpen={popupOpen}
+>
+    <div class="explanation">
         {#if actionScore.isMaxed}
             <span class="maxed">(Max 10)</span>
         {/if}
@@ -85,14 +63,14 @@
             </div>
             <span class="plus">+</span>
             <div class="stat">
-                <span class="value">{actionScore.stat.value}</span>
-                <span class="type">{actionScore.stat.type}</span>
+                <span class="value">{actionScore.stat.getValue()}</span>
+                <span class="type">{actionScore.stat.name}</span>
             </div>
             <span class="plus">+</span>
             <span class="adds">{actionScore.adds}</span>
         </div>
     </div>
-</Portal>
+</Popup>
 
 <style>
     .wrapper {
@@ -102,56 +80,17 @@
         justify-content: center;
     }
 
-    .popup {
-        font-size: 0.9em;
-        position: absolute;
+    .explanation {
+        padding: 0.1em 0.8em 0.5em 0.5em;
         display: flex;
         flex-direction: column;
-        background: white;
-        border: 2px solid #3e3e3f;
         align-items: center;
-        padding: 0.6em 1.3em 0.8em 1.3em;
-        box-sizing: border-box;
-        border-radius: 5px;
-        box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.25);
-    }
-
-    .popup:not(.visible) {
-        visibility: hidden;
-    }
-
-    .popup:after, .popup:before {
-        /*noinspection CssUnresolvedCustomProperty*/
-        left: calc(50% + var(--triangleOffset));
-        border: solid transparent;
-        content: "";
-        height: 0;
-        width: 0;
-        position: absolute;
-        pointer-events: none;
-    }
-
-    .popup:after {
-        border-color: transparent;
-        border-top-color: white;
-        border-width: 6px;
-        margin-left: -6px;
-        top: calc(100% - 1px)
-    }
-
-    .popup:before {
-        border-color: transparent;
-        border-top-color: #3e3e3f;
-        border-width: 8px;
-        margin-left: -8px;
-        top: 100%;
     }
 
     .calculation {
         display: flex;
         flex-direction: row;
         align-items: center;
-        margin-top: 0.25em;
     }
 
     .d6Wrapper {
@@ -162,7 +101,7 @@
     .maxed {
         font-style: italic;
         color: darkgrey;
-        margin-bottom: 0.2em;
+        margin-bottom: 0.4em;
     }
 
     .plus {
@@ -184,7 +123,11 @@
     }
 
     .stat > .value {
-        font-size: 1.8em;
+        font-size: 1.5em;
         line-height: 1em;
+    }
+
+    .stat > .type {
+        margin-top: 5px
     }
 </style>

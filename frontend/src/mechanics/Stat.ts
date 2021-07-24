@@ -1,17 +1,21 @@
 import type {Modifier} from "./Modifier";
 import type {Character} from "./Character";
 
-type StatValidator = (stat: Stat, character: Character) => string | undefined;
+type StatValidator = (stat: Stat) => string | undefined;
 
 export class Stat {
   baseValue: number = 0;
   modifiers: Modifier[] = [];
-  validate: StatValidator = () => undefined;
+  validator: StatValidator = () => undefined;
+  name: string = "";
+  character: Character = undefined;
 
   static create(props: {
     baseValue?: number,
     modifiers?: Modifier[],
-    validate?: StatValidator,
+    validator?: StatValidator,
+    name?: string,
+    character?: Character,
   } = {}): Stat {
     return Object.assign(new Stat(), props);
   }
@@ -20,12 +24,28 @@ export class Stat {
     return Stat.create({
       baseValue: this.baseValue,
       modifiers: this.modifiers.map((m) => m.clone()),
-      validate: this.validate,
+      validator: this.validator,
+      name: this.name,
+      character: this.character,
     });
   }
 
   public getValue(): number {
     return this.modifiers.reduce((acc, m) => m.apply(acc), this.baseValue);
+  }
+
+  public validate(baseValueOverride?: number): string | undefined {
+    if (this.validator === undefined) {
+      return undefined;
+    }
+
+    if (baseValueOverride !== undefined) {
+      const clonedStat = this.clone();
+      clonedStat.baseValue = baseValueOverride;
+      return this.validator(clonedStat);
+    }
+
+    return this.validator(this);
   }
 }
 

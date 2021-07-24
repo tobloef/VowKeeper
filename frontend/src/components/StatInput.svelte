@@ -1,142 +1,198 @@
 <script lang="ts">
-  import {noop} from "../utils";
+  import {Stat} from "../mechanics/Stat";
 
-    export let name: string;
-    export let value: number;
-    export let onChange: (value: number) => void = noop;
-    export let onNameClick: () => void = noop;
-    export let showButtons: boolean = false;
-    export let canIncrease: boolean = true;
-    export let canDecrease: boolean = true;
-    export let canEdit: boolean = true;
-    export let showSign: boolean = true;
+  const VALID_INPUT_REGEX = /^[+-]?[0-9]*$/;
 
-    const formatValue = (x, showSign) => {
-      if (!showSign) {
-        return String(x);
-      }
-      if (x > 0) {
-        return `+${x}`;
-      }
+  export let stat: Stat;
+  export let showButtons: boolean = false;
+  export let canEdit: boolean = true;
+  export let showSign: boolean = true;
+  export let vertical: boolean = false;
+  export let label: string = undefined;
+  export let onClick: (stat: Stat) => void;
+
+  let prevInputValue;
+  let prevSelectionStart;
+  let prevSelectionEnd;
+  let inputValue;
+
+  const formatValue = (x, showSign) => {
+    if (!showSign) {
       return String(x);
     }
-
-    let prevInputValue;
-    let prevSelectionStart;
-    let prevSelectionEnd;
-    let inputValue;
-
-    $: prevInputValue = formatValue(value, showSign);
-    $: inputValue = formatValue(value, showSign);
-
-    const onInput = (e) => {
-      inputValue = e.target.value;
-      if (!/^[+-]?[0-9]*$/.test(inputValue)) {
-        inputValue = prevInputValue;
-        requestAnimationFrame(() => {
-          e.target.selectionStart = prevSelectionStart;
-          e.target.selectionEnd = prevSelectionEnd;
-        })
-      } else {
-        prevInputValue = inputValue;
-        prevSelectionStart = e.target.selectionStart;
-        prevSelectionEnd = e.target.selectionEnd;
-      }
+    if (x > 0) {
+      return `+${x}`;
     }
+    return String(x);
+  }
+
+  const onInput = (e) => {
+    inputValue = e.target.value;
+
+    if (!VALID_INPUT_REGEX.test(inputValue)) {
+      inputValue = prevInputValue;
+      requestAnimationFrame(() => {
+        e.target.selectionStart = prevSelectionStart;
+        e.target.selectionEnd = prevSelectionEnd;
+      })
+    } else {
+      prevInputValue = inputValue;
+      prevSelectionStart = e.target.selectionStart;
+      prevSelectionEnd = e.target.selectionEnd;
+    }
+  }
+
+  $: prevInputValue = formatValue(stat.getValue(), showSign);
+  $: inputValue = formatValue(stat.getValue(), showSign);
 </script>
 
-<div class="statInput">
-    {#if showButtons}
-        <button
-                class="decrease"
-                disabled={!canDecrease}
-                on:click={() => onChange(value - 1)}
-        >-</button>
-    {/if}
-    <div class="stat">
-        <input
-                value={inputValue}
-                on:input={onInput}
-                on:keydown={(e) => {
-                  if (e.key === "Enter") {
-                    e.target.blur();
-                    e.preventDefault();
-                  }
-                }}
-                disabled={!canEdit}
-                on:blur={() => {
-                  const newValue = Number(inputValue);
-                  if (Number.isNaN(newValue)) {
-                    onChange(0);
-                  } else {
-                    onChange(newValue);
-                  }
-                }}
-        >
-        <label
-                class="name"
-                on:click={onNameClick}
-        >{name}</label>
-    </div>
-    {#if showButtons}
-        <button
-                class="increase"
-                disabled={!canIncrease}
-                on:click={() => onChange(value + 1)}
-        >+</button>
-    {/if}
+<div
+  class="statInput"
+  class:vertical
+  class:error={stat.validate() !== undefined}
+>
+  {#if showButtons}
+    <button
+      class="decrease"
+      disabled={stat.validate(stat.baseValue - 1) !== undefined}
+      on:click={() => stat.baseValue -= 1}
+    >-
+    </button>
+  {/if}
+  <div class="stat">
+    <input
+      value={inputValue}
+      on:input={onInput}
+      on:keydown={(e) => {
+        switch (e.key) {
+          case "Enter":
+            e.target.blur();
+            e.preventDefault();
+            return;
+          case "ArrowUp":
+            stat.baseValue += 1;
+            e.preventDefault();
+            return;
+          case "ArrowDown":
+            stat.baseValue -= 1;
+            e.preventDefault();
+            return;
+        }
+      }}
+      disabled={!canEdit}
+      on:blur={() => {
+        const newValue = Number(inputValue);
+        if (Number.isNaN(newValue)) {
+          stat.baseValue = 0;
+        } else {
+          stat.baseValue = newValue;
+        }
+      }}
+    >
+    <label
+      class="name"
+      class:clickable={onClick !== undefined}
+      on:click={() => onClick(stat)}
+    >{label || stat.name}</label>
+  </div>
+  {#if showButtons}
+    <button
+      class="increase"
+      disabled={stat.validate(stat.baseValue + 1) !== undefined}
+      on:click={() => stat.baseValue += 1}
+    >+
+    </button>
+  {/if}
 </div>
 
 <style>
-    .statInput {
-        display: flex;
-        flex-direction: row;
-        font-size: 1em;
-        user-select: none;
-    }
+  .statInput {
+    display: flex;
+    flex-direction: row;
+    font-size: 1em;
+    user-select: none;
+  }
 
-    .stat {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border: 1px solid #3e3e3f;
-        border-radius: 3px;
-        padding: 5px;
-        font-weight: bold;
-    }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #3e3e3f;
+    border-radius: 3px;
+    padding: 8px 5px;
+    font-weight: bold;
+    width: 4em;
+  }
 
-    .stat .name:hover {
-        cursor: pointer;
-        color: #ff8c00;
-        /* text-shadow: 0 0 10px #ff8c00; */
-    }
+  .stat .name {
+    font-size: 1em;
+    margin-top: 2px;
+  }
 
-    .stat input {
-        width: 2em;
-        font-size: 1.5em;
-        text-align: center;
-        border: none;
-        background: transparent;
-    }
+  .stat .name.clickable:hover {
+    cursor: pointer;
+    color: darkorange;
+  }
 
-    .stat input[disabled] {
-        color: unset;
-        pointer-events: none;
-    }
+  .stat .name:not(.clickable):hover {
+    cursor: not-allowed;
+  }
 
-    button {
-        font-size: 1.25em;
-        width: 0.75em;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+  .stat input {
+    width: 2em;
+    font-size: 1.4em;
+    text-align: center;
+    background: transparent;
+    border: 1px solid transparent;
+    box-sizing: border-box;
+  }
 
-    .increase {
-        margin-left: 0.25em;
-    }
+  .stat input:not([disabled]):hover {
+    border: 1px solid black;
+    border-radius: 2px;
+  }
 
-    .decrease {
-        margin-right: 0.25em;
-    }
+  .stat input[disabled] {
+    color: unset;
+    pointer-events: none;
+  }
+
+  .statInput.error input {
+    color: red;
+  }
+
+  button {
+    font-size: 1.25em;
+    width: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 0.75em;
+  }
+
+  .increase {
+    margin: 0px 0px 0px 0.25em;
+  }
+
+  .decrease {
+    margin: 0px 0.25em 0px 0px;
+  }
+
+  /* Vertical */
+
+  .statInput.vertical button {
+    width: 100%;
+  }
+
+  .statInput.vertical {
+    flex-direction: column-reverse;
+  }
+
+  .statInput.vertical .increase {
+    margin: 0px 0px 0.25em 0px;
+  }
+
+  .statInput.vertical .decrease {
+    margin: 0.25em 0px 0px 0px;
+  }
 </style>

@@ -23,7 +23,6 @@
     flex-direction: row;
     align-items: start;
     box-sizing: border-box;
-    font-family: "Merriweather", serif;
     padding: 20px;
   }
 
@@ -35,7 +34,7 @@
 
   #tools-wrapper {
     height: 100%;
-    min-width: 400px;
+    min-width: 450px;
     flex: 1;
   }
 </style>
