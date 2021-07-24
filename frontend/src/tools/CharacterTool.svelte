@@ -7,25 +7,80 @@
   export let characterStore: Writable<Character>;
 </script>
 
-<button on:click={() => console.log($characterStore)}>Log Character Sheet</button>
-
 <div class="character">
-    <div>
-        <label>Character</label>
-        <input bind:value={$characterStore.name}>
+    <div class="header">
+        <div class="name">
+            <label>Character</label>
+            <input bind:value={$characterStore.name}>
+        </div>
+
+        <div class="experience">
+            <label>Experience</label>
+            <input type="number" value={$characterStore.experience.getValue()}>
+        </div>
     </div>
 
-    <div>
-        <label>Experience</label>
-        <input type="number" value={$characterStore.experience.getValue()}>
-        <button on:click={characterStore.update((character) => {
-            character.experience.baseValue += 1;
-            return character;
-        })}>+</button>
-        <button on:click={characterStore.update((character) => {
-            character.experience.baseValue -= 1;
-            return character;
-        })}>-</button>
+    <div class="stats">
+        <div class="edge">
+            <label>Edge</label>
+            <input type="number" value={$characterStore.stats.edge.getValue()}>
+            <button on:click={characterStore.update((character) => {
+                character.stats.edge.baseValue += 1;
+                return character;
+            })}>+</button>
+            <button on:click={characterStore.update((character) => {
+                character.stats.edge.baseValue -= 1;
+                return character;
+            })}>-</button>
+        </div>
+        <div>
+            <label>Heart</label>
+            <input type="number" value={$characterStore.stats.heart.getValue()}>
+            <button on:click={characterStore.update((character) => {
+                character.stats.heart.baseValue += 1;
+                return character;
+            })}>+</button>
+            <button on:click={characterStore.update((character) => {
+                character.stats.heart.baseValue -= 1;
+                return character;
+            })}>-</button>
+        </div>
+        <div>
+            <label>Iron</label>
+            <input type="number" value={$characterStore.stats.iron.getValue()}>
+            <button on:click={characterStore.update((character) => {
+                character.stats.iron.baseValue += 1;
+                return character;
+            })}>+</button>
+            <button on:click={characterStore.update((character) => {
+                character.stats.iron.baseValue -= 1;
+                return character;
+            })}>-</button>
+        </div>
+        <div>
+            <label>Shadow</label>
+            <input type="number" value={$characterStore.stats.shadow.getValue()}>
+            <button on:click={characterStore.update((character) => {
+                character.stats.shadow.baseValue += 1;
+                return character;
+            })}>+</button>
+            <button on:click={characterStore.update((character) => {
+                character.stats.shadow.baseValue -= 1;
+                return character;
+            })}>-</button>
+        </div>
+        <div>
+            <label>Wits</label>
+            <input type="number" value={$characterStore.stats.wits.getValue()}>
+            <button on:click={characterStore.update((character) => {
+                character.stats.wits.baseValue += 1;
+                return character;
+            })}>+</button>
+            <button on:click={characterStore.update((character) => {
+                character.stats.wits.baseValue -= 1;
+                return character;
+            })}>-</button>
+        </div>
     </div>
 
     <div>
@@ -106,69 +161,6 @@
             })}>+</button>
             <button on:click={characterStore.update((character) => {
                 character.statuses.supply.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-    </div>
-
-    <div>
-        <div>
-            <label>Edge</label>
-            <input type="number" value={$characterStore.stats.edge.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.stats.edge.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.stats.edge.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-        <div>
-            <label>Heart</label>
-            <input type="number" value={$characterStore.stats.heart.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.stats.heart.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.stats.heart.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-        <div>
-            <label>Iron</label>
-            <input type="number" value={$characterStore.stats.iron.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.stats.iron.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.stats.iron.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-        <div>
-            <label>Shadow</label>
-            <input type="number" value={$characterStore.stats.shadow.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.stats.shadow.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.stats.shadow.baseValue -= 1;
-                return character;
-            })}>-</button>
-        </div>
-        <div>
-            <label>Wits</label>
-            <input type="number" value={$characterStore.stats.wits.getValue()}>
-            <button on:click={characterStore.update((character) => {
-                character.stats.wits.baseValue += 1;
-                return character;
-            })}>+</button>
-            <button on:click={characterStore.update((character) => {
-                character.stats.wits.baseValue -= 1;
                 return character;
             })}>-</button>
         </div>
