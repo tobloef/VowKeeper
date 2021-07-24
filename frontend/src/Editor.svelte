@@ -46,65 +46,65 @@
   };
 </script>
 <div id="editor">
-    <div id="menu">
-        {#if editor !== undefined}
-            <button
-                    on:click={menu.h1}
-                    class:active={editor.isActive('heading', { level: 1 })}
-            >
-                H1
-            </button>
-            <button
-                    on:click={menu.h2}
-                    class:active={editor.isActive('heading', { level: 2 })}
-            >
-                H2
-            </button>
-            <button
-                    on:click={menu.paragraph}
-                    class:active={editor.isActive('paragraph')}
-            >
-                P
-            </button>
-        {/if}
-    </div>
+  <div id="menu">
+    {#if editor !== undefined}
+      <button
+        on:click={menu.h1}
+        class:active={editor.isActive('heading', { level: 1 })}
+      >
+        H1
+      </button>
+      <button
+        on:click={menu.h2}
+        class:active={editor.isActive('heading', { level: 2 })}
+      >
+        H2
+      </button>
+      <button
+        on:click={menu.paragraph}
+        class:active={editor.isActive('paragraph')}
+      >
+        P
+      </button>
+    {/if}
+  </div>
 
-    <div
-            id="document"
-            bind:this={documentElement}
-    ></div>
+  <div
+    id="document"
+    bind:this={documentElement}
+  ></div>
 </div>
 
 <style>
-    #editor {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
+  #editor {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 
-    #menu {
-        background: white;
-        box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-        padding: 10px 20px;
-    }
+  #menu {
+    background: white;
+    box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    padding: 10px 20px;
+  }
 
-    #menu button.active {
-        background: black;
-        color: white;
-    }
+  #menu button.active {
+    background: black;
+    color: white;
+  }
 
-    #document {
-        flex: 1;
-        overflow-y: auto;
-        box-sizing: border-box;
-        background: white;
-        box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-        padding: 10px 20px;
-    }
+  #document {
+    flex: 1;
+    overflow-y: auto;
+    box-sizing: border-box;
+    background: white;
+    box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    padding: 10px 20px;
+  }
 
-    :global(#document .dice) {
-        width: 2.5em;
-        align-items: flex-end;
-        display: flex;
-    }
+  :global(#document .dice) {
+    width: 2.5em;
+    align-items: flex-end;
+    display: flex;
+  }
 </style>

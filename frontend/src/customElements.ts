@@ -21,7 +21,7 @@ const draggedCustomElementStore = writable<undefined | {
   type: CustomElementType,
 }>(undefined)
 
-export const draggableElement = <T>(node, { canDropInsert, id, type }) => {
+export const draggableElement = <T>(node, {canDropInsert, id, type}) => {
   if (!canDropInsert) {
     return {};
   }
@@ -124,7 +124,7 @@ export const createNodeView = (type: CustomElementType) => {
       mergeAttributes(HTMLAttributes)
     ],
 
-    addNodeView: () => ({ node }) => {
+    addNodeView: () => ({node}) => {
       const dom = document.createElement("span");
       dom.style.display = "inline-flex";
       dom.style.verticalAlign = "bottom";

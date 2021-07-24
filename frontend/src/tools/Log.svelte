@@ -4,28 +4,28 @@
 </script>
 
 <div>
-    <h1>Log</h1>
-    <div class="list">
-        {#each $logStore as {id, type}}
-            <svelte:component
-                    this={customElementTypeToComponent(type)}
-                    {id}
-                    canDropInsert={true}
-            />
-        {/each}
-    </div>
+  <h1>Log</h1>
+  <div class="list">
+    {#each $logStore as {id, type}}
+      <svelte:component
+        this={customElementTypeToComponent(type)}
+        {id}
+        canDropInsert={true}
+      />
+    {/each}
+  </div>
 </div>
 
 <style>
-    .list {
-        display: flex;
-        flex-direction: column;
-        font-size: 1.25em;
+  .list {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.25em;
 
-        margin-bottom: 20px;
-    }
+    margin-bottom: 20px;
+  }
 
-    :global(.list > :not(:last-child)) {
-        margin-bottom: 10px;
-    }
+  :global(.list > :not(:last-child)) {
+    margin-bottom: 10px;
+  }
 </style>

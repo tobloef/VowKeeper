@@ -21,91 +21,91 @@
 </script>
 
 <div id="tools">
-    <nav>
-        <a href="/#/log" use:active>
-            <span><Fa icon={faList}/>Log</span>
-        </a>
-        <a href="/#/character" use:active>
-            <span><Fa icon={faUser}/>Character</span>
-        </a>
-        <a href="/#/notes" use:active>
-            <span><Fa icon={faStickyNote}/>Notes</span>
-        </a>
-        <a href="/#/combat" use:active>
-            <span><Fa icon={faFistRaised}/>Combat</span>
-        </a>
-        <a href="/#/map" use:active>
-            <span><Fa icon={faMap}/>Map</span>
-        </a>
-        <a href="/#/oracles" use:active>
-            <span><Fa icon={faDice}/>Oracles</span>
-        </a>
-    </nav>
-    <section>
-        <Route path="/log">
-            <Log/>
-        </Route>
-        <Route path="/character">
-            <CharacterTool characterStore={characterStore} />
-        </Route>
-        <Route path="/notes">
-            <Notes/>
-        </Route>
-        <Route path="/combat">
-            <Combat/>
-        </Route>
-        <Route path="/map">
-            <Map/>
-        </Route>
-        <Route path="/oracles">
-            <Oracles/>
-        </Route>
-    </section>
+  <nav>
+    <a href="/#/log" use:active>
+      <span><Fa icon={faList}/>Log</span>
+    </a>
+    <a href="/#/character" use:active>
+      <span><Fa icon={faUser}/>Character</span>
+    </a>
+    <a href="/#/notes" use:active>
+      <span><Fa icon={faStickyNote}/>Notes</span>
+    </a>
+    <a href="/#/combat" use:active>
+      <span><Fa icon={faFistRaised}/>Combat</span>
+    </a>
+    <a href="/#/map" use:active>
+      <span><Fa icon={faMap}/>Map</span>
+    </a>
+    <a href="/#/oracles" use:active>
+      <span><Fa icon={faDice}/>Oracles</span>
+    </a>
+  </nav>
+  <section>
+    <Route path="/log">
+      <Log/>
+    </Route>
+    <Route path="/character">
+      <CharacterTool characterStore={characterStore}/>
+    </Route>
+    <Route path="/notes">
+      <Notes/>
+    </Route>
+    <Route path="/combat">
+      <Combat/>
+    </Route>
+    <Route path="/map">
+      <Map/>
+    </Route>
+    <Route path="/oracles">
+      <Oracles/>
+    </Route>
+  </section>
 </div>
 
 <style>
-    #tools {
-        height: 100%;
-        box-sizing: border-box;
-        background: white;
-        box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-        display: flex;
-        flex-direction: column;
-    }
+  #tools {
+    height: 100%;
+    box-sizing: border-box;
+    background: white;
+    box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    display: flex;
+    flex-direction: column;
+  }
 
-    nav {
-        border-bottom: 1px solid lightgrey;
-        padding: 5px 10px;
-        display: flex;
-        flex-wrap: wrap;
-    }
+  nav {
+    border-bottom: 1px solid lightgrey;
+    padding: 5px 10px;
+    display: flex;
+    flex-wrap: wrap;
+  }
 
-    nav a {
-        text-decoration: none;
-        color: dimgrey;
-    }
+  nav a {
+    text-decoration: none;
+    color: dimgrey;
+  }
 
-    nav span {
-        display: inline-block;
-        line-height: 1.5em;
-    }
+  nav span {
+    display: inline-block;
+    line-height: 1.5em;
+  }
 
-    nav a:not(:last-child) {
-        margin-right: 15px;
-    }
+  nav a:not(:last-child) {
+    margin-right: 15px;
+  }
 
-    :global(nav a.active span) {
-        font-weight: bold;
-        color: black;
-    }
+  :global(nav a.active span) {
+    font-weight: bold;
+    color: black;
+  }
 
-    :global(nav svg) {
-        margin-right: 5px;
-    }
+  :global(nav svg) {
+    margin-right: 5px;
+  }
 
-    section {
-        flex: 1;
-        padding: 10px;
-        overflow-y: auto;
-    }
+  section {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+  }
 </style>

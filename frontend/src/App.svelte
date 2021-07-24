@@ -1,16 +1,16 @@
 <script lang="ts">
   import Editor from "./Editor.svelte";
   import Tools from "./Tools.svelte";
-  import { Route } from "tinro";
+  import {Route} from "tinro";
 </script>
 
 <main>
-	<div id="editor-wrapper">
-		<Editor/>
-	</div>
-	<div id="tools-wrapper">
-		<Tools/>
-	</div>
+  <div id="editor-wrapper">
+    <Editor/>
+  </div>
+  <div id="tools-wrapper">
+    <Tools/>
+  </div>
 </main>
 
 <Route path="/" redirect="/log"/>
@@ -29,7 +29,7 @@
   #editor-wrapper {
     height: 100%;
     width: 900px;
-	margin-right: 20px;
+    margin-right: 20px;
   }
 
   #tools-wrapper {

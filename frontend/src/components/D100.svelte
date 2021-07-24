@@ -8,13 +8,13 @@
 </script>
 
 <div class="wrapper">
-    <D10 number={tensPart} />
-    <D10 number={onesPart} />
+  <D10 number={tensPart}/>
+  <D10 number={onesPart}/>
 </div>
 
 <style>
-    .wrapper {
-        display: flex;
-        flex-direction: row;
-    }
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+  }
 </style>

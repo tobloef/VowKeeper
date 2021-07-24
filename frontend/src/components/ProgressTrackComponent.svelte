@@ -1,7 +1,7 @@
 <script lang="ts">
-    import {ProgressTrack} from "../mechanics/Progress";
+  import {ProgressTrack} from "../mechanics/Progress";
 
-    export let progressTrack: ProgressTrack;
+  export let progressTrack: ProgressTrack;
 </script>
 
 <span>[ProgressTrack]</span>

@@ -4,7 +4,8 @@ export type Optional<T> = {
 
 export const identity = <T>(x: T): T => x;
 
-export const noop = () => {};
+export const noop = () => {
+};
 
 export const capitalizeFirstLetter = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
