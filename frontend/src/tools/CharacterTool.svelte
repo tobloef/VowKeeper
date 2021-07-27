@@ -4,7 +4,6 @@
   import ProgressTrack from "../components/ProgressTrackComponent.svelte";
   import {Writable} from "svelte/store";
   import StatInput from "../components/StatInput.svelte";
-  import {capitalizeFirstLetter} from "../utils";
   import Divider from "../components/Divider.svelte";
   import {nanoid} from "nanoid";
   import {rollActionRoll} from "../mechanics/rolls";
@@ -13,20 +12,18 @@
 
   export let characterStore: Writable<Character>;
 
-  const makeActionRoll = (stat) => {
-    const id = nanoid();
-    const actionRoll = rollActionRoll(stat, 1);
-    getCustomElementStore(id, {
-      roll: actionRoll,
+  const createActionRollLogEntry = (stat) => {
+    const storeId = nanoid();
+    const roll = rollActionRoll(stat, 1);
+    getCustomElementStore(storeId, {
+      roll,
+      character: $characterStore,
     });
-    logStore.update((prevLog) => [
-      ...prevLog,
-      {
-        id: id,
-        type: CustomElementType.ActionRoll,
-      }
-    ]);
-  };
+    return {
+      type: CustomElementType.ActionRollCard,
+      storeId,
+    };
+  }
 </script>
 
 <div class="character">
@@ -51,8 +48,12 @@
         showButtons={false}
         showSign={true}
         canEdit={true}
-        clickable={true}
-        onClick={makeActionRoll}
+        onClick={(stat) => {
+          logStore.update((prevLog) => [
+            ...prevLog,
+            createActionRollLogEntry(stat),
+          ]);
+        }}
       />
     {/each}
   </div>
@@ -66,7 +67,6 @@
         showButtons={true}
         showSign={true}
         canEdit={true}
-        clickable={true}
       />
     {/each}
   </div>
@@ -75,11 +75,10 @@
 
   <div class="momentum stats-wrapper">
     <StatInput
-      stat={$characterStore.momentum.value}
+      stat={$characterStore.momentum.current}
       showButtons={true}
       showSign={true}
       canEdit={true}
-      clickable={true}
       label="Current"
     />
     <Divider vertical={true}/>

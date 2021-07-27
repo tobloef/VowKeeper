@@ -105,7 +105,7 @@
 
   section {
     flex: 1;
-    padding: 10px;
+    padding: 10px 20px;
     overflow-y: auto;
   }
 </style>

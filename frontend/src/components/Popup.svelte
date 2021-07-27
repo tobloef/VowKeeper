@@ -2,11 +2,12 @@
   import Portal from "svelte-portal/src/Portal.svelte";
 
   export let anchor;
-  export let isOpen;
+  export let offsetY = 0;
 
   let popup;
   let anchorRect;
   let popupRect;
+  let isOpen = false;
 
   const updatePopupPosition = () => {
     if (!isOpen) {
@@ -16,10 +17,16 @@
     popupRect = popup?.getBoundingClientRect();
   }
 
-  $: anchor?.addEventListener("mousemove", updatePopupPosition);
+  $: {
+    anchor?.addEventListener("mousemove", updatePopupPosition);
+    anchor?.addEventListener("mousemove", () => isOpen = true)
+    anchor?.addEventListener("mouseleave", () => isOpen = false)
+    anchor?.addEventListener("wheel", () => isOpen = false)
+    anchor?.addEventListener("mousedown", () => isOpen = false)
+  }
   $: originalPopupX = anchorRect?.x + anchorRect?.width / 2 - popupRect?.width / 2;
   $: popupX = Math.max(10, originalPopupX);
-  $: popupY = anchorRect?.y - popupRect?.height - 10;
+  $: popupY = anchorRect?.y - popupRect?.height + offsetY;
   $: triangleOffset = originalPopupX - popupX;
 </script>
 

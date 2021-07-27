@@ -8,14 +8,12 @@ export class Stat {
   modifiers: Modifier[] = [];
   validator: StatValidator = () => undefined;
   name: string = "";
-  character: Character = undefined;
 
   static create(props: {
     baseValue?: number,
     modifiers?: Modifier[],
     validator?: StatValidator,
     name?: string,
-    character?: Character,
   } = {}): Stat {
     return Object.assign(new Stat(), props);
   }
@@ -26,7 +24,6 @@ export class Stat {
       modifiers: this.modifiers.map((m) => m.clone()),
       validator: this.validator,
       name: this.name,
-      character: this.character,
     });
   }
 
@@ -34,7 +31,7 @@ export class Stat {
     return this.modifiers.reduce((acc, m) => m.apply(acc), this.baseValue);
   }
 
-  public validate(baseValueOverride?: number): string | undefined {
+  public validate(character: Character, baseValueOverride?: number): string | undefined {
     if (this.validator === undefined) {
       return undefined;
     }

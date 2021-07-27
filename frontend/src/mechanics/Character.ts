@@ -13,59 +13,49 @@ export class Character {
   experience = Stat.create({
     name: "Experience",
     validator: minMaxValidator(0, 50),
-    character: this,
   });
 
   stats = {
     edge: Stat.create({
       name: "Edge",
-      character: this,
     }),
     heart: Stat.create({
       name: "Heart",
-      character: this,
     }),
     iron: Stat.create({
       name: "Iron",
-      character: this,
     }),
     shadow: Stat.create({
       name: "Shadow",
-      character: this,
     }),
     wits: Stat.create({
       name: "Wits",
-      character: this,
     }),
   };
 
   momentum = {
-    value: Stat.create({
+    current: Stat.create({
       name: "Momentum",
       baseValue: 2,
       validator: (stat) => (
         minMaxValidator(
-          stat.character.momentum.min.getValue(),
-          stat.character.momentum.max.getValue()
+          this.momentum.min.getValue(),
+          this.momentum.max.getValue()
         )(stat)
       ),
-      character: this,
     }),
     max: Stat.create({
       name: "Max Momentum",
       baseValue: 10,
-      character: this,
     }),
     min: Stat.create({
       name: "Min Momentum",
       baseValue: -6,
-      character: this,
     }),
     reset: Stat.create({
       name: "Momentum Reset",
       baseValue: 2,
       validator: minMaxValidator(0),
-      character: this,
     }),
   };
 
@@ -74,19 +64,16 @@ export class Character {
       name: "Health",
       baseValue: 5,
       validator: minMaxValidator(0, 5),
-      character: this,
     }),
     spirit: Stat.create({
       name: "Spirit",
       baseValue: 5,
       validator: minMaxValidator(0, 5),
-      character: this,
     }),
     supply: Stat.create({
       name: "Supply",
       baseValue: 5,
       validator: minMaxValidator(0, 5),
-      character: this,
     }),
   };
 
@@ -127,7 +114,7 @@ export class Character {
         wits: this.stats.wits.clone(),
       },
       momentum: {
-        value: this.momentum.value.clone(),
+        current: this.momentum.current.clone(),
         min: this.momentum.min.clone(),
         max: this.momentum.max.clone(),
         reset: this.momentum.reset.clone(),

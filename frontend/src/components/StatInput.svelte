@@ -1,5 +1,6 @@
 <script lang="ts">
   import {Stat} from "../mechanics/Stat";
+  import {formatNumber, noop} from "../utils";
 
   const VALID_INPUT_REGEX = /^[+-]?[0-9]*$/;
 
@@ -9,22 +10,12 @@
   export let showSign: boolean = true;
   export let vertical: boolean = false;
   export let label: string = undefined;
-  export let onClick: (stat: Stat) => void;
+  export let onClick: (stat: Stat) => void = noop;
 
   let prevInputValue;
   let prevSelectionStart;
   let prevSelectionEnd;
   let inputValue;
-
-  const formatValue = (x, showSign) => {
-    if (!showSign) {
-      return String(x);
-    }
-    if (x > 0) {
-      return `+${x}`;
-    }
-    return String(x);
-  }
 
   const onInput = (e) => {
     inputValue = e.target.value;
@@ -42,8 +33,8 @@
     }
   }
 
-  $: prevInputValue = formatValue(stat.getValue(), showSign);
-  $: inputValue = formatValue(stat.getValue(), showSign);
+  $: prevInputValue = formatNumber(stat.getValue(), showSign);
+  $: inputValue = formatNumber(stat.getValue(), showSign);
 </script>
 
 <div
@@ -139,7 +130,7 @@
   }
 
   .stat input {
-    width: 2em;
+    width: 90%;
     font-size: 1.4em;
     text-align: center;
     background: transparent;
@@ -159,6 +150,7 @@
 
   .statInput.error input {
     color: red;
+    caret-color: black;
   }
 
   button {

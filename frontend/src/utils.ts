@@ -10,3 +10,10 @@ export const noop = () => {
 export const capitalizeFirstLetter = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
+export const formatNumber = (x, showSign) => {
+  if (!showSign || x <= 0) {
+    return String(x);
+  }
+  return `+${x}`;
+}

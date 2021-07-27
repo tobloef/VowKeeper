@@ -17,6 +17,7 @@ export type ActionScore = {
 }
 
 export type ActionRoll = {
+  stat: Stat,
   actionScore: ActionScore,
   result: RollResult,
   isMatch: boolean,
@@ -58,6 +59,7 @@ export const rollActionRoll = (stat: Stat, adds: number): ActionRoll => {
   const isMaxed: boolean = unboundedActionScore > actionScore;
 
   return {
+    stat,
     actionScore: {
       value: actionScore,
       actionDie,

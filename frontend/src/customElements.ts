@@ -1,12 +1,12 @@
 import {get, Writable, writable} from 'svelte/store';
 import {Extension, mergeAttributes, Node} from "@tiptap/core";
 import {Plugin} from "prosemirror-state";
-import ActionRoll from "./custom-elements/ActionRoll.svelte";
+import ActionRollCard from "./custom-elements/ActionRollCardElement.svelte";
 
 const customElementStores: { [key: string]: Writable<any> } = {};
 
 export enum CustomElementType {
-  ActionRoll,
+  ActionRollCard,
 }
 
 export const getCustomElementStore = <T>(id: string, defaultValue: T = {} as T): Writable<T> => {
@@ -51,8 +51,8 @@ export const draggableElement = <T>(node, {canDropInsert, id, type}) => {
 
 export const customElementTypeToTag = (type: CustomElementType): string => {
   switch (type) {
-    case CustomElementType.ActionRoll:
-      return "action-roll";
+    case CustomElementType.ActionRollCard:
+      return "action-roll-card";
     default:
       throw new Error(`Invalid CustomElementType "${type}"`);
   }
@@ -60,8 +60,8 @@ export const customElementTypeToTag = (type: CustomElementType): string => {
 
 export const customElementTypeToComponent = (type: CustomElementType) => {
   switch (type) {
-    case CustomElementType.ActionRoll:
-      return ActionRoll;
+    case CustomElementType.ActionRollCard:
+      return ActionRollCard;
     default:
       throw new Error(`Invalid CustomElementType "${type}"`);
   }

@@ -12,7 +12,7 @@
       element: documentElement,
       extensions: [
         StarterKit,
-        createNodeView(CustomElementType.ActionRoll),
+        createNodeView(CustomElementType.ActionRollCard),
         DropInsertCustomElement
       ],
       content: '',

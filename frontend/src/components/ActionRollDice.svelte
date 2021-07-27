@@ -1,34 +1,23 @@
 <script lang="ts">
-  import {CustomElementType, getCustomElementStore, draggableElement} from "../customElements";
-  import D10 from "../components/D10.svelte";
-  import ActionScore from "../components/ActionScore.svelte";
+  import D10 from "./D10.svelte";
+  import ActionScore from "./ActionScore.svelte";
   import type {ActionRoll} from "../mechanics/rolls";
-  import {onDestroy} from "svelte";
 
-  type ActionRollProps = {
-    roll: ActionRoll,
-  }
-
-  export let id: string;
-  export let canDropInsert: boolean | undefined;
-
-  let store = getCustomElementStore<ActionRollProps>(id);
-
-  const type = CustomElementType.ActionRoll;
+  export let roll: ActionRoll;
 </script>
 
-<div class="wrapper" use:draggableElement={{canDropInsert, id, type}}>
+<div class="wrapper">
   <div class="actionScoreWrapper">
-    <ActionScore actionScore={$store.roll.actionScore}/>
+    <ActionScore actionScore={roll.actionScore}/>
   </div>
   <span class="vs">vs</span>
   <div class="challengeDiceWrapper">
     <D10
-      number={$store.roll.challengeDice[0].value}
-      isHit={$store.roll.challengeDice[0].isHit}
+      number={roll.challengeDice[0].value}
+      isHit={roll.challengeDice[0].isHit}
     />
   </div>
-  {#if $store.roll.isMatch}
+  {#if roll.isMatch}
     <div class="matchWrapper">
       <span class="match">Match!</span>
       <span class="equals">=</span>
@@ -36,8 +25,8 @@
   {/if}
   <div class="challengeDiceWrapper">
     <D10
-      number={$store.roll.challengeDice[1].value}
-      isHit={$store.roll.challengeDice[1].isHit}
+      number={roll.challengeDice[1].value}
+      isHit={roll.challengeDice[1].isHit}
     />
   </div>
 </div>

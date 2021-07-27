@@ -106,7 +106,7 @@
       <g transform="matrix(.35278 0 0 -.35278 -97.7255 195.5202)">
         <path
           d="M294.1907 545.1761c0-4.484-3.635-8.118-8.119-8.118-4.483 0-8.118 3.634-8.118 8.118s3.635 8.118 8.118 8.118c4.484 0 8.119-3.634 8.119-8.118"
-          fill={coloredResults ? "hsl(120deg 100% 85%)" : "white"}/>
+          fill={coloredResults ? "hsl(120deg 60% 70%)" : "white"}/>
         <path
           d="M294.1907 545.1761c0-4.484-3.635-8.118-8.119-8.118-4.483 0-8.118 3.634-8.118 8.118s3.635 8.118 8.118 8.118c4.484 0 8.119-3.634 8.119-8.118z"
           fill="none" stroke="#393536" stroke-width="1.873" stroke-miterlimit="10"/>
@@ -129,7 +129,7 @@
       </defs>
       <g transform="matrix(.35278 0 0 -.35278 -97.71 195.53)">
         <path d="M294.16 545.2a8.12 8.12 0 10-16.24 0 8.12 8.12 0 0016.24 0"
-              fill={coloredResults ? "hsl(0deg 100% 80%)" : "white"}/>
+              fill={coloredResults ? "hsl(0deg 100% 65%)" : "white"}/>
         <path d="M294.16 545.2a8.12 8.12 0 10-16.24 0 8.12 8.12 0 0016.24 0z" fill="none" stroke="#393536"
               stroke-width="1.87" stroke-miterlimit="10"/>
         <path

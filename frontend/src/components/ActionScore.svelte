@@ -6,18 +6,11 @@
 
   export let actionScore: ActionScore;
 
-  let popupOpen: boolean = false;
   let popupAnchor;
 </script>
 
 <div
   class="wrapper"
-  on:mousemove={() => {
-          popupOpen = true;
-        }}
-  on:mouseleave={() => popupOpen = false}
-  on:wheel={() => popupOpen = false}
-  on:mousedown={() => popupOpen = false}
   bind:this={popupAnchor}
 >
   <svg
@@ -51,7 +44,7 @@
 
 <Popup
   anchor={popupAnchor}
-  isOpen={popupOpen}
+  offsetY={-10}
 >
   <div class="explanation">
     {#if actionScore.isMaxed}
@@ -128,6 +121,7 @@
   }
 
   .stat > .type {
-    margin-top: 5px
+    margin-top: 5px;
+    font-weight: bold;
   }
 </style>
