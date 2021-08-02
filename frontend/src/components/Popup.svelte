@@ -19,7 +19,7 @@
 
   $: {
     anchor?.addEventListener("mousemove", updatePopupPosition);
-    anchor?.addEventListener("mousemove", () => isOpen = true)
+    anchor?.addEventListener("mouseenter", () => isOpen = true)
     anchor?.addEventListener("mouseleave", () => isOpen = false)
     anchor?.addEventListener("wheel", () => isOpen = false)
     anchor?.addEventListener("mousedown", () => isOpen = false)

@@ -69,7 +69,7 @@
   </div>
 </div>
 
-<Popup anchor={momentumPopupAnchor}>
+<Popup anchor={momentumPopupAnchor} offsetY={-10}>
   <span>Burn momentum ({formatNumber(currentMomentum, true)}) for a {resultIfBurnMomentum}.</span>
 </Popup>
 

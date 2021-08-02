@@ -10,7 +10,7 @@
   export let showSign: boolean = true;
   export let vertical: boolean = false;
   export let label: string = undefined;
-  export let onClick: (stat: Stat) => void = noop;
+  export let onClick: (stat: Stat) => void = undefined;
 
   let prevInputValue;
   let prevSelectionStart;
@@ -83,7 +83,7 @@
     <label
       class="name"
       class:clickable={onClick !== undefined}
-      on:click={() => onClick(stat)}
+      on:click={() => onClick !== undefined && onClick(stat)}
     >{label || stat.name}</label>
   </div>
   {#if showButtons}
