@@ -1,18 +1,12 @@
 <script>
   import {Route, router, active} from "tinro";
-  import Log from "./tools/Log.svelte";
+  import Log from "./tools/LogTool.svelte";
   import CharacterTool from "./tools/CharacterTool.svelte";
-  import Notes from "./tools/Notes.svelte";
-  import Combat from "./tools/Combat.svelte";
-  import Map from "./tools/Map.svelte";
-  import Oracles from "./tools/Oracles.svelte";
+  import Oracles from "./tools/OraclesTool.svelte";
   import Fa from "svelte-fa"
   import {
     faList,
     faUser,
-    faStickyNote,
-    faFistRaised,
-    faMap,
     faDice,
   } from "@fortawesome/free-solid-svg-icons";
   import {characterStore} from "./stores";
@@ -28,15 +22,6 @@
     <a href="/#/character" use:active>
       <span><Fa icon={faUser}/>Character</span>
     </a>
-    <a href="/#/notes" use:active>
-      <span><Fa icon={faStickyNote}/>Notes</span>
-    </a>
-    <a href="/#/combat" use:active>
-      <span><Fa icon={faFistRaised}/>Combat</span>
-    </a>
-    <a href="/#/map" use:active>
-      <span><Fa icon={faMap}/>Map</span>
-    </a>
     <a href="/#/oracles" use:active>
       <span><Fa icon={faDice}/>Oracles</span>
     </a>
@@ -47,15 +32,6 @@
     </Route>
     <Route path="/character">
       <CharacterTool characterStore={characterStore}/>
-    </Route>
-    <Route path="/notes">
-      <Notes/>
-    </Route>
-    <Route path="/combat">
-      <Combat/>
-    </Route>
-    <Route path="/map">
-      <Map/>
     </Route>
     <Route path="/oracles">
       <Oracles/>
@@ -105,7 +81,6 @@
 
   section {
     flex: 1;
-    padding: 10px 20px;
-    overflow-y: auto;
+    overflow-y: hidden;
   }
 </style>

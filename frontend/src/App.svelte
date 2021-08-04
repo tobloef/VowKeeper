@@ -33,8 +33,8 @@
   }
 
   #tools-wrapper {
-    height: 100%;
     min-width: 450px;
+    height: 100%;
     flex: 1;
   }
 </style>
