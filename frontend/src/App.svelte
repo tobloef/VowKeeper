@@ -24,6 +24,7 @@
     align-items: start;
     box-sizing: border-box;
     padding: 20px;
+    font-family: "Merriweather", serif;
   }
 
   #editor-wrapper {
@@ -44,5 +45,9 @@
 
   :global(.ProseMirror.ProseMirror-focused) {
     outline: none;
+  }
+
+  :global(input) {
+    font-size: 1em;
   }
 </style>

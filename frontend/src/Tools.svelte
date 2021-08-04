@@ -1,17 +1,19 @@
 <script>
-  import {Route, router, active} from "tinro";
-  import Log from "./tools/LogTool.svelte";
-  import CharacterTool from "./tools/CharacterTool.svelte";
-  import Oracles from "./tools/OraclesTool.svelte";
-  import Fa from "svelte-fa"
-  import {
-    faList,
-    faUser,
-    faDice,
-  } from "@fortawesome/free-solid-svg-icons";
-  import {characterStore} from "./stores";
+	import {Route, router, active} from "tinro";
+	import CharacterTool from "./tools/CharacterTool.svelte";
+	import Fa from "svelte-fa"
+	import {
+		faList,
+		faUser,
+		faDice,
+    faQuestion,
+	} from "@fortawesome/free-solid-svg-icons";
+	import {characterStore} from "./stores";
+	import LogTool from "./tools/LogTool.svelte";
+	import OraclesTool from "./tools/OraclesTool.svelte";
+	import MovesTool from "./tools/MovesTool.svelte";
 
-  router.mode.hash();
+	router.mode.hash();
 </script>
 
 <div id="tools">
@@ -22,19 +24,25 @@
     <a href="/#/character" use:active>
       <span><Fa icon={faUser}/>Character</span>
     </a>
+    <a href="/#/moves" use:active>
+      <span><Fa icon={faDice}/>Moves</span>
+    </a>
     <a href="/#/oracles" use:active>
-      <span><Fa icon={faDice}/>Oracles</span>
+      <span><Fa icon={faQuestion}/>Oracles</span>
     </a>
   </nav>
   <section>
     <Route path="/log">
-      <Log/>
+      <LogTool />
     </Route>
     <Route path="/character">
       <CharacterTool characterStore={characterStore}/>
     </Route>
+    <Route path="/moves">
+      <MovesTool />
+    </Route>
     <Route path="/oracles">
-      <Oracles/>
+      <OraclesTool />
     </Route>
   </section>
 </div>

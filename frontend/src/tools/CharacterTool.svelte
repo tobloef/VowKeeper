@@ -108,58 +108,66 @@
 
   <div>
     {#each $characterStore.vows as track}
-      <div>
-        <input bind:value={track.name}>
-        <select bind:value={track.rank}>
-          {#each Object.values(ChallengeRanks) as rank}
-            <option value={rank}>{rank.name}</option>
-          {/each}
-        </select>
+      <div class="vow">
+        <div class="header">
+          <input bind:value={track.name}>
+          <select bind:value={track.rank}>
+            {#each Object.values(ChallengeRanks) as rank}
+              <option value={rank}>{rank.name}</option>
+            {/each}
+          </select>
+        </div>
         <ProgressTrack progressTrack={track}/>
+        <div class="buttons">
+          <button>Mark progress</button>
+          <button>Progress Move</button>
+        </div>
       </div>
     {/each}
   </div>
 
   <Divider text="Debilities"/>
 
-  <div>
-    <div>
+  <div class="debilities">
+    <div class="debilities-group">
       <label>Conditions</label>
-      <div>
+      <div class="debility">
         <input type="checkbox" bind:checked={$characterStore.debilities.conditions.wounded}>
         <label>Wounded</label>
       </div>
-      <div>
+      <div class="debility">
         <input type="checkbox" bind:checked={$characterStore.debilities.conditions.unprepared}>
         <label>Unprepared</label>
       </div>
-      <div>
+      <div class="debility">
         <input type="checkbox" bind:checked={$characterStore.debilities.conditions.shaken}>
         <label>Shaken</label>
       </div>
-      <div>
+      <div class="debility">
         <input type="checkbox" bind:checked={$characterStore.debilities.conditions.encumbered}>
         <label>Encumbered</label>
       </div>
     </div>
-    <div>
+
+    <div class="debilities-group">
       <label>Banes</label>
-      <div>
+      <div class="debility">
         <input type="checkbox" bind:checked={$characterStore.debilities.banes.maimed}>
         <label>Maimed</label>
       </div>
-      <div>
+      <div class="debility">
         <input type="checkbox" bind:checked={$characterStore.debilities.banes.corrupted}>
         <label>Corrupted</label>
       </div>
     </div>
-    <div>
+
+    <div class="debilities-group">
       <label>Burdens</label>
-      <div>
+      <div class="debility">
         <input type="checkbox" bind:checked={$characterStore.debilities.burdens.cursed}>
         <label>Cursed</label>
       </div>
-      <div>
+      <div class="debility">
         <input type="checkbox" bind:checked={$characterStore.debilities.burdens.tormented}>
         <label>Tormented</label>
       </div>
@@ -173,6 +181,9 @@
     flex-direction: column;
     align-items: center;
     padding: 15px;
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
   }
 
   :global(.character > *) {
@@ -229,5 +240,50 @@
 
   :global(.momentum .separator) {
     align-self: stretch;
+  }
+
+  :global(.vow:not(:last-child)) {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+  }
+
+  :global(.vow .header) {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+  }
+
+  :global(.vow .buttons) {
+    margin-top: 5px;
+  }
+
+  :global(.vow .buttons :not(:last-child)) {
+    margin-right: 5px;
+  }
+
+  :global(.vow .header input) {
+    flex: 1;
+    margin-right: 10px;
+  }
+
+  .debilities {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .debilities .debilities-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .debilities .debilities-group > label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .debilities .debility:not(:last-child) {
+    margin-bottom: 5px;
   }
 </style>
