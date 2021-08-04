@@ -31,7 +31,7 @@ export class Stat {
     return this.modifiers.reduce((acc, m) => m.apply(acc), this.baseValue);
   }
 
-  public validate(character: Character, baseValueOverride?: number): string | undefined {
+  public validate(baseValueOverride?: number): string | undefined {
     if (this.validator === undefined) {
       return undefined;
     }
@@ -52,7 +52,7 @@ export const minMaxValidator = (min?: number, max?: number): StatValidator => (
       return `Minimum ${min}`;
     }
     if (max !== undefined && stat.getValue() > max) {
-      return `Maximum ${min}`;
+      return `Maximum ${max}`;
     }
     return undefined;
   }

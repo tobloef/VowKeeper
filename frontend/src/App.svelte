@@ -37,4 +37,12 @@
     height: 100%;
     flex: 1;
   }
+
+  :global(.ProseMirror-selectednode) {
+    outline: 1px solid -webkit-focus-ring-color;
+  }
+
+  :global(.ProseMirror.ProseMirror-focused) {
+    outline: none;
+  }
 </style>

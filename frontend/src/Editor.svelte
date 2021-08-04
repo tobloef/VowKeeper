@@ -107,12 +107,4 @@
     align-items: flex-end;
     display: flex;
   }
-
-  :global(.ProseMirror-selectednode) {
-    outline: 1px solid -webkit-focus-ring-color;
-  }
-
-  :global(.ProseMirror.ProseMirror-focused) {
-    outline: none;
-  }
 </style>

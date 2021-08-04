@@ -47,6 +47,7 @@ export class Character {
     max: Stat.create({
       name: "Max Momentum",
       baseValue: 10,
+      validator: minMaxValidator(-6, 10),
     }),
     min: Stat.create({
       name: "Min Momentum",
@@ -55,7 +56,7 @@ export class Character {
     reset: Stat.create({
       name: "Momentum Reset",
       baseValue: 2,
-      validator: minMaxValidator(0),
+      validator: minMaxValidator(-6, 10),
     }),
   };
 

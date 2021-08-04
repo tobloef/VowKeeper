@@ -172,10 +172,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 15px;
   }
 
   :global(.character > *) {
     width: 100%;
+  }
+
+  .stats-wrapper {
+    align-items: flex-start;
   }
 
   .header {

@@ -16,6 +16,7 @@
   let prevSelectionStart;
   let prevSelectionEnd;
   let inputValue;
+  let validationError;
 
   const onInput = (e) => {
     inputValue = e.target.value;
@@ -35,69 +36,82 @@
 
   $: prevInputValue = formatNumber(stat.getValue(), showSign);
   $: inputValue = formatNumber(stat.getValue(), showSign);
+
+  $: validationError = stat.validate();
 </script>
 
 <div
   class="statInput"
   class:vertical
-  class:error={stat.validate() !== undefined}
+  class:error={validationError !== undefined}
 >
-  {#if showButtons}
-    <button
-      class="decrease"
-      disabled={stat.validate(stat.baseValue - 1) !== undefined}
-      on:click={() => stat.baseValue -= 1}
-    >-
-    </button>
-  {/if}
-  <div class="stat">
-    <input
-      value={inputValue}
-      on:input={onInput}
-      on:keydown={(e) => {
-        switch (e.key) {
-          case "Enter":
-            e.target.blur();
-            e.preventDefault();
-            return;
-          case "ArrowUp":
-            stat.baseValue += 1;
-            e.preventDefault();
-            return;
-          case "ArrowDown":
-            stat.baseValue -= 1;
-            e.preventDefault();
-            return;
-        }
-      }}
-      disabled={!canEdit}
-      on:blur={() => {
-        const newValue = Number(inputValue);
-        if (Number.isNaN(newValue)) {
-          stat.baseValue = 0;
-        } else {
-          stat.baseValue = newValue;
-        }
-      }}
-    >
-    <label
-      class="name"
-      class:clickable={onClick !== undefined}
-      on:click={() => onClick !== undefined && onClick(stat)}
-    >{label || stat.name}</label>
+  <div class="wrapper">
+    {#if showButtons}
+      <button
+        class="decrease"
+        disabled={stat.validate(stat.baseValue - 1) !== undefined}
+        on:click={() => stat.baseValue -= 1}
+      >-
+      </button>
+    {/if}
+    <div class="stat">
+      <input
+        value={inputValue}
+        on:input={onInput}
+        on:keydown={(e) => {
+          switch (e.key) {
+            case "Enter":
+              e.target.blur();
+              e.preventDefault();
+              return;
+            case "ArrowUp":
+              stat.baseValue += 1;
+              e.preventDefault();
+              return;
+            case "ArrowDown":
+              stat.baseValue -= 1;
+              e.preventDefault();
+              return;
+          }
+        }}
+        disabled={!canEdit}
+        on:blur={() => {
+          const newValue = Number(inputValue);
+          if (Number.isNaN(newValue)) {
+            stat.baseValue = 0;
+          } else {
+            stat.baseValue = newValue;
+          }
+        }}
+      >
+      <label
+        class="name"
+        class:clickable={onClick !== undefined}
+        on:click={() => onClick !== undefined && onClick(stat)}
+      >{label || stat.name}</label>
+    </div>
+    {#if showButtons}
+      <button
+        class="increase"
+        disabled={stat.validate(stat.baseValue + 1) !== undefined}
+        on:click={() => stat.baseValue += 1}
+      >+
+      </button>
+    {/if}
   </div>
-  {#if showButtons}
-    <button
-      class="increase"
-      disabled={stat.validate(stat.baseValue + 1) !== undefined}
-      on:click={() => stat.baseValue += 1}
-    >+
-    </button>
+  {#if validationError !== undefined}
+    <span class="errorText">{validationError}</span>
   {/if}
 </div>
 
 <style>
   .statInput {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .wrapper {
     display: flex;
     flex-direction: row;
     font-size: 1em;
@@ -151,6 +165,12 @@
   .statInput.error input {
     color: red;
     caret-color: black;
+  }
+
+  .errorText {
+    color: red;
+    text-align: center;
+    margin-top: 5px;
   }
 
   button {
