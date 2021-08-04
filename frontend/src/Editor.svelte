@@ -100,6 +100,11 @@
     background: white;
     box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     padding: 10px 20px;
+    height: 100%;
+  }
+
+  :global(#document > div) {
+    height: calc(100% - 10px * 2);
   }
 
   :global(#document .dice) {
