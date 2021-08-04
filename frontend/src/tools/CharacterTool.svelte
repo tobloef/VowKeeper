@@ -271,14 +271,6 @@
     margin-bottom: 10px;
   }
 
-  .vow .buttons {
-    margin-top: 5px;
-  }
-
-  .vow .buttons :not(:last-child) {
-    margin-right: 5px;
-  }
-
   .vow .header input {
     flex: 1;
     margin-right: 10px;
