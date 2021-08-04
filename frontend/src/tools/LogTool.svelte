@@ -31,9 +31,9 @@
   });
 
   $: deleteLogItem = (id) => {
-    console.log("Removing id", id);
-    console.log(logStore);
-    logStore.update((prevLog) => prevLog.filter((item) => item.id !== id));
+    if (confirm("Are you sure you want to delete this log entry?")) {
+      logStore.update((prevLog) => prevLog.filter((item) => item.id !== id));
+    }
   }
 </script>
 
@@ -82,8 +82,8 @@
 
   :global(.log-item .delete-icon) {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 8px;
+    right: 12px;
     cursor: pointer;
     color: hsl(0deg 100% 65%);
     z-index: 10;
