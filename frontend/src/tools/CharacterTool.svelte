@@ -118,10 +118,6 @@
           </select>
         </div>
         <ProgressTrack progressTrack={track}/>
-        <div class="buttons">
-          <button>Mark progress</button>
-          <button>Progress Move</button>
-        </div>
       </div>
     {/each}
   </div>
