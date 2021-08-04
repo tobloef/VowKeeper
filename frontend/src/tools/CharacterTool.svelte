@@ -129,44 +129,60 @@
     <div class="debilities-group">
       <label>Conditions</label>
       <div class="debility">
-        <input type="checkbox" bind:checked={$characterStore.debilities.conditions.wounded}>
-        <label>Wounded</label>
+        <label>
+          <input type="checkbox" bind:checked={$characterStore.debilities.conditions.wounded}>
+          Wounded
+        </label>
       </div>
       <div class="debility">
-        <input type="checkbox" bind:checked={$characterStore.debilities.conditions.unprepared}>
-        <label>Unprepared</label>
+        <label>
+          <input type="checkbox" bind:checked={$characterStore.debilities.conditions.unprepared}>
+          Unprepared
+        </label>
       </div>
       <div class="debility">
-        <input type="checkbox" bind:checked={$characterStore.debilities.conditions.shaken}>
-        <label>Shaken</label>
+        <label>
+          <input type="checkbox" bind:checked={$characterStore.debilities.conditions.shaken}>
+          Shaken
+        </label>
       </div>
       <div class="debility">
-        <input type="checkbox" bind:checked={$characterStore.debilities.conditions.encumbered}>
-        <label>Encumbered</label>
+        <label>
+          <input type="checkbox" bind:checked={$characterStore.debilities.conditions.encumbered}>
+          Encumbered
+        </label>
       </div>
     </div>
 
     <div class="debilities-group">
       <label>Banes</label>
       <div class="debility">
-        <input type="checkbox" bind:checked={$characterStore.debilities.banes.maimed}>
-        <label>Maimed</label>
+        <label>
+          <input type="checkbox" bind:checked={$characterStore.debilities.banes.maimed}>
+          Maimed
+        </label>
       </div>
       <div class="debility">
-        <input type="checkbox" bind:checked={$characterStore.debilities.banes.corrupted}>
-        <label>Corrupted</label>
+        <label>
+          <input type="checkbox" bind:checked={$characterStore.debilities.banes.corrupted}>
+          Corrupted
+        </label>
       </div>
     </div>
 
     <div class="debilities-group">
       <label>Burdens</label>
       <div class="debility">
-        <input type="checkbox" bind:checked={$characterStore.debilities.burdens.cursed}>
-        <label>Cursed</label>
+        <label>
+          <input type="checkbox" bind:checked={$characterStore.debilities.burdens.cursed}>
+          Cursed
+        </label>
       </div>
       <div class="debility">
-        <input type="checkbox" bind:checked={$characterStore.debilities.burdens.tormented}>
-        <label>Tormented</label>
+        <label>
+          <input type="checkbox" bind:checked={$characterStore.debilities.burdens.tormented}>
+          Tormented
+        </label>
       </div>
     </div>
   </div>
@@ -282,6 +298,10 @@
   .debilities .debilities-group > label {
     font-weight: bold;
     margin-bottom: 5px;
+  }
+
+  .debilities .debility {
+    user-select: none;
   }
 
   .debilities .debility:not(:last-child) {
