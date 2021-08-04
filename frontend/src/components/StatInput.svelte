@@ -1,6 +1,7 @@
 <script lang="ts">
   import {Stat} from "../mechanics/Stat";
   import {formatNumber, noop} from "../utils";
+  import Popup from "./Popup.svelte";
 
   const VALID_INPUT_REGEX = /^[+-]?[0-9]*$/;
 
@@ -17,6 +18,7 @@
   let prevSelectionEnd;
   let inputValue;
   let validationError;
+  let statInputElement;
 
   const onInput = (e) => {
     inputValue = e.target.value;
@@ -44,6 +46,7 @@
   class="statInput"
   class:vertical
   class:error={validationError !== undefined}
+  bind:this={statInputElement}
 >
   <div class="wrapper">
     {#if showButtons}
@@ -54,7 +57,10 @@
       >-
       </button>
     {/if}
-    <div class="stat">
+    <div
+      class="stat"
+      class:modified={stat.modifiers.length > 0}
+    >
       <input
         value={inputValue}
         on:input={onInput}
@@ -103,6 +109,19 @@
     <span class="errorText">{validationError}</span>
   {/if}
 </div>
+
+{#if stat.modifiers.length > 0}
+  <Popup
+    anchor={statInputElement}
+    offsetY={-10}
+  >
+    <div class="modifiers">
+      {#each stat.modifiers as modifier}
+        <span>{modifier.description}</span>
+      {/each}
+    </div>
+  </Popup>
+{/if}
 
 <style>
   .statInput {
@@ -162,9 +181,14 @@
     pointer-events: none;
   }
 
-  .statInput.error input {
-    color: red;
+  .stat.modified input {
+    color: darkorange;
     caret-color: black;
+    font-weight: bold;
+  }
+
+  .statInput.error .stat {
+    border-color: red;
   }
 
   .errorText {
@@ -206,5 +230,22 @@
 
   .statInput.vertical .decrease {
     margin: 0.25em 0px 0px 0px;
+  }
+
+  .modifiers {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 5px 10px;
+  }
+
+  .modifiers > span {
+    text-align: center;
+  }
+
+  .modifiers > span:not(:last-child) {
+    padding-bottom: 10px;
+    border-bottom: 1px solid grey;
+    margin-bottom: 10px;
   }
 </style>

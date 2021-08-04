@@ -2,6 +2,8 @@ import {minMaxValidator, Stat} from "./Stat";
 import {ChallengeRanks, ProgressTrack} from "./Progress";
 import type {Asset} from "./Asset";
 import type {Optional} from "../utils";
+import {Modifier} from "./Modifier";
+import { nanoid } from "nanoid";
 
 export class Character {
   name = "";

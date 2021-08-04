@@ -251,7 +251,7 @@
     align-items: center;
   }
 
-  .momentum .separator {
+  :global(.momentum .separator) {
     align-self: stretch;
   }
 
