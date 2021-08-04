@@ -2,9 +2,15 @@
   type Progress = 1 | 2 | 3 | 4;
 
   export let progress: Progress;
+  export let onClick: () => void;
 </script>
 
-<svg viewBox="0.5 -6 33 33" xmlns="http://www.w3.org/2000/svg">
+<svg
+  viewBox="0.5 -6 33 33"
+  xmlns="http://www.w3.org/2000/svg"
+  on:click={onClick !== undefined && onClick()}
+  class:clickable={onClick !== undefined}
+>
   <defs>
     <clipPath clipPathUnits="userSpaceOnUse">
       <path d="M31.5 420.5h27v26.3h-27z"/>
@@ -34,3 +40,13 @@
     {/if}
   </g>
 </svg>
+
+<style>
+  svg {
+    user-select: none;
+  }
+
+  .clickable {
+    cursor: pointer;
+  }
+</style>

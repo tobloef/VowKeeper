@@ -238,31 +238,31 @@
     align-items: center;
   }
 
-  :global(.momentum .separator) {
+  .momentum .separator {
     align-self: stretch;
   }
 
-  :global(.vow:not(:last-child)) {
+  .vow:not(:last-child) {
     display: flex;
     flex-direction: column;
     margin-bottom: 25px;
   }
 
-  :global(.vow .header) {
+  .vow .header {
     display: flex;
     flex-direction: row;
     margin-bottom: 10px;
   }
 
-  :global(.vow .buttons) {
+  .vow .buttons {
     margin-top: 5px;
   }
 
-  :global(.vow .buttons :not(:last-child)) {
+  .vow .buttons :not(:last-child) {
     margin-right: 5px;
   }
 
-  :global(.vow .header input) {
+  .vow .header input {
     flex: 1;
     margin-right: 10px;
   }
