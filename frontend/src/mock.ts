@@ -4,7 +4,7 @@ import {ChallengeRanks, ProgressTrack} from "./mechanics/Progress";
 export const mockCharacter: Character = Character.create();
 
 mockCharacter.name = "Kuno";
-mockCharacter.experience.baseValue = 2;
+mockCharacter.experience = 2;
 mockCharacter.stats.edge.baseValue = 3;
 mockCharacter.stats.heart.baseValue = 2;
 mockCharacter.stats.iron.baseValue = 2;

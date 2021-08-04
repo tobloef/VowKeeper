@@ -8,11 +8,17 @@
   let anchorRect;
   let popupRect;
   let isOpen = false;
+  let isVisible = false;
 
   $: {
     if (isOpen) {
-      anchorRect = anchor?.getBoundingClientRect();
-      popupRect = popup?.getBoundingClientRect();
+      requestAnimationFrame(() => {
+        anchorRect = anchor?.getBoundingClientRect();
+        popupRect = popup?.getBoundingClientRect();
+        isVisible = true;
+      })
+    } else {
+      isVisible = false;
     }
   }
 
@@ -22,10 +28,13 @@
     anchor?.addEventListener("wheel", () => isOpen = false)
     anchor?.addEventListener("mousedown", () => isOpen = false)
   }
-  $: originalPopupX = anchorRect?.x + anchorRect?.width / 2 - popupRect?.width / 2;
-  $: popupX = Math.max(10, originalPopupX);
+
+  $: leftSideX = anchorRect?.x + anchorRect?.width / 2 - popupRect?.width / 2;
+  $: minX = document.body.getBoundingClientRect().x + 10;
+  $: maxX = document.body.getBoundingClientRect().width - 10 - popupRect?.width;
+  $: popupX = Math.min(Math.max(leftSideX, minX), maxX);
   $: popupY = anchorRect?.y - popupRect?.height + offsetY;
-  $: triangleOffset = originalPopupX - popupX;
+  $: triangleOffset = leftSideX - popupX;
 </script>
 
 {#if isOpen}
@@ -33,6 +42,7 @@
     <div
       class="popup"
       bind:this={popup}
+      class:visible={isVisible}
       style="
           left: {popupX}px;
           top: {popupY}px;
@@ -57,6 +67,11 @@
     box-sizing: border-box;
     border-radius: 5px;
     box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.25);
+    width: fit-content;
+  }
+
+  .popup:not(.visible) {
+    visibility: hidden;
   }
 
   .popup:after, .popup:before {

@@ -9,6 +9,7 @@
   import {rollActionRoll} from "../mechanics/rolls";
   import {CustomElementType, getCustomElementStore} from "../customElements";
   import {LogItem, logStore} from "../stores";
+  import {capitalizeFirstLetter} from "../utils"
 
   export let characterStore: Writable<Character>;
 
@@ -25,6 +26,11 @@
       storeId,
     };
   }
+
+  const updateModifiers = () => {
+    $characterStore.updateModifiers();
+    $characterStore = $characterStore;
+  }
 </script>
 
 <div class="character">
@@ -36,7 +42,7 @@
 
     <div class="experience">
       <label>Experience</label>
-      <input type="number" value={$characterStore.experience.getValue()}>
+      <input type="number" bind:value={$characterStore.experience}>
     </div>
   </div>
 
@@ -49,6 +55,7 @@
         showButtons={false}
         showSign={true}
         canEdit={true}
+        afterUpdate={updateModifiers}
         onClick={(stat) => {
           logStore.update((prevLog) => [
             ...prevLog,
@@ -68,6 +75,7 @@
         showButtons={true}
         showSign={true}
         canEdit={true}
+        afterUpdate={updateModifiers}
       />
     {/each}
   </div>
@@ -80,6 +88,7 @@
       showButtons={true}
       showSign={true}
       canEdit={true}
+      afterUpdate={updateModifiers}
       label="Current"
     />
     <Divider vertical={true}/>
@@ -88,6 +97,7 @@
       showButtons={false}
       showSign={true}
       canEdit={true}
+      afterUpdate={updateModifiers}
       label="Max"
     />
     <StatInput
@@ -95,6 +105,7 @@
       showButtons={false}
       showSign={true}
       canEdit={true}
+      afterUpdate={updateModifiers}
       label="Reset"
     />
   </div>
@@ -126,65 +137,23 @@
   <Divider text="Debilities"/>
 
   <div class="debilities">
-    <div class="debilities-group">
-      <label>Conditions</label>
-      <div class="debility">
-        <label>
-          <input type="checkbox" bind:checked={$characterStore.debilities.conditions.wounded}>
-          Wounded
-        </label>
+    {#each Object.entries($characterStore.debilities) as [groupKey, group]}
+      <div class="debilities-group">
+        <label>{capitalizeFirstLetter(groupKey)}</label>
+        {#each Object.keys(group) as debilityKey}
+          <div class="debility">
+            <label>
+              <input
+                type="checkbox"
+                bind:checked={$characterStore.debilities[groupKey][debilityKey]}
+                on:change={updateModifiers}
+              >
+              {capitalizeFirstLetter(debilityKey)}
+            </label>
+          </div>
+        {/each}
       </div>
-      <div class="debility">
-        <label>
-          <input type="checkbox" bind:checked={$characterStore.debilities.conditions.unprepared}>
-          Unprepared
-        </label>
-      </div>
-      <div class="debility">
-        <label>
-          <input type="checkbox" bind:checked={$characterStore.debilities.conditions.shaken}>
-          Shaken
-        </label>
-      </div>
-      <div class="debility">
-        <label>
-          <input type="checkbox" bind:checked={$characterStore.debilities.conditions.encumbered}>
-          Encumbered
-        </label>
-      </div>
-    </div>
-
-    <div class="debilities-group">
-      <label>Banes</label>
-      <div class="debility">
-        <label>
-          <input type="checkbox" bind:checked={$characterStore.debilities.banes.maimed}>
-          Maimed
-        </label>
-      </div>
-      <div class="debility">
-        <label>
-          <input type="checkbox" bind:checked={$characterStore.debilities.banes.corrupted}>
-          Corrupted
-        </label>
-      </div>
-    </div>
-
-    <div class="debilities-group">
-      <label>Burdens</label>
-      <div class="debility">
-        <label>
-          <input type="checkbox" bind:checked={$characterStore.debilities.burdens.cursed}>
-          Cursed
-        </label>
-      </div>
-      <div class="debility">
-        <label>
-          <input type="checkbox" bind:checked={$characterStore.debilities.burdens.tormented}>
-          Tormented
-        </label>
-      </div>
-    </div>
+    {/each}
   </div>
 </div>
 

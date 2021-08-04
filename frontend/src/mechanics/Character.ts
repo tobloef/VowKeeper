@@ -12,10 +12,7 @@ export class Character {
     rank: ChallengeRanks.Epic,
   })
 
-  experience = Stat.create({
-    name: "Experience",
-    validator: minMaxValidator(0, 50),
-  });
+  experience = 0;
 
   stats = {
     edge: Stat.create({
@@ -101,6 +98,54 @@ export class Character {
 
   vows: ProgressTrack[] = [];
 
+  modifierRules = [
+    {
+      check: () => this.getMarkedDebilitiesCount() > 0,
+      stat: this.momentum.max,
+      modifier: Modifier.create({
+        id: "debilities_max_momentum",
+        getDescription: () => `Debilities: -${this.getMarkedDebilitiesCount()} Max Momentum bla bla bla`,
+        apply: (prev) => prev - this.getMarkedDebilitiesCount(),
+      }),
+    },
+    {
+      check: () => this.getMarkedDebilitiesCount() === 1,
+      stat: this.momentum.reset,
+      modifier: Modifier.create({
+        id: "debilities_1_momentum_reset",
+        getDescription: () => `Debilities: -1 Momentum Reset`,
+        apply: (prev) => prev - 1,
+      }),
+    },
+    {
+      check: () => this.getMarkedDebilitiesCount() >= 2,
+      stat: this.momentum.reset,
+      modifier: Modifier.create({
+        id: "debilities_2_momentum_reset",
+        getDescription: () => `Debilities: -2 Momentum Reset bla bla bla`,
+        apply: (prev) => prev - 2,
+      }),
+    },
+  ]
+
+  private getMarkedDebilitiesCount(): number {
+    const allDebilityValues = [
+      ...Object.values(this.debilities.burdens),
+      ...Object.values(this.debilities.conditions),
+      ...Object.values(this.debilities.banes),
+    ];
+    return allDebilityValues.filter((v) => v).length;
+  }
+
+  public updateModifiers(): void {
+    this.modifierRules.forEach(({check, stat, modifier}) => {
+      stat.modifiers = stat.modifiers.filter((m) => m.id !== modifier.id);
+      if (check()) {
+        stat.modifiers = [...stat.modifiers, modifier];
+      }
+    })
+  }
+
   static create(props: Optional<Character> = {}): Character {
     return Object.assign(new Character(), props)
   }
@@ -108,7 +153,7 @@ export class Character {
   public clone(): Character {
     return Character.create({
       name: this.name,
-      experience: this.experience.clone(),
+      experience: this.experience,
       stats: {
         edge: this.stats.edge.clone(),
         heart: this.stats.heart.clone(),

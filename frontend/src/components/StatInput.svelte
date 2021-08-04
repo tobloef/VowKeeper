@@ -12,6 +12,7 @@
   export let vertical: boolean = false;
   export let label: string = undefined;
   export let onClick: (stat: Stat) => void = undefined;
+  export let afterUpdate: () => void;
 
   let prevInputValue;
   let prevSelectionStart;
@@ -19,6 +20,8 @@
   let inputValue;
   let validationError;
   let statInputElement;
+  let updateBaseValue;
+  let hasModifiers;
 
   const onInput = (e) => {
     inputValue = e.target.value;
@@ -37,9 +40,20 @@
   }
 
   $: prevInputValue = formatNumber(stat.getValue(), showSign);
+
   $: inputValue = formatNumber(stat.getValue(), showSign);
 
   $: validationError = stat.validate();
+
+  $: hasModifiers = stat.modifiers.length > 0;
+
+  $: updateBaseValue = (newVal) => {
+    const oldVal = stat.baseValue;
+    stat.baseValue = newVal;
+    if (afterUpdate !== undefined && oldVal !== newVal) {
+      afterUpdate();
+    }
+  }
 </script>
 
 <div
@@ -53,13 +67,13 @@
       <button
         class="decrease"
         disabled={stat.validate(stat.baseValue - 1) !== undefined}
-        on:click={() => stat.baseValue -= 1}
+        on:click={() => updateBaseValue(stat.baseValue - 1)}
       >-
       </button>
     {/if}
     <div
       class="stat"
-      class:modified={stat.modifiers.length > 0}
+      class:modified={hasModifiers}
     >
       <input
         value={inputValue}
@@ -71,11 +85,11 @@
               e.preventDefault();
               return;
             case "ArrowUp":
-              stat.baseValue += 1;
+              updateBaseValue(stat.baseValue + 1);
               e.preventDefault();
               return;
             case "ArrowDown":
-              stat.baseValue -= 1;
+              updateBaseValue(stat.baseValue - 1);
               e.preventDefault();
               return;
           }
@@ -84,9 +98,9 @@
         on:blur={() => {
           const newValue = Number(inputValue);
           if (Number.isNaN(newValue)) {
-            stat.baseValue = 0;
+            updateBaseValue(0);
           } else {
-            stat.baseValue = newValue;
+            updateBaseValue(newValue);
           }
         }}
       >
@@ -100,7 +114,7 @@
       <button
         class="increase"
         disabled={stat.validate(stat.baseValue + 1) !== undefined}
-        on:click={() => stat.baseValue += 1}
+        on:click={() => updateBaseValue(stat.baseValue + 1)}
       >+
       </button>
     {/if}
@@ -110,14 +124,14 @@
   {/if}
 </div>
 
-{#if stat.modifiers.length > 0}
+{#if hasModifiers}
   <Popup
     anchor={statInputElement}
     offsetY={-10}
   >
     <div class="modifiers">
       {#each stat.modifiers as modifier}
-        <span>{modifier.description}</span>
+        <span>{modifier.getDescription()}</span>
       {/each}
     </div>
   </Popup>
