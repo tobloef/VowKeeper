@@ -8,11 +8,11 @@
   import {nanoid} from "nanoid";
   import {rollActionRoll} from "../mechanics/rolls";
   import {CustomElementType, getCustomElementStore} from "../customElements";
-  import {logStore} from "../stores";
+  import {LogItem, logStore} from "../stores";
 
   export let characterStore: Writable<Character>;
 
-  const createActionRollLogEntry = (stat) => {
+  const createActionRollLogEntry = (stat): LogItem => {
     const storeId = nanoid();
     const roll = rollActionRoll(stat, 1);
     getCustomElementStore(storeId, {
@@ -20,6 +20,7 @@
       character: $characterStore,
     });
     return {
+      id: nanoid(),
       type: CustomElementType.ActionRollCard,
       storeId,
     };
@@ -100,7 +101,7 @@
 
   <Divider text="Bonds"/>
 
-  <div>
+  <div class="bonds">
     <ProgressTrack progressTrack={$characterStore.bonds}/>
   </div>
 
@@ -236,6 +237,10 @@
 
   .momentum .separator {
     align-self: stretch;
+  }
+
+  .bonds {
+    margin: 10px 0px 5px;
   }
 
   .vow:not(:last-child) {

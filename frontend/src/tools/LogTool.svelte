@@ -2,6 +2,10 @@
   import {logStore} from "../stores";
   import {customElementTypeToComponent} from "../customElements";
   import {onDestroy, onMount} from "svelte";
+  import Fa from "svelte-fa";
+  import {
+    faTrash,
+  } from "@fortawesome/free-solid-svg-icons";
 
   let logElement;
   let lockToBottom = true;
@@ -25,6 +29,12 @@
   onDestroy(() => {
     logResizeObserver.unobserve(logElement);
   });
+
+  $: deleteLogItem = (id) => {
+    console.log("Removing id", id);
+    console.log(logStore);
+    logStore.update((prevLog) => prevLog.filter((item) => item.id !== id));
+  }
 </script>
 
 <div
@@ -32,12 +42,22 @@
   bind:this={logElement}
   on:scroll={onLogScroll}
 >
-  {#each $logStore as { storeId, type }}
-    <svelte:component
-      this={customElementTypeToComponent(type)}
-      id={storeId}
-      canDropInsert={true}
-    />
+  {#each $logStore as { id, storeId, type } (id)}
+    <div class="log-item">
+      <span
+        class="delete-icon"
+        on:click={() => deleteLogItem(id)}
+      >
+        <Fa
+          icon={faTrash}
+        />
+      </span>
+      <svelte:component
+        this={customElementTypeToComponent(type)}
+        id={storeId}
+        canDropInsert={true}
+      />
+    </div>
   {/each}
 </div>
 
@@ -52,7 +72,25 @@
     box-sizing: border-box;
   }
 
-  :global(.log > *:not(:last-child)) {
+  .log > *:not(:last-child) {
     margin-bottom: 10px;
+  }
+
+  .log-item {
+    position: relative;
+  }
+
+  :global(.log-item .delete-icon) {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: hsl(0deg 100% 65%);
+    z-index: 10;
+    user-select: none;
+  }
+
+  :global(.log-item:not(:hover) .delete-icon) {
+    display: none;
   }
 </style>

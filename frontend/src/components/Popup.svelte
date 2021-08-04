@@ -9,16 +9,14 @@
   let popupRect;
   let isOpen = false;
 
-  const updatePopupPosition = () => {
-    if (!isOpen) {
-      return;
+  $: {
+    if (isOpen) {
+      anchorRect = anchor?.getBoundingClientRect();
+      popupRect = popup?.getBoundingClientRect();
     }
-    anchorRect = anchor?.getBoundingClientRect();
-    popupRect = popup?.getBoundingClientRect();
   }
 
   $: {
-    anchor?.addEventListener("mousemove", updatePopupPosition);
     anchor?.addEventListener("mouseenter", () => isOpen = true)
     anchor?.addEventListener("mouseleave", () => isOpen = false)
     anchor?.addEventListener("wheel", () => isOpen = false)
@@ -30,20 +28,21 @@
   $: triangleOffset = originalPopupX - popupX;
 </script>
 
-<Portal>
-  <div
-    class="popup"
-    class:visible={isOpen}
-    bind:this={popup}
-    style="
-                left: {popupX}px;
-                top: {popupY}px;
-                --triangleOffset: {triangleOffset}px;
-            "
-  >
-    <slot></slot>
-  </div>
-</Portal>
+{#if isOpen}
+  <Portal>
+    <div
+      class="popup"
+      bind:this={popup}
+      style="
+          left: {popupX}px;
+          top: {popupY}px;
+          --triangleOffset: {triangleOffset}px;
+      "
+    >
+      <slot></slot>
+    </div>
+  </Portal>
+{/if}
 
 <style>
   .popup {
@@ -58,10 +57,6 @@
     box-sizing: border-box;
     border-radius: 5px;
     box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.25);
-  }
-
-  .popup:not(.visible) {
-    visibility: hidden;
   }
 
   .popup:after, .popup:before {

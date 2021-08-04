@@ -24,7 +24,6 @@
     align-items: start;
     box-sizing: border-box;
     padding: 20px;
-    font-family: "Merriweather", serif;
   }
 
   #editor-wrapper {

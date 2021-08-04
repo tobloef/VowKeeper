@@ -21,7 +21,6 @@
 
   $: currentMomentum = character.momentum.current.getValue();
 
-
   $: {
     const challengeDice1Hit: boolean = currentMomentum > roll.challengeDice[0].value;
     const challengeDice2Hit: boolean = currentMomentum > roll.challengeDice[1].value;
@@ -75,11 +74,12 @@
 
 <style>
   .wrapper {
-    border: 1px solid black;
+    border: 1px solid hsl(0deg 0% 50%);
     padding: 5px 10px 10px 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    border-radius: 3px;
   }
 
   .header {

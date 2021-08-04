@@ -1,7 +1,7 @@
 <script>
 	import {Route, router, active} from "tinro";
 	import CharacterTool from "./tools/CharacterTool.svelte";
-	import Fa from "svelte-fa"
+	import Fa from "svelte-fa";
 	import {
 		faList,
 		faUser,
