@@ -54,7 +54,7 @@
       </span>
       <svelte:component
         this={customElementTypeToComponent(type)}
-        id={storeId}
+        storeId={storeId}
         canDropInsert={true}
       />
     </div>

@@ -4,16 +4,18 @@
   import {Character} from "../mechanics/Character";
   import Popup from "./Popup.svelte";
   import {formatNumber} from "../utils";
+  import {logStore} from "../stores";
 
   export let roll: ActionRoll;
   export let character: Character;
   export let move: string = undefined;
-
+  export let isLatest: boolean = false;
 
   let resultIfBurnMomentum;
   let momentumPopupAnchor;
   let canUpgradeResult;
   let statText;
+  let thisRollIsLatest;
 
   const burnMomentum = () => {
     character.burnMomentum();
@@ -73,7 +75,7 @@
         class="momentumWrapper"
         bind:this={momentumPopupAnchor}
       >
-        {#if canUpgradeResult}
+        {#if isLatest && canUpgradeResult}
           <button
             class="burnMomentum"
             on:click={burnMomentum}
