@@ -3,7 +3,6 @@ import {ChallengeRanks, ProgressTrack} from "./Progress";
 import type {Asset} from "./Asset";
 import type {Optional} from "../utils";
 import {Modifier} from "./Modifier";
-import { nanoid } from "nanoid";
 
 export class Character {
   name = "";
@@ -104,7 +103,7 @@ export class Character {
       stat: this.momentum.max,
       modifier: Modifier.create({
         id: "debilities_max_momentum",
-        getDescription: () => `Debilities: -${this.getMarkedDebilitiesCount()} Max Momentum bla bla bla`,
+        getDescription: () => `Debilities: -${this.getMarkedDebilitiesCount()} Max Momentum`,
         apply: (prev) => prev - this.getMarkedDebilitiesCount(),
       }),
     },
@@ -122,7 +121,7 @@ export class Character {
       stat: this.momentum.reset,
       modifier: Modifier.create({
         id: "debilities_2_momentum_reset",
-        getDescription: () => `Debilities: -2 Momentum Reset bla bla bla`,
+        getDescription: () => `Debilities: -2 Momentum Reset`,
         apply: (prev) => prev - 2,
       }),
     },
