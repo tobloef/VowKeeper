@@ -2,28 +2,38 @@
   import ActionRollDice from "./ActionRollDice.svelte";
   import {ActionRoll, RollResult} from "../mechanics/rolls";
   import {Character} from "../mechanics/Character";
-  import Fa from "svelte-fa"
-  import {
-    faFire,
-    faFireAlt,
-    faBurn,
-  } from "@fortawesome/free-solid-svg-icons";
   import Popup from "./Popup.svelte";
   import {formatNumber} from "../utils";
+  import {logStore} from "../stores";
 
   export let roll: ActionRoll;
   export let character: Character;
   export let move: string = undefined;
-
+  export let isLatest: boolean = false;
 
   let resultIfBurnMomentum;
-  let momentumPopupAnchor
+  let momentumPopupAnchor;
+  let canUpgradeResult;
+  let statText;
+  let thisRollIsLatest;
 
-  $: currentMomentum = character.momentum.current.getValue();
+  const burnMomentum = () => {
+    character.burnMomentum();
+    roll.result = resultIfBurnMomentum;
+    roll.momentumBurned = true;
+    roll.challengeDice[0].isHit = (
+      roll.challengeDice[0].isHit ||
+      roll.momentumAtRoll > roll.challengeDice[0].value
+    );
+    roll.challengeDice[1].isHit = (
+      roll.challengeDice[1].isHit ||
+      roll.momentumAtRoll > roll.challengeDice[1].value
+    );
+  }
 
   $: {
-    const challengeDice1Hit: boolean = currentMomentum > roll.challengeDice[0].value;
-    const challengeDice2Hit: boolean = currentMomentum > roll.challengeDice[1].value;
+    const challengeDice1Hit: boolean = roll.momentumAtRoll > roll.challengeDice[0].value;
+    const challengeDice2Hit: boolean = roll.momentumAtRoll > roll.challengeDice[1].value;
     if (challengeDice1Hit && challengeDice2Hit) {
       resultIfBurnMomentum = RollResult.StrongHit;
     } else if (challengeDice1Hit || challengeDice2Hit) {
@@ -61,8 +71,21 @@
     />
     <div class="resultWrapper">
       <span class="result">{roll.result}</span>
-      <div class="momentumWrapper" class:visible={canUpgradeResult} bind:this={momentumPopupAnchor}>
-        <button class="burnMomentum">Burn momentum</button>
+      <div
+        class="momentumWrapper"
+        bind:this={momentumPopupAnchor}
+      >
+        {#if isLatest && canUpgradeResult}
+          <button
+            class="burnMomentum"
+            on:click={burnMomentum}
+          >
+            Burn momentum
+          </button>
+        {/if}
+        {#if roll.momentumBurned}
+          <span><i>(Momentum burned)</i></span>
+        {/if}
       </div>
     </div>
   </div>
@@ -72,7 +95,7 @@
   anchor={momentumPopupAnchor}
   offsetY={-10}
 >
-  <span>Burn momentum ({formatNumber(currentMomentum, true)}) for a {resultIfBurnMomentum}.</span>
+  <span>Burn momentum ({formatNumber(roll.momentumAtRoll, true)}) for a {resultIfBurnMomentum}.</span>
 </Popup>
 
 <style>
@@ -132,7 +155,9 @@
     align-items: center;
   }
 
-  .momentumWrapper:not(.visible) {
-    display: none;
+  .momentumWrapper span {
+    text-align: center;
+    color: grey;
+    font-size: 0.8em;
   }
 </style>

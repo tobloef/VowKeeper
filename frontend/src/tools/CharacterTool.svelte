@@ -15,7 +15,7 @@
 
   const createActionRollLogEntry = (stat): LogItem => {
     const storeId = nanoid();
-    const roll = rollActionRoll(stat, 1);
+    const roll = rollActionRoll(stat, 1, $characterStore); // TODO
     getCustomElementStore(storeId, {
       roll,
       character: $characterStore,

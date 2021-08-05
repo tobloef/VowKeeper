@@ -68,6 +68,7 @@
     border-radius: 5px;
     box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.25);
     width: fit-content;
+    z-index: 100;
   }
 
   .popup:not(.visible) {
