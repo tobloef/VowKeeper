@@ -1,6 +1,7 @@
 import _ from "lodash";
 import type {Stat} from "./Stat";
 import type {ProgressTrack} from "./Progress";
+import type {Character} from "./Character";
 
 export enum RollResult {
   StrongHit = "Strong Hit",
@@ -21,6 +22,8 @@ export type ActionRoll = {
   actionScore: ActionScore,
   result: RollResult,
   isMatch: boolean,
+  momentumAtRoll: number,
+  momentumBurned: boolean,
   challengeDice: [
     {
       value: number,
@@ -36,7 +39,7 @@ export type ActionRoll = {
 const rollD10 = (): number => _.random(1, 10);
 const rollD6 = (): number => _.random(1, 6);
 
-export const rollActionRoll = (stat: Stat, adds: number): ActionRoll => {
+export const rollActionRoll = (stat: Stat, adds: number, character: Character): ActionRoll => {
   const challengeDice1: number = rollD10();
   const challengeDice2: number = rollD10();
   const actionDie: number = rollD6();
@@ -58,15 +61,19 @@ export const rollActionRoll = (stat: Stat, adds: number): ActionRoll => {
   const isMatch: boolean = challengeDice1 === challengeDice2;
   const isMaxed: boolean = unboundedActionScore > actionScore;
 
+  const clonedStat = stat.clone();
+
   return {
-    stat,
+    stat: clonedStat,
     actionScore: {
       value: actionScore,
       actionDie,
-      stat: stat.clone(),
+      stat: clonedStat,
       adds,
       isMaxed,
     },
+    momentumAtRoll: character.momentum.current.getValue(),
+    momentumBurned: false,
     result,
     isMatch,
     challengeDice: [

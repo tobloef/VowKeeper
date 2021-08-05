@@ -128,6 +128,10 @@ export class Character {
     },
   ]
 
+  public burnMomentum(): void {
+    this.momentum.current.baseValue = this.momentum.reset.getValue();
+  }
+
   private getMarkedDebilitiesCount(): number {
     const allDebilityValues = [
       ...Object.values(this.debilities.burdens),
