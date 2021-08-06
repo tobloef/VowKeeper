@@ -5,6 +5,7 @@
   import Popup from "./Popup.svelte";
 
   export let actionScore: ActionScore;
+  export let momentum: number;
 
   let popupAnchor;
 </script>
@@ -52,7 +53,29 @@
     {/if}
     <div class="calculation">
       <div class="d6Wrapper">
-        <D6 number={actionScore.actionDie}/>
+        <div class="d6">
+          {#if actionScore.actionDiceNegated}
+            <div class="cross">
+              <svg
+                viewBox="-10 -10 120 120"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke="rgba(255,77,77,0.85)"
+                  stroke-width="20"
+                  stroke-linecap="round"
+                  d="M4.15 4.15l92 92m0-92l-92 92"
+                />
+              </svg>
+            </div>
+          {/if}
+          <D6
+            number={actionScore.actionDie}
+          />
+        </div>
+        {#if actionScore.actionDiceNegated}
+          <span><i>({momentum} Momentum)</i></span>
+        {/if}
       </div>
       <span class="plus">+</span>
       <div class="stat">
@@ -87,8 +110,31 @@
   }
 
   .d6Wrapper {
-    height: 2.5em;
     margin-right: 0.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .d6Wrapper > span {
+    color: darkgrey;
+    margin-top: 10px;
+  }
+
+  .d6 {
+    height: 2.5em;
+    position: relative;
+  }
+
+  .d6 .cross {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .maxed {

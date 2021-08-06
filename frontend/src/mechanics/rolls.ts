@@ -15,6 +15,7 @@ export type ActionScore = {
   stat: Stat,
   adds: number,
   isMaxed: boolean,
+  actionDiceNegated: boolean,
 }
 
 export type ActionRoll = {
@@ -43,7 +44,13 @@ export const rollActionRoll = (stat: Stat, adds: number, character: Character): 
   const challengeDice1: number = rollD10();
   const challengeDice2: number = rollD10();
   const actionDie: number = rollD6();
-  const unboundedActionScore = actionDie + stat.getValue() + adds;
+  const momentumAtRoll = character.momentum.current.getValue();
+  const actionDiceNegated = momentumAtRoll === -actionDie;
+
+  const unboundedActionScore =
+    (actionDiceNegated ? 0 : actionDie) +
+    stat.getValue() +
+    adds;
   const actionScore: number = Math.min(unboundedActionScore, 10);
 
   const challengeDice1Hit: boolean = actionScore > challengeDice1;
@@ -66,13 +73,14 @@ export const rollActionRoll = (stat: Stat, adds: number, character: Character): 
   return {
     stat: clonedStat,
     actionScore: {
+      actionDiceNegated,
       value: actionScore,
       actionDie,
       stat: clonedStat,
       adds,
       isMaxed,
     },
-    momentumAtRoll: character.momentum.current.getValue(),
+    momentumAtRoll,
     momentumBurned: false,
     result,
     isMatch,

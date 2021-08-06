@@ -8,7 +8,10 @@
 
 <div class="wrapper">
   <div class="actionScoreWrapper">
-    <ActionScore actionScore={roll.actionScore}/>
+    <ActionScore
+      actionScore={roll.actionScore}
+      momentum={roll.momentumAtRoll}
+    />
   </div>
   <span class="vs">vs</span>
   <div class="challengeDiceWrapper">

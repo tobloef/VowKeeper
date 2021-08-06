@@ -65,7 +65,7 @@
       {/if}
     </span>
   </div>
-  <div class="dunno">
+  <div class="content">
     <ActionRollDice
       roll={roll}
     />
@@ -124,7 +124,7 @@
     left: 0px;
   }
 
-  .dunno {
+  .content {
     display: flex;
     align-items: center;
   }
