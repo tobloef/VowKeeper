@@ -18,7 +18,7 @@
   let thisRollIsLatest;
 
   const burnMomentum = () => {
-    character.burnMomentum();
+    character.resetMomentum();
     roll.result = resultIfBurnMomentum;
     roll.momentumBurned = true;
     roll.challengeDice[0].isHit = (

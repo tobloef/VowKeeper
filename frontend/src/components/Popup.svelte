@@ -3,6 +3,9 @@
 
   export let anchor;
   export let offsetY = 0;
+  export let name = "";
+
+  const EDGE_MARGIN = 5;
 
   let popup;
   let anchorRect;
@@ -23,15 +26,38 @@
   }
 
   $: {
-    anchor?.addEventListener("mouseenter", () => isOpen = true)
-    anchor?.addEventListener("mouseleave", () => isOpen = false)
-    anchor?.addEventListener("wheel", () => isOpen = false)
-    anchor?.addEventListener("mousedown", () => isOpen = false)
+    if (name !== undefined && name !== "") {
+      console.log(name, anchor !== undefined, anchor)
+    }
+    anchor?.addEventListener("mouseenter", () => {
+      if (name !== undefined && name !== "") {
+        console.log(name, "mouseenter")
+      }
+      isOpen = true;
+    })
+    anchor?.addEventListener("mouseleave", () => {
+      if (name !== undefined && name !== "") {
+        console.log(name, "mouseleave")
+      }
+      isOpen = false;
+    })
+    anchor?.addEventListener("wheel", () => {
+      if (name !== undefined && name !== "") {
+        console.log(name, "wheel")
+      }
+      isOpen = false;
+    })
+    anchor?.addEventListener("mousedown", () => {
+      if (name !== undefined && name !== "") {
+        console.log(name, "mousedown")
+      }
+      isOpen = false;
+    })
   }
 
   $: leftSideX = anchorRect?.x + anchorRect?.width / 2 - popupRect?.width / 2;
-  $: minX = document.body.getBoundingClientRect().x + 10;
-  $: maxX = document.body.getBoundingClientRect().width - 10 - popupRect?.width;
+  $: minX = document.body.getBoundingClientRect().x + EDGE_MARGIN;
+  $: maxX = document.body.getBoundingClientRect().width - EDGE_MARGIN - popupRect?.width;
   $: popupX = Math.min(Math.max(leftSideX, minX), maxX);
   $: popupY = anchorRect?.y - popupRect?.height + offsetY;
   $: triangleOffset = leftSideX - popupX;

@@ -2,10 +2,12 @@
   import {Stat} from "../mechanics/Stat";
   import {formatNumber, noop} from "../utils";
   import Popup from "./Popup.svelte";
+  import {Character} from "../mechanics/Character";
 
   const VALID_INPUT_REGEX = /^[+-]?[0-9]*$/;
 
   export let stat: Stat;
+  export let character: Character;
   export let showButtons: boolean = false;
   export let canEdit: boolean = true;
   export let showSign: boolean = true;
@@ -18,7 +20,9 @@
   let prevSelectionStart;
   let prevSelectionEnd;
   let inputValue;
-  let validationError;
+  let validateResult;
+  let validateIncreaseResult;
+  let validateDecreaseResult;
   let statInputElement;
   let updateBaseValue;
   let hasModifiers;
@@ -43,7 +47,9 @@
 
   $: inputValue = formatNumber(stat.getValue(), showSign);
 
-  $: validationError = stat.validate();
+  $: validateResult = stat.validate(character);
+  $: validateIncreaseResult = stat.validateIncrease(character);
+  $: validateDecreaseResult = stat.validateDecrease(character);
 
   $: hasModifiers = stat.modifiers.length > 0;
 
@@ -59,18 +65,18 @@
 <div
   class="statInput"
   class:vertical
-  class:error={validationError !== undefined}
+  class:error={validateResult !== undefined}
   bind:this={statInputElement}
 >
   <div class="wrapper">
-    {#if showButtons}
-      <button
-        class="decrease"
-        disabled={stat.validate(stat.baseValue - 1) !== undefined}
-        on:click={() => updateBaseValue(stat.baseValue - 1)}
-      >-
-      </button>
-    {/if}
+    <button
+      class="decrease"
+      class:visible={showButtons}
+      disabled={validateDecreaseResult !== undefined}
+      on:click={() => updateBaseValue(stat.baseValue - 1)}
+    >
+      -
+    </button>
     <div
       class="stat"
       class:modified={hasModifiers}
@@ -85,11 +91,15 @@
               e.preventDefault();
               return;
             case "ArrowUp":
-              updateBaseValue(stat.baseValue + 1);
+            	if (validateIncreaseResult === undefined) {
+                updateBaseValue(stat.baseValue + 1);
+              }
               e.preventDefault();
               return;
             case "ArrowDown":
-              updateBaseValue(stat.baseValue - 1);
+            	if (validateDecreaseResult === undefined) {
+                updateBaseValue(stat.baseValue - 1);
+              }
               e.preventDefault();
               return;
           }
@@ -110,17 +120,17 @@
         on:click={() => onClick !== undefined && onClick(stat)}
       >{label || stat.name}</label>
     </div>
-    {#if showButtons}
-      <button
-        class="increase"
-        disabled={stat.validate(stat.baseValue + 1) !== undefined}
-        on:click={() => updateBaseValue(stat.baseValue + 1)}
-      >+
-      </button>
-    {/if}
+    <button
+      class="increase"
+      class:visible={showButtons}
+      disabled={validateIncreaseResult !== undefined}
+      on:click={() => updateBaseValue(stat.baseValue + 1)}
+    >
+      +
+    </button>
   </div>
-  {#if validationError !== undefined}
-    <span class="errorText">{validationError}</span>
+  {#if validateResult !== undefined}
+    <span class="errorText">{validateResult}</span>
   {/if}
 </div>
 
@@ -226,6 +236,11 @@
 
   .decrease {
     margin: 0px 0.25em 0px 0px;
+  }
+
+  .increase:not(.visible),
+  .decrease:not(.visible) {
+    display: none;
   }
 
   /* Vertical */

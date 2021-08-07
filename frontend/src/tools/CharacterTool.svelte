@@ -52,6 +52,7 @@
     {#each ["edge", "heart", "iron", "shadow", "wits"] as stat}
       <StatInput
         stat={$characterStore.stats[stat]}
+        character={$characterStore}
         showButtons={false}
         showSign={true}
         canEdit={true}
@@ -72,6 +73,7 @@
     {#each ["health", "spirit", "supply"] as status}
       <StatInput
         stat={$characterStore.statuses[status]}
+        character={$characterStore}
         showButtons={true}
         showSign={true}
         canEdit={true}
@@ -85,6 +87,7 @@
   <div class="momentum stats-wrapper">
     <StatInput
       stat={$characterStore.momentum.current}
+      character={$characterStore}
       showButtons={true}
       showSign={true}
       canEdit={true}
@@ -94,6 +97,7 @@
     <Divider vertical={true}/>
     <StatInput
       stat={$characterStore.momentum.max}
+      character={$characterStore}
       showButtons={false}
       showSign={true}
       canEdit={true}
@@ -102,11 +106,16 @@
     />
     <StatInput
       stat={$characterStore.momentum.reset}
+      character={$characterStore}
       showButtons={false}
       showSign={true}
       canEdit={true}
       afterUpdate={updateModifiers}
       label="Reset"
+      onClick={() => {
+      	$characterStore.resetMomentum();
+      	$characterStore = $characterStore;
+      }}
     />
   </div>
 

@@ -3,6 +3,7 @@ import {ChallengeRanks, ProgressTrack} from "./Progress";
 import type {Asset} from "./Asset";
 import type {Optional} from "../utils";
 import {Modifier} from "./Modifier";
+import {identity} from "../utils";
 
 export class Character {
   name = "";
@@ -35,11 +36,11 @@ export class Character {
     current: Stat.create({
       name: "Momentum",
       baseValue: 2,
-      validator: (stat) => (
+      validator: (character, value) => (
         minMaxValidator(
           this.momentum.min.getValue(),
           this.momentum.max.getValue()
-        )(stat)
+        )(character, value)
       ),
     }),
     max: Stat.create({
@@ -63,16 +64,34 @@ export class Character {
       name: "Health",
       baseValue: 5,
       validator: minMaxValidator(0, 5),
+      increaseValidator: (character, value) => {
+        if (character.debilities.conditions.wounded) {
+          return "Wounded: Cannot increase Health."
+        }
+        return undefined;
+      },
     }),
     spirit: Stat.create({
       name: "Spirit",
       baseValue: 5,
       validator: minMaxValidator(0, 5),
+      increaseValidator: (character, value) => {
+        if (character.debilities.conditions.shaken) {
+          return "Shaken: Cannot increase Spirit."
+        }
+        return undefined;
+      },
     }),
     supply: Stat.create({
       name: "Supply",
       baseValue: 5,
       validator: minMaxValidator(0, 5),
+      increaseValidator: (character, value) => {
+        if (character.debilities.conditions.unprepared) {
+          return "Unprepared: Cannot increase Supply."
+        }
+        return undefined;
+      },
     }),
   };
 
@@ -125,9 +144,36 @@ export class Character {
         apply: (prev) => prev - 2,
       }),
     },
+    {
+      check: () => this.debilities.conditions.wounded,
+      stat: this.statuses.health,
+      modifier: Modifier.create({
+        id: "wounded_health_increase",
+        getDescription: () => `Wounded: Cannot increase Health`,
+        apply: identity,
+      }),
+    },
+    {
+      check: () => this.debilities.conditions.shaken,
+      stat: this.statuses.spirit,
+      modifier: Modifier.create({
+        id: "shaken_spirit_increase",
+        getDescription: () => `Shaken: Cannot increase Spirit`,
+        apply: identity,
+      }),
+    },
+    {
+      check: () => this.debilities.conditions.unprepared,
+      stat: this.statuses.supply,
+      modifier: Modifier.create({
+        id: "unprepared_supply_increase",
+        getDescription: () => `Unprepared: Cannot increase Supply`,
+        apply: identity,
+      }),
+    },
   ]
 
-  public burnMomentum(): void {
+  public resetMomentum(): void {
     this.momentum.current.baseValue = this.momentum.reset.getValue();
   }
 
