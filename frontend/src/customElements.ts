@@ -9,25 +9,25 @@ export enum CustomElementType {
   ActionRollCard,
 }
 
-export const getCustomElementStore = <T>(id: string, defaultValue: T = {} as T): Writable<T> => {
-  if (customElementStores[id] === undefined) {
-    customElementStores[id] = writable(defaultValue);
+export const getCustomElementStore = <T>(storeId: string, defaultValue: T = {} as T): Writable<T> => {
+  if (customElementStores[storeId] === undefined) {
+    customElementStores[storeId] = writable(defaultValue);
   }
-  return customElementStores[id];
+  return customElementStores[storeId];
 }
 
 const draggedCustomElementStore = writable<undefined | {
-  id: string,
+  storeId: string,
   type: CustomElementType,
 }>(undefined)
 
-export const draggableElement = <T>(node, {canDropInsert, id, type}) => {
+export const draggableElement = <T>(node, {canDropInsert, storeId, type}) => {
   if (!canDropInsert) {
     return {};
   }
 
   const handleDragStart = () => {
-    draggedCustomElementStore.set({id, type})
+    draggedCustomElementStore.set({storeId, type})
   };
 
   const handleDragEnd = () => {
@@ -77,7 +77,7 @@ export const DropInsertCustomElement = Extension.create({
               if (get(draggedCustomElementStore) === undefined) {
                 return false;
               }
-              const {id, type} = get(draggedCustomElementStore);
+              const {storeId, type} = get(draggedCustomElementStore);
               const tag = customElementTypeToTag(type);
 
               const dropPosition = this.editor.view.posAtCoords({
@@ -88,7 +88,7 @@ export const DropInsertCustomElement = Extension.create({
               this.editor
                 .chain()
                 .focus()
-                .insertContentAt(dropPosition, `<${tag} id=${id} />`)
+                .insertContentAt(dropPosition, `<${tag} storeId=${storeId} />`)
                 .run()
 
               return true;
@@ -111,7 +111,7 @@ export const createNodeView = (type: CustomElementType) => {
     draggable: true,
 
     addAttributes: () => ({
-      id: {},
+      storeId: {},
       canDropInsert: {},
     }),
 
@@ -132,7 +132,7 @@ export const createNodeView = (type: CustomElementType) => {
       const component = new Component({
         target: dom,
         props: {
-          id: node.attrs.id,
+          storeId: node.attrs.storeId,
           canDropInsert: false,
         }
       });

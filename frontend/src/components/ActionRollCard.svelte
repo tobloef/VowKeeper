@@ -4,18 +4,18 @@
   import {Character} from "../mechanics/Character";
   import Popup from "./Popup.svelte";
   import {formatNumber} from "../utils";
-  import {logStore} from "../stores";
 
   export let roll: ActionRoll;
   export let character: Character;
   export let move: string = undefined;
   export let isLatest: boolean = false;
+  export let viewOnly: boolean = false;
+  export let onUpdateRoll;
 
   let resultIfBurnMomentum;
   let momentumPopupAnchor;
   let canUpgradeResult;
   let statText;
-  let thisRollIsLatest;
 
   const burnMomentum = () => {
     character.resetMomentum();
@@ -29,6 +29,9 @@
       roll.challengeDice[1].isHit ||
       roll.momentumAtRoll > roll.challengeDice[1].value
     );
+    if (onUpdateRoll !== undefined) {
+      onUpdateRoll();
+    }
   }
 
   $: {
@@ -73,18 +76,18 @@
       <span class="result">{roll.result}</span>
       <div
         class="momentumWrapper"
-        bind:this={momentumPopupAnchor}
       >
-        {#if isLatest && canUpgradeResult}
+        {#if isLatest && canUpgradeResult && !viewOnly}
           <button
             class="burnMomentum"
             on:click={burnMomentum}
+            bind:this={momentumPopupAnchor}
           >
             Burn momentum
           </button>
         {/if}
         {#if roll.momentumBurned}
-          <span><i>(Momentum burned)</i></span>
+          <span><i>({roll.momentumAtRoll} Momentum burned)</i></span>
         {/if}
       </div>
     </div>
@@ -130,8 +133,8 @@
   }
 
   .resultWrapper {
-    margin-left: 15px;
-    width: 150px;
+    margin-left: 5px;
+    width: 160px;
     display: flex;
     flex-direction: column;
     justify-content: center;

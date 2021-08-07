@@ -1,10 +1,7 @@
 <script lang="ts">
   import {darkGrey} from "../colors";
-  import {nanoid} from "nanoid";
 
   export let number: 1 | 2 | 3 | 4 | 5 | 6;
-
-  const id = nanoid();
 </script>
 
 <svg

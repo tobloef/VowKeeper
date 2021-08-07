@@ -19,6 +19,7 @@ export type ActionScore = {
 }
 
 export type ActionRoll = {
+  move: string,
   stat: Stat,
   actionScore: ActionScore,
   result: RollResult,
@@ -40,7 +41,12 @@ export type ActionRoll = {
 const rollD10 = (): number => _.random(1, 10);
 const rollD6 = (): number => _.random(1, 6);
 
-export const rollActionRoll = (stat: Stat, adds: number, character: Character): ActionRoll => {
+export const rollActionRoll = (
+  stat: Stat,
+  adds: number,
+  character: Character,
+  move: string,
+): ActionRoll => {
   const challengeDice1: number = rollD10();
   const challengeDice2: number = rollD10();
   const actionDie: number = rollD6();
@@ -71,6 +77,7 @@ export const rollActionRoll = (stat: Stat, adds: number, character: Character): 
   const clonedStat = stat.clone();
 
   return {
+    move,
     stat: clonedStat,
     actionScore: {
       actionDiceNegated,

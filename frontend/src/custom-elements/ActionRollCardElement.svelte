@@ -26,10 +26,12 @@
 </script>
 
 <div use:draggableElement={{canDropInsert, storeId, type}}>
-  <ActionRollCard
-    roll={$store.roll}
-    character={$store.character}
-    move="Undertake a Journey"
-    isLatest={storeId === latestActionRollStoreId}
-  />
+    <ActionRollCard
+      roll={$store.roll}
+      character={$store.character}
+      move={$store.roll.move}
+      isLatest={storeId === latestActionRollStoreId}
+      viewOnly={!canDropInsert}
+      onUpdateRoll={() => $store = $store}
+    />
 </div>
