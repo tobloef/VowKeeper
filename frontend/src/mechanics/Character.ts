@@ -1,18 +1,59 @@
 import {minMaxValidator, Stat} from "./Stat";
-import {ChallengeRanks, ProgressTrack} from "./Progress";
-import type {Asset} from "./Asset";
-import type {Optional} from "../utils";
+import {ChallengeRanks, ProgressTrack, SerializedProgressTrack} from "./Progress";
+import {Asset, SerializedAsset} from "./Asset";
 import {Modifier} from "./Modifier";
 import {identity} from "../utils";
+
+type SerializedCharacter = {
+  name: string,
+  experience: number,
+  bondsTicks: number,
+  stats: {
+    edgeBaseValue: number,
+    heartBaseValue: number,
+    ironBaseValue: number,
+    shadowBaseValue: number,
+    witsBaseValue: number,
+  },
+  momentum: {
+    currentBaseValue: number,
+    maxBaseValue: number,
+    minBaseValue: number,
+    resetBaseValue: number,
+  },
+  statuses: {
+    healthBaseValue: number,
+    spiritBaseValue: number,
+    supplyBaseValue: number,
+  },
+  debilities: {
+    conditions: {
+      wounded: boolean,
+      unprepared: boolean,
+      shaken: boolean,
+      encumbered: boolean,
+    },
+    banes: {
+      maimed: boolean,
+      corrupted: boolean,
+    },
+    burdens: {
+      cursed: boolean,
+      tormented: boolean,
+    },
+  },
+  assets: SerializedAsset[],
+  vows: SerializedProgressTrack[],
+}
 
 export class Character {
   name = "";
 
+  experience = 0;
+
   bonds = ProgressTrack.create({
     rank: ChallengeRanks.Epic,
   })
-
-  experience = 0;
 
   stats = {
     edge: Stat.create({
@@ -195,50 +236,61 @@ export class Character {
     })
   }
 
-  static create(props: Optional<Character> = {}): Character {
-    return Object.assign(new Character(), props)
+  public serialize(): SerializedCharacter {
+    return {
+      name: this.name,
+      experience: this.experience,
+      bondsTicks: this.bonds.ticks,
+      stats: {
+        edgeBaseValue: this.stats.edge.baseValue,
+        heartBaseValue: this.stats.heart.baseValue,
+        ironBaseValue: this.stats.iron.baseValue,
+        shadowBaseValue: this.stats.shadow.baseValue,
+        witsBaseValue: this.stats.wits.baseValue,
+      },
+      statuses: {
+        healthBaseValue: this.statuses.health.baseValue,
+        spiritBaseValue: this.statuses.spirit.baseValue,
+        supplyBaseValue: this.statuses.supply.baseValue,
+      },
+      momentum: {
+        currentBaseValue: this.momentum.current.baseValue,
+        maxBaseValue: this.momentum.max.baseValue,
+        minBaseValue: this.momentum.min.baseValue,
+        resetBaseValue: this.momentum.reset.baseValue,
+      },
+      debilities: this.debilities,
+      assets: this.assets.map((a) => a.serialize()),
+      vows: this.vows.map((v) => v.serialize()),
+    }
+  }
+
+  static deserialize(serialized: SerializedCharacter): Character {
+    const char = new Character();
+
+    char.name = serialized.name;
+    char.experience = serialized.experience;
+    char.bonds.ticks = serialized.bondsTicks;
+    char.stats.edge.baseValue = serialized.stats.edgeBaseValue;
+    char.stats.heart.baseValue = serialized.stats.heartBaseValue;
+    char.stats.iron.baseValue = serialized.stats.ironBaseValue;
+    char.stats.shadow.baseValue = serialized.stats.shadowBaseValue;
+    char.stats.wits.baseValue = serialized.stats.witsBaseValue;
+    char.statuses.health.baseValue = serialized.statuses.healthBaseValue;
+    char.statuses.spirit.baseValue = serialized.statuses.spiritBaseValue;
+    char.statuses.supply.baseValue = serialized.statuses.supplyBaseValue;
+    char.momentum.current.baseValue = serialized.momentum.currentBaseValue;
+    char.momentum.max.baseValue = serialized.momentum.maxBaseValue;
+    char.momentum.min.baseValue = serialized.momentum.minBaseValue;
+    char.momentum.reset.baseValue = serialized.momentum.resetBaseValue;
+    char.debilities = serialized.debilities;
+    char.assets = serialized.assets.map((a) => Asset.deserialize(a));
+    char.vows = serialized.vows.map((v) => ProgressTrack.deserialize(v));
+
+    return char;
   }
 
   public clone(): Character {
-    return Character.create({
-      name: this.name,
-      experience: this.experience,
-      stats: {
-        edge: this.stats.edge.clone(),
-        heart: this.stats.heart.clone(),
-        iron: this.stats.iron.clone(),
-        shadow: this.stats.shadow.clone(),
-        wits: this.stats.wits.clone(),
-      },
-      momentum: {
-        current: this.momentum.current.clone(),
-        min: this.momentum.min.clone(),
-        max: this.momentum.max.clone(),
-        reset: this.momentum.reset.clone(),
-      },
-      statuses: {
-        health: this.statuses.health.clone(),
-        spirit: this.statuses.spirit.clone(),
-        supply: this.statuses.supply.clone(),
-      },
-      debilities: {
-        conditions: {
-          wounded: this.debilities.conditions.wounded,
-          unprepared: this.debilities.conditions.unprepared,
-          shaken: this.debilities.conditions.shaken,
-          encumbered: this.debilities.conditions.encumbered,
-        },
-        banes: {
-          maimed: this.debilities.banes.maimed,
-          corrupted: this.debilities.banes.corrupted,
-        },
-        burdens: {
-          cursed: this.debilities.burdens.cursed,
-          tormented: this.debilities.burdens.tormented,
-        },
-      },
-      assets: this.assets.map((a) => a.clone()),
-      vows: this.vows.map((v) => v.clone()),
-    });
+    return Character.deserialize(this.serialize());
   }
 }

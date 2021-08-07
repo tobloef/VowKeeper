@@ -26,6 +26,12 @@ export const ChallengeRanks = {
   },
 }
 
+export type SerializedProgressTrack = {
+  name: string,
+  rank: ChallengeRank,
+  ticks: number,
+}
+
 export class ProgressTrack {
   name: string = "";
   rank: ChallengeRank;
@@ -39,8 +45,24 @@ export class ProgressTrack {
     return Object.assign(new ProgressTrack(), props);
   }
 
+  public serialize(): SerializedProgressTrack {
+    return {
+      name: this.name,
+      rank: this.rank,
+      ticks: this.ticks,
+    }
+  }
+
+  static deserialize(serialized: SerializedProgressTrack): ProgressTrack {
+    return ProgressTrack.create({
+      name: serialized.name,
+      rank: serialized.rank,
+      ticks: serialized.ticks,
+    })
+  }
+
   public clone(): ProgressTrack {
-    return ProgressTrack.create(this);
+    return ProgressTrack.deserialize(this.serialize());
   }
 
   public toReadableProgress(): string {
