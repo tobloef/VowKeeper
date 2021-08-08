@@ -1,3 +1,5 @@
+import { nanoid } from "nanoid";
+
 type ChallengeRank = {
   name: string,
   ticksPerProgress: number,
@@ -37,14 +39,6 @@ export class ProgressTrack {
   rank: ChallengeRank;
   ticks: number = 0;
 
-  static create(props: {
-    rank: ChallengeRank;
-    name?: string;
-    ticks?: number;
-  }): ProgressTrack {
-    return Object.assign(new ProgressTrack(), props);
-  }
-
   public serialize(): SerializedProgressTrack {
     return {
       name: this.name,
@@ -54,11 +48,13 @@ export class ProgressTrack {
   }
 
   static deserialize(serialized: SerializedProgressTrack): ProgressTrack {
-    return ProgressTrack.create({
-      name: serialized.name,
-      rank: serialized.rank,
-      ticks: serialized.ticks,
-    })
+    const track = new ProgressTrack();
+
+    track.name = serialized.name;
+    track.rank = serialized.rank;
+    track.ticks = serialized.ticks;
+
+    return track;
   }
 
   public clone(): ProgressTrack {

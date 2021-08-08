@@ -1,38 +1,22 @@
 <script lang="ts">
   import ActionRollDice from "./ActionRollDice.svelte";
-  import {ActionRoll, RollResult} from "../mechanics/rolls";
+  import {RollResult} from "../mechanics/rolls";
+  import type {ActionRoll} from "../mechanics/rolls";
   import {Character} from "../mechanics/Character";
   import Popup from "./Popup.svelte";
   import {formatNumber} from "../utils";
 
   export let roll: ActionRoll;
+  export let burnMomentum: (newResult: RollResult) => void;
   export let character: Character;
   export let move: string = undefined;
   export let isLatest: boolean = false;
   export let viewOnly: boolean = false;
-  export let onUpdateRoll;
 
   let resultIfBurnMomentum;
   let momentumPopupAnchor;
   let canUpgradeResult;
   let statText;
-
-  const burnMomentum = () => {
-    character.resetMomentum();
-    roll.result = resultIfBurnMomentum;
-    roll.momentumBurned = true;
-    roll.challengeDice[0].isHit = (
-      roll.challengeDice[0].isHit ||
-      roll.momentumAtRoll > roll.challengeDice[0].value
-    );
-    roll.challengeDice[1].isHit = (
-      roll.challengeDice[1].isHit ||
-      roll.momentumAtRoll > roll.challengeDice[1].value
-    );
-    if (onUpdateRoll !== undefined) {
-      onUpdateRoll();
-    }
-  }
 
   $: {
     const challengeDice1Hit: boolean = roll.momentumAtRoll > roll.challengeDice[0].value;
@@ -80,7 +64,7 @@
         {#if isLatest && canUpgradeResult && !viewOnly}
           <button
             class="burnMomentum"
-            on:click={burnMomentum}
+            on:click={() => burnMomentum(resultIfBurnMomentum)}
             bind:this={momentumPopupAnchor}
           >
             Burn momentum

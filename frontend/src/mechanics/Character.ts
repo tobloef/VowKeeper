@@ -3,6 +3,7 @@ import {ChallengeRanks, ProgressTrack, SerializedProgressTrack} from "./Progress
 import {Asset, SerializedAsset} from "./Asset";
 import {Modifier} from "./Modifier";
 import {identity} from "../utils";
+import {nanoid} from "nanoid";
 
 type SerializedCharacter = {
   name: string,
@@ -51,8 +52,10 @@ export class Character {
 
   experience = 0;
 
-  bonds = ProgressTrack.create({
+  bonds = ProgressTrack.deserialize({
+    name: "Bonds",
     rank: ChallengeRanks.Epic,
+    ticks: 0,
   })
 
   stats = {
@@ -214,10 +217,6 @@ export class Character {
     },
   ]
 
-  public resetMomentum(): void {
-    this.momentum.current.baseValue = this.momentum.reset.getValue();
-  }
-
   private getMarkedDebilitiesCount(): number {
     const allDebilityValues = [
       ...Object.values(this.debilities.burdens),
@@ -227,6 +226,7 @@ export class Character {
     return allDebilityValues.filter((v) => v).length;
   }
 
+  // TODO: Refactor?
   public updateModifiers(): void {
     this.modifierRules.forEach(({check, stat, modifier}) => {
       stat.modifiers = stat.modifiers.filter((m) => m.id !== modifier.id);

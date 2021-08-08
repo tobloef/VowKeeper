@@ -14,7 +14,7 @@
   export let vertical: boolean = false;
   export let label: string = undefined;
   export let onClick: (stat: Stat) => void = undefined;
-  export let afterUpdate: () => void;
+  export let onBaseValueChange: (newBaseValue: number) => void;
 
   let prevInputValue;
   let prevSelectionStart;
@@ -24,7 +24,6 @@
   let validateIncreaseResult;
   let validateDecreaseResult;
   let statInputElement;
-  let updateBaseValue;
   let hasModifiers;
 
   const onInput = (e) => {
@@ -52,14 +51,6 @@
   $: validateDecreaseResult = stat.validateDecrease(character);
 
   $: hasModifiers = stat.modifiers.length > 0;
-
-  $: updateBaseValue = (newVal) => {
-    const oldVal = stat.baseValue;
-    stat.baseValue = newVal;
-    if (afterUpdate !== undefined && oldVal !== newVal) {
-      afterUpdate();
-    }
-  }
 </script>
 
 <div
@@ -73,7 +64,7 @@
       class="decrease"
       class:visible={showButtons}
       disabled={validateDecreaseResult !== undefined}
-      on:click={() => updateBaseValue(stat.baseValue - 1)}
+      on:click={() => onBaseValueChange(stat.baseValue - 1)}
     >
       -
     </button>
@@ -92,13 +83,13 @@
               return;
             case "ArrowUp":
             	if (validateIncreaseResult === undefined) {
-                updateBaseValue(stat.baseValue + 1);
+                onBaseValueChange(stat.baseValue + 1);
               }
               e.preventDefault();
               return;
             case "ArrowDown":
             	if (validateDecreaseResult === undefined) {
-                updateBaseValue(stat.baseValue - 1);
+                onBaseValueChange(stat.baseValue - 1);
               }
               e.preventDefault();
               return;
@@ -108,23 +99,23 @@
         on:blur={() => {
           const newValue = Number(inputValue);
           if (Number.isNaN(newValue)) {
-            updateBaseValue(0);
+            onBaseValueChange(0);
           } else {
-            updateBaseValue(newValue);
+            onBaseValueChange(newValue);
           }
         }}
       >
-      <label
+      <span
         class="name"
         class:clickable={onClick !== undefined}
         on:click={() => onClick !== undefined && onClick(stat)}
-      >{label || stat.name}</label>
+      >{label || stat.name}</span>
     </div>
     <button
       class="increase"
       class:visible={showButtons}
       disabled={validateIncreaseResult !== undefined}
-      on:click={() => updateBaseValue(stat.baseValue + 1)}
+      on:click={() => onBaseValueChange(stat.baseValue + 1)}
     >
       +
     </button>

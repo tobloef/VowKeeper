@@ -1,24 +1,24 @@
 <script lang="ts">
   import {ChallengeRanks} from "../mechanics/Progress";
-  import {Character} from "../mechanics/Character";
   import ProgressTrack from "../components/ProgressTrackComponent.svelte";
-  import {Writable} from "svelte/store";
   import StatInput from "../components/StatInput.svelte";
   import Divider from "../components/Divider.svelte";
   import {nanoid} from "nanoid";
   import {rollActionRoll} from "../mechanics/rolls";
   import {CustomElementType, getCustomElementStore} from "../customElements";
-  import {LogItem, logStore} from "../stores";
+  import {logStore} from "../stores";
+  import type {ActionRollCardStoreProps} from "../stores";
+  import type {LogItem, CharacterStore} from "../stores";
   import {capitalizeFirstLetter} from "../utils"
 
-  export let characterStore: Writable<Character>;
+  export let characterStore: CharacterStore;
 
   const createActionRollLogEntry = (stat): LogItem => {
     const storeId = nanoid();
     const roll = rollActionRoll(stat, 1, $characterStore, "Undertake a Journey"); // TODO
-    getCustomElementStore(storeId, {
+    getCustomElementStore<ActionRollCardStoreProps>(storeId, {
       roll,
-      character: $characterStore,
+      characterStoreId: characterStore.id,
     });
     return {
       id: nanoid(),
@@ -27,21 +27,42 @@
     };
   }
 
-  const updateModifiers = () => {
-    $characterStore.updateModifiers();
-    $characterStore = $characterStore;
-  }
+  const debilityGroups = [
+    {
+      groupKey: "conditions",
+      debilities: [
+        "wounded",
+        "shaken",
+        "unprepared",
+        "encumbered",
+      ]
+    },
+    {
+      groupKey: "banes",
+      debilities: [
+        "corrupted",
+        "maimed",
+      ]
+    },
+    {
+      groupKey: "burdens",
+      debilities: [
+        "cursed",
+        "tormented",
+      ]
+    },
+  ];
 </script>
 
 <div class="character">
   <div class="header">
-    <div class="name">
-      <label>Character</label>
+    <div class="name" id="name">
+      <label for="name">Character</label>
       <input bind:value={$characterStore.name}>
     </div>
 
-    <div class="experience">
-      <label>Experience</label>
+    <div class="experience" id="experience">
+      <label for="experience">Experience</label>
       <input type="number" bind:value={$characterStore.experience}>
     </div>
   </div>
@@ -52,11 +73,11 @@
     {#each ["edge", "heart", "iron", "shadow", "wits"] as stat}
       <StatInput
         stat={$characterStore.stats[stat]}
+        onBaseValueChange={(newBaseValue) => $characterStore.stats[stat].baseValue = newBaseValue}
         character={$characterStore}
         showButtons={false}
         showSign={true}
         canEdit={true}
-        afterUpdate={updateModifiers}
         onClick={(stat) => {
           logStore.update((prevLog) => [
             ...prevLog,
@@ -73,11 +94,11 @@
     {#each ["health", "spirit", "supply"] as status}
       <StatInput
         stat={$characterStore.statuses[status]}
+        onBaseValueChange={(newBaseValue) => $characterStore.statuses[status].baseValue = newBaseValue}
         character={$characterStore}
         showButtons={true}
         showSign={true}
         canEdit={true}
-        afterUpdate={updateModifiers}
       />
     {/each}
   </div>
@@ -87,34 +108,33 @@
   <div class="momentum stats-wrapper">
     <StatInput
       stat={$characterStore.momentum.current}
+      onBaseValueChange={(newBaseValue) => $characterStore.momentum.current.baseValue = newBaseValue}
       character={$characterStore}
       showButtons={true}
       showSign={true}
       canEdit={true}
-      afterUpdate={updateModifiers}
       label="Current"
     />
     <Divider vertical={true}/>
     <StatInput
       stat={$characterStore.momentum.max}
+      onBaseValueChange={(newBaseValue) => $characterStore.momentum.max.baseValue = newBaseValue}
       character={$characterStore}
       showButtons={false}
       showSign={true}
       canEdit={true}
-      afterUpdate={updateModifiers}
       label="Max"
     />
     <StatInput
       stat={$characterStore.momentum.reset}
+      onBaseValueChange={(newBaseValue) => $characterStore.momentum.reset.baseValue = newBaseValue}
       character={$characterStore}
       showButtons={false}
       showSign={true}
       canEdit={true}
-      afterUpdate={updateModifiers}
       label="Reset"
       onClick={() => {
-      	$characterStore.resetMomentum();
-      	$characterStore = $characterStore;
+        $characterStore.momentum.current.baseValue = $characterStore.momentum.reset.getValue();
       }}
     />
   </div>
@@ -122,7 +142,10 @@
   <Divider text="Bonds"/>
 
   <div class="bonds">
-    <ProgressTrack progressTrack={$characterStore.bonds}/>
+    <ProgressTrack
+      progressTrack={$characterStore.bonds}
+      onTicksChange={(newTicks) => $characterStore.bonds.ticks = newTicks}
+    />
   </div>
 
   <Divider text="Vows"/>
@@ -138,7 +161,10 @@
             {/each}
           </select>
         </div>
-        <ProgressTrack progressTrack={track}/>
+        <ProgressTrack
+          progressTrack={track}
+          onTicksChange={(newTicks) => track.ticks = newTicks}
+        />
       </div>
     {/each}
   </div>
@@ -146,18 +172,19 @@
   <Divider text="Debilities"/>
 
   <div class="debilities">
-    {#each Object.entries($characterStore.debilities) as [groupKey, group]}
-      <div class="debilities-group">
-        <label>{capitalizeFirstLetter(groupKey)}</label>
-        {#each Object.keys(group) as debilityKey}
-          <div class="debility">
+    {#each debilityGroups as { groupKey, debilities }}
+      <div class="debilities-group" id={`debility_group_${groupKey}`}>
+        <label for={`debility_group_${groupKey}`}>
+          {capitalizeFirstLetter(groupKey)}
+        </label>
+        {#each debilities as debility}
+          <div class="debility" id={`debility_group_${debility}`}>
             <label>
               <input
                 type="checkbox"
-                bind:checked={$characterStore.debilities[groupKey][debilityKey]}
-                on:change={updateModifiers}
+                bind:checked={$characterStore.debilities[groupKey][debility]}
               >
-              {capitalizeFirstLetter(debilityKey)}
+              {capitalizeFirstLetter(debility)}
             </label>
           </div>
         {/each}

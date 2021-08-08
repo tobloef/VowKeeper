@@ -41,6 +41,16 @@ export type ActionRoll = {
 const rollD10 = (): number => _.random(1, 10);
 const rollD6 = (): number => _.random(1, 6);
 
+export const getResult = (dice1Hit, dice2Hit) => {
+  if (dice1Hit && dice2Hit) {
+    return RollResult.StrongHit;
+  } else if (dice1Hit || dice2Hit) {
+    return RollResult.WeakHit;
+  } else {
+    return RollResult.Miss;
+  }
+}
+
 export const rollActionRoll = (
   stat: Stat,
   adds: number,
@@ -62,14 +72,7 @@ export const rollActionRoll = (
   const challengeDice1Hit: boolean = actionScore > challengeDice1;
   const challengeDice2Hit: boolean = actionScore > challengeDice2;
 
-  let result: RollResult;
-  if (challengeDice1Hit && challengeDice2Hit) {
-    result = RollResult.StrongHit;
-  } else if (challengeDice1Hit || challengeDice2Hit) {
-    result = RollResult.WeakHit;
-  } else {
-    result = RollResult.Miss;
-  }
+  const result = getResult(challengeDice1Hit, challengeDice2Hit)
 
   const isMatch: boolean = challengeDice1 === challengeDice2;
   const isMaxed: boolean = unboundedActionScore > actionScore;

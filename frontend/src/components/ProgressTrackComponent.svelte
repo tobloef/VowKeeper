@@ -3,6 +3,7 @@
   import ProgressBox from "./ProgressBox.svelte";
 
   export let progressTrack: ProgressTrack;
+  export let onTicksChange: (newTicks: number) => void;
 
   const getProgressBoxTicks = (ticks, i) => {
     return Math.min(Math.max(ticks - (4 * i), 0), 4);
@@ -10,11 +11,13 @@
 
   $: onProgressBoxClick = (i) => {
     const ticks = getProgressBoxTicks(progressTrack.ticks, i);
+    let newTicks = progressTrack.ticks;
     if (ticks === 4) {
-      progressTrack.ticks -= Math.max(progressTrack.rank.ticksPerProgress, 4);
+      newTicks -= Math.max(progressTrack.rank.ticksPerProgress, 4);
     } else {
-      progressTrack.ticks += progressTrack.rank.ticksPerProgress;
+      newTicks += progressTrack.rank.ticksPerProgress;
     }
+    onTicksChange(newTicks);
   }
 
 

@@ -1,5 +1,6 @@
 import {Character} from "./mechanics/Character";
 import {ChallengeRanks} from "./mechanics/Progress";
+import {nanoid} from "nanoid";
 
 export const mockCharacter: Character = Character.deserialize({
   name: "Kuno",
@@ -26,7 +27,7 @@ export const mockCharacter: Character = Character.deserialize({
     {
       name: "Find a new home for the refugees",
       ticks: 16,
-      rank: ChallengeRanks.Epic,
+      rank: ChallengeRanks.Dangerous,
     },
   ],
   debilities: {
@@ -45,7 +46,7 @@ export const mockCharacter: Character = Character.deserialize({
       wounded: false,
     }
   },
-  assets: [], // TODO,
+  assets: [],
   momentum: {
     resetBaseValue: 2,
     minBaseValue: -6,

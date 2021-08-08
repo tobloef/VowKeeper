@@ -8,7 +8,7 @@
 		faDice,
     faQuestion,
 	} from "@fortawesome/free-solid-svg-icons";
-	import {characterStore} from "./stores";
+	import {getCharacterStore} from "./stores";
 	import LogTool from "./tools/LogTool.svelte";
 	import OraclesTool from "./tools/OraclesTool.svelte";
 	import MovesTool from "./tools/MovesTool.svelte";
@@ -36,7 +36,7 @@
       <LogTool />
     </Route>
     <Route path="/character">
-      <CharacterTool characterStore={characterStore}/>
+      <CharacterTool characterStore={getCharacterStore("mock")}/>
     </Route>
     <Route path="/moves">
       <MovesTool />
