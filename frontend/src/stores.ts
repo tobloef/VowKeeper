@@ -27,6 +27,8 @@ export const getCharacterStore = (characterStoreId) => {
   return characterStores[characterStoreId];
 }
 
+/* ------------------------------------------------------ */
+
 export type LogItem = {
   id: string,
   storeId: string,
@@ -34,6 +36,8 @@ export type LogItem = {
 }
 
 export const logStore = writable<LogItem[]>([]);
+
+/* ------------------------------------------------------ */
 
 export type ActionRollCardStoreProps = {
   characterStoreId: string,

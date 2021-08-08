@@ -79,7 +79,7 @@
       </div>
       <span class="plus">+</span>
       <div class="stat">
-        <span class="value">{actionScore.stat.getValue()}</span>
+        <span class="value">{actionScore.stat.value}</span>
         <span class="type">{actionScore.stat.name}</span>
       </div>
       <span class="plus">+</span>

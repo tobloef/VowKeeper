@@ -12,7 +12,10 @@ export enum RollResult {
 export type ActionScore = {
   value: number,
   actionDie: number,
-  stat: Stat,
+  stat: {
+    name: string,
+    value: number,
+  },
   adds: number,
   isMaxed: boolean,
   actionDiceNegated: boolean,
@@ -20,7 +23,10 @@ export type ActionScore = {
 
 export type ActionRoll = {
   move: string,
-  stat: Stat,
+  stat: {
+    name: string,
+    value: number,
+  },
   actionScore: ActionScore,
   result: RollResult,
   isMatch: boolean,
@@ -77,16 +83,20 @@ export const rollActionRoll = (
   const isMatch: boolean = challengeDice1 === challengeDice2;
   const isMaxed: boolean = unboundedActionScore > actionScore;
 
-  const clonedStat = stat.clone();
-
   return {
     move,
-    stat: clonedStat,
+    stat: {
+      value: stat.getValue(),
+      name: stat.name,
+    },
     actionScore: {
       actionDiceNegated,
       value: actionScore,
       actionDie,
-      stat: clonedStat,
+      stat: {
+        value: stat.getValue(),
+        name: stat.name,
+      },
       adds,
       isMaxed,
     },
