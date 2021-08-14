@@ -26,33 +26,10 @@
   }
 
   $: {
-    if (name !== undefined && name !== "") {
-      console.log(name, anchor !== undefined, anchor)
-    }
-    anchor?.addEventListener("mouseenter", () => {
-      if (name !== undefined && name !== "") {
-        console.log(name, "mouseenter")
-      }
-      isOpen = true;
-    })
-    anchor?.addEventListener("mouseleave", () => {
-      if (name !== undefined && name !== "") {
-        console.log(name, "mouseleave")
-      }
-      isOpen = false;
-    })
-    anchor?.addEventListener("wheel", () => {
-      if (name !== undefined && name !== "") {
-        console.log(name, "wheel")
-      }
-      isOpen = false;
-    })
-    anchor?.addEventListener("mousedown", () => {
-      if (name !== undefined && name !== "") {
-        console.log(name, "mousedown")
-      }
-      isOpen = false;
-    })
+    anchor?.addEventListener("mouseenter", () => isOpen = true)
+    anchor?.addEventListener("mouseleave", () => isOpen = false)
+    anchor?.addEventListener("wheel", () => isOpen = false)
+    anchor?.addEventListener("mousedown", () => isOpen = false)
   }
 
   $: leftSideX = anchorRect?.x + anchorRect?.width / 2 - popupRect?.width / 2;

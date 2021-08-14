@@ -1,41 +1,30 @@
 <script lang="ts">
-  import ActionRollDice from "./ActionRollDice.svelte";
-  import {RollResult} from "../mechanics/rolls";
-  import type {ActionRoll} from "../mechanics/rolls";
-  import {Character} from "../mechanics/Character";
-  import Popup from "./Popup.svelte";
-  import {formatNumber} from "../utils";
+  import ActionRollDice from "../ActionRollDice.svelte";
+  import {considerBurningMomentum} from "../../mechanics/rolls";
+  import type {ActionRoll} from "../../mechanics/rolls";
+  import type {Character} from "../../mechanics/character";
+  import Popup from "../Popup.svelte";
+  import {formatNumber} from "../../utils";
+  import {burnMomentum} from "../../mechanics/rolls";
 
   export let roll: ActionRoll;
-  export let burnMomentum: (newResult: RollResult) => void;
   export let character: Character;
-  export let move: string = undefined;
-  export let isLatest: boolean = false;
-  export let viewOnly: boolean = false;
+  export let updateRoll: (roll: ActionRoll) => void = undefined;
+  export let updateCharacter: (character: Character) => void = undefined;
+  export let canBurnMomentum = false;
 
-  let resultIfBurnMomentum;
   let momentumPopupAnchor;
-  let canUpgradeResult;
   let statText;
-
-  $: {
-    const challengeDice1Hit: boolean = roll.momentumAtRoll > roll.challengeDice[0].value;
-    const challengeDice2Hit: boolean = roll.momentumAtRoll > roll.challengeDice[1].value;
-    if (challengeDice1Hit && challengeDice2Hit) {
-      resultIfBurnMomentum = RollResult.StrongHit;
-    } else if (challengeDice1Hit || challengeDice2Hit) {
-      resultIfBurnMomentum = RollResult.WeakHit;
-    } else {
-      resultIfBurnMomentum = RollResult.Miss;
-    }
-  }
-
-  $: canUpgradeResult = (
-    (roll.result === RollResult.Miss && resultIfBurnMomentum !== RollResult.Miss) ||
-    (roll.result === RollResult.WeakHit && resultIfBurnMomentum === RollResult.StrongHit)
-  )
+  let resultIfBurnMomentum;
+  let canUpgradeResult;
 
   $: statText = `+${roll.stat.name.toLowerCase()}`;
+
+  $: {
+    const result = considerBurningMomentum(roll);
+    resultIfBurnMomentum = result.resultIfBurnMomentum;
+    canUpgradeResult = result.canUpgradeResult;
+  }
 </script>
 
 <div class="wrapper">
@@ -43,11 +32,11 @@
     <span class="name">
       {character.name}
       rolls
-      {#if move !== undefined}
-        <i>{move}</i>
+      {#if roll.move !== undefined}
+        <i>{roll.move}</i>
         ({statText})
       {/if}
-      {#if move === undefined}
+      {#if roll.move === undefined}
         {statText}
       {/if}
     </span>
@@ -61,10 +50,14 @@
       <div
         class="momentumWrapper"
       >
-        {#if isLatest && canUpgradeResult && !viewOnly}
+        {#if canUpgradeResult && canBurnMomentum && !roll.momentumBurned}
           <button
             class="burnMomentum"
-            on:click={() => burnMomentum(resultIfBurnMomentum)}
+            on:click={() => {
+            	const {newRoll, newCharacter} = burnMomentum(roll, character);
+            	updateRoll(newRoll);
+            	updateCharacter(newCharacter);
+            }}
             bind:this={momentumPopupAnchor}
           >
             Burn momentum

@@ -27,15 +27,14 @@
   }
 
   #editor-wrapper {
+    flex: 1;
     height: 100%;
-    width: 900px;
     margin-right: 20px;
   }
 
   #tools-wrapper {
-    min-width: 450px;
+    width: 450px;
     height: 100%;
-    flex: 1;
   }
 
   :global(.ProseMirror-selectednode) {

@@ -1,7 +1,9 @@
 import _ from "lodash";
-import type {Stat} from "./Stat";
-import type {ProgressTrack} from "./Progress";
-import type {Character} from "./Character";
+import type {Stat} from "./stat";
+import type {ProgressTrack} from "./progress";
+import type {Character} from "./character";
+import {calculateValue} from "./stat";
+import {progressTrackToScore} from "./progress";
 
 export enum RollResult {
   StrongHit = "Strong Hit",
@@ -61,17 +63,17 @@ export const rollActionRoll = (
   stat: Stat,
   adds: number,
   character: Character,
-  move: string,
+  move?: string,
 ): ActionRoll => {
   const challengeDice1: number = rollD10();
   const challengeDice2: number = rollD10();
   const actionDie: number = rollD6();
-  const momentumAtRoll = character.momentum.current.getValue();
+  const momentumAtRoll = calculateValue(character.momentum.current);
   const actionDiceNegated = momentumAtRoll === -actionDie;
 
   const unboundedActionScore =
     (actionDiceNegated ? 0 : actionDie) +
-    stat.getValue() +
+    calculateValue(stat) +
     adds;
   const actionScore: number = Math.min(unboundedActionScore, 10);
 
@@ -86,7 +88,7 @@ export const rollActionRoll = (
   return {
     move,
     stat: {
-      value: stat.getValue(),
+      value: calculateValue(stat),
       name: stat.name,
     },
     actionScore: {
@@ -94,7 +96,7 @@ export const rollActionRoll = (
       value: actionScore,
       actionDie,
       stat: {
-        value: stat.getValue(),
+        value: calculateValue(stat),
         name: stat.name,
       },
       adds,
@@ -136,7 +138,7 @@ export type ProgressRoll = {
 export const rollProgressRoll = (track: ProgressTrack): ProgressRoll => {
   const challengeDice1: number = rollD10();
   const challengeDice2: number = rollD10();
-  const progressScore: number = track.toProgressScore();
+  const progressScore: number = progressTrackToScore(track);
 
   const challengeDice1Hit: boolean = progressScore > challengeDice1;
   const challengeDice2Hit: boolean = progressScore > challengeDice2;
@@ -151,7 +153,7 @@ export const rollProgressRoll = (track: ProgressTrack): ProgressRoll => {
   }
 
   return {
-    progressTrack: track.clone(),
+    progressTrack: _.cloneDeep(track),
     progressScore,
     result,
     challengeDice: [
@@ -165,4 +167,61 @@ export const rollProgressRoll = (track: ProgressTrack): ProgressRoll => {
       },
     ],
   };
+}
+
+export const burnMomentum = (roll, character) => {
+  let newRoll: ActionRoll = _.cloneDeep(roll);
+  newRoll.momentumBurned = true;
+  newRoll.challengeDice = [
+    {
+      value: newRoll.challengeDice[0].value,
+      isHit: (
+        newRoll.challengeDice[0].isHit ||
+        newRoll.momentumAtRoll > newRoll.challengeDice[0].value
+      ),
+    },
+    {
+      value: newRoll.challengeDice[1].value,
+      isHit: (
+        newRoll.challengeDice[1].isHit ||
+        newRoll.momentumAtRoll > newRoll.challengeDice[1].value
+      ),
+    }
+  ]
+  newRoll.result = getResult(
+    newRoll.challengeDice[0].isHit,
+    newRoll.challengeDice[1].isHit,
+  );
+
+  const newCharacter: Character = _.cloneDeep(character);
+  newCharacter.momentum.current.baseValue = calculateValue(newCharacter.momentum.reset);
+
+  return {
+    newRoll,
+    newCharacter,
+  }
+};
+
+export const considerBurningMomentum = (roll) => {
+  let resultIfBurnMomentum;
+
+  const challengeDice1Hit: boolean = roll.momentumAtRoll > roll.challengeDice[0].value;
+  const challengeDice2Hit: boolean = roll.momentumAtRoll > roll.challengeDice[1].value;
+  if (challengeDice1Hit && challengeDice2Hit) {
+    resultIfBurnMomentum = RollResult.StrongHit;
+  } else if (challengeDice1Hit || challengeDice2Hit) {
+    resultIfBurnMomentum = RollResult.WeakHit;
+  } else {
+    resultIfBurnMomentum = RollResult.Miss;
+  }
+
+  const canUpgradeResult = (
+    (roll.result === RollResult.Miss && resultIfBurnMomentum !== RollResult.Miss) ||
+    (roll.result === RollResult.WeakHit && resultIfBurnMomentum === RollResult.StrongHit)
+  );
+
+  return {
+    resultIfBurnMomentum,
+    canUpgradeResult,
+  }
 }

@@ -1,9 +1,11 @@
 <script lang="ts">
-  import {ProgressTrack} from "../mechanics/Progress";
   import ProgressBox from "./ProgressBox.svelte";
+  import type {ProgressTrack} from "../mechanics/progress";
 
   export let progressTrack: ProgressTrack;
   export let onTicksChange: (newTicks: number) => void;
+
+  let onProgressBoxClick;
 
   const getProgressBoxTicks = (ticks, i) => {
     return Math.min(Math.max(ticks - (4 * i), 0), 4);

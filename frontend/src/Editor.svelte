@@ -2,7 +2,7 @@
   import {onDestroy, onMount} from "svelte";
   import {Editor} from "@tiptap/core"
   import StarterKit from "@tiptap/starter-kit"
-  import {createNodeView, CustomElementType, customElementTypeToTag, DropInsertCustomElement} from "./customElements";
+  import {createNodeView, DraggableElementType, draggableElementTypeToTag, DraggableElement} from "./draggableElements";
 
   let documentElement;
   let editor;
@@ -12,8 +12,8 @@
       element: documentElement,
       extensions: [
         StarterKit,
-        createNodeView(CustomElementType.ActionRollCard),
-        DropInsertCustomElement
+        createNodeView(DraggableElementType.ActionRollCard),
+        DraggableElement
       ],
       content: '',
       autofocus: true,
@@ -95,12 +95,12 @@
 
   #document {
     flex: 1;
-    overflow-y: auto;
     box-sizing: border-box;
     background: white;
     box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     padding: 10px 20px;
     height: 100%;
+    overflow: auto;
   }
 
   :global(#document > div) {

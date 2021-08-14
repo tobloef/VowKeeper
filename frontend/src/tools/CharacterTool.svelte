@@ -1,29 +1,30 @@
 <script lang="ts">
-  import {ChallengeRanks} from "../mechanics/Progress";
+  import {ChallengeRanks} from "../mechanics/progress";
   import ProgressTrack from "../components/ProgressTrackComponent.svelte";
   import StatInput from "../components/StatInput.svelte";
   import Divider from "../components/Divider.svelte";
   import {nanoid} from "nanoid";
   import {rollActionRoll} from "../mechanics/rolls";
-  import {CustomElementType, getCustomElementStore} from "../customElements";
-  import {logStore} from "../stores";
-  import type {ActionRollCardStoreProps} from "../stores";
-  import type {LogItem, CharacterStore} from "../stores";
   import {capitalizeFirstLetter} from "../utils"
+  import type {CharacterStore} from "../stores/characterStore";
+  import type {ActionRollLogItem} from "../stores/logStore";
+  import {LogItemType} from "../stores/logStore";
+  import type {Stat} from "../mechanics/stat";
+  import {logStore} from "../stores/logStore";
+  import {calculateValue} from "../mechanics/stat";
 
   export let characterStore: CharacterStore;
 
-  const createActionRollLogEntry = (stat): LogItem => {
-    const storeId = nanoid();
-    const roll = rollActionRoll(stat, 1, $characterStore, "Undertake a Journey"); // TODO
-    getCustomElementStore<ActionRollCardStoreProps>(storeId, {
-      roll,
-      characterStoreId: characterStore.id,
-    });
+  const createActionRollLogEntry = (stat: Stat): ActionRollLogItem => {
+    const roll = rollActionRoll(stat, 1, $characterStore); // TODO
+
     return {
       id: nanoid(),
-      type: CustomElementType.ActionRollCard,
-      storeId,
+      type: LogItemType.ActionRoll,
+      props: {
+        roll,
+        character: _.cloneDeep($characterStore),
+      },
     };
   }
 
@@ -134,7 +135,7 @@
       canEdit={true}
       label="Reset"
       onClick={() => {
-        $characterStore.momentum.current.baseValue = $characterStore.momentum.reset.getValue();
+        $characterStore.momentum.current.baseValue = calculateValue($characterStore.momentum.reset);
       }}
     />
   </div>

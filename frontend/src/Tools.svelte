@@ -8,7 +8,7 @@
 		faDice,
     faQuestion,
 	} from "@fortawesome/free-solid-svg-icons";
-	import {getCharacterStore} from "./stores";
+	import {getCharacterStore} from "./stores/characterStore";
 	import LogTool from "./tools/LogTool.svelte";
 	import OraclesTool from "./tools/OraclesTool.svelte";
 	import MovesTool from "./tools/MovesTool.svelte";

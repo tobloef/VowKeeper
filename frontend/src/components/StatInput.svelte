@@ -1,20 +1,21 @@
 <script lang="ts">
-  import {Stat} from "../mechanics/Stat";
-  import {formatNumber, noop} from "../utils";
+  import {calculateValue, validate, validateDecrease, validateIncrease} from "../mechanics/stat";
+  import type {Stat} from "../mechanics/stat";
+  import {formatNumber} from "../utils";
   import Popup from "./Popup.svelte";
-  import {Character} from "../mechanics/Character";
+  import type {Character} from "../mechanics/character";
 
   const VALID_INPUT_REGEX = /^[+-]?[0-9]*$/;
 
   export let stat: Stat;
   export let character: Character;
+  export let onBaseValueChange: (newBaseValue: number) => void;
   export let showButtons: boolean = false;
   export let canEdit: boolean = true;
   export let showSign: boolean = true;
   export let vertical: boolean = false;
   export let label: string = undefined;
   export let onClick: (stat: Stat) => void = undefined;
-  export let onBaseValueChange: (newBaseValue: number) => void;
 
   let prevInputValue;
   let prevSelectionStart;
@@ -42,13 +43,13 @@
     }
   }
 
-  $: prevInputValue = formatNumber(stat.getValue(), showSign);
+  $: prevInputValue = formatNumber(calculateValue(stat), showSign);
 
-  $: inputValue = formatNumber(stat.getValue(), showSign);
+  $: inputValue = formatNumber(calculateValue(stat), showSign);
 
-  $: validateResult = stat.validate(character);
-  $: validateIncreaseResult = stat.validateIncrease(character);
-  $: validateDecreaseResult = stat.validateDecrease(character);
+  $: validateResult = validate(stat, character);
+  $: validateIncreaseResult = validateIncrease(stat, character);
+  $: validateDecreaseResult = validateDecrease(stat, character);
 
   $: hasModifiers = stat.modifiers.length > 0;
 </script>

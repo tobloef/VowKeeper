@@ -1,11 +1,10 @@
 <script lang="ts">
-  import {logStore} from "../stores";
-  import {customElementTypeToComponent} from "../customElements";
   import {onDestroy, onMount} from "svelte";
   import Fa from "svelte-fa";
   import {
     faTrash,
   } from "@fortawesome/free-solid-svg-icons";
+  import {logStore, getLogItemComponent} from "../stores/logStore";
 
   let logElement;
   let lockToBottom = true;
@@ -42,20 +41,19 @@
   bind:this={logElement}
   on:scroll={onLogScroll}
 >
-  {#each $logStore as { id, storeId, type } (id)}
+  {#each $logStore as logItem (logItem.id)}
     <div class="log-item">
       <span
         class="delete-icon"
-        on:click={() => deleteLogItem(id)}
+        on:click={() => deleteLogItem(logItem.id)}
       >
         <Fa
           icon={faTrash}
         />
       </span>
       <svelte:component
-        this={customElementTypeToComponent(type)}
-        storeId={storeId}
-        canDropInsert={true}
+        this={getLogItemComponent(logItem.type)}
+        {logItem}
       />
     </div>
   {/each}
