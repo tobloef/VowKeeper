@@ -3,7 +3,6 @@
 
   export let anchor;
   export let offsetY = 0;
-  export let name = "";
 
   const EDGE_MARGIN = 5;
 

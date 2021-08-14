@@ -1,7 +1,6 @@
 import {Writable, writable} from "svelte/store";
 import type {ActionRoll} from "../mechanics/rolls";
-import type {Character} from "../mechanics/character";
-import ActionRollCardLogItem from "../log-items/ActionRollCardLogItem.svelte";
+import ActionRollCardLogItem from "../components/action-roll-card/ActionRollCardLogItem.svelte";
 
 export enum LogItemType {
   ActionRoll,
@@ -12,7 +11,7 @@ export type ActionRollLogItem = {
   type: LogItemType.ActionRoll,
   props: {
     roll: ActionRoll,
-    character: Character,
+    characterId: string,
   }
 }
 

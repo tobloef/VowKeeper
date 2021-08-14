@@ -23,7 +23,7 @@
       type: LogItemType.ActionRoll,
       props: {
         roll,
-        character: _.cloneDeep($characterStore),
+        characterId: $characterStore.id,
       },
     };
   }

@@ -26,15 +26,13 @@ if (
     characterStore.set(existingCharacter);
   }
   if (existingLogJson != null) {
-    const existingLog = deserializeLog(JSON.parse(existingLogJson));
-    logStore.set(existingLog);
+    logStore.set(JSON.parse(existingLogJson));
   }
 }
 
 logStore.subscribe((newLog) => {
   console.log("Saving log", newLog);
-  const serializedLog = serializeLog(newLog);
-  localStorage.setItem(logKey, JSON.stringify(serializedLog));
+  localStorage.setItem(logKey, JSON.stringify(newLog));
 });
 
 getCharacterStore(characterId).subscribe((newChar) => {

@@ -1,9 +1,8 @@
 import {get, writable} from 'svelte/store';
 import {Extension, mergeAttributes, Node} from "@tiptap/core";
 import {Plugin} from "prosemirror-state";
-import ActionRollCard from "./components/ActionRollCard.svelte";
+import ActionRollCardDocumentItem from "./components/action-roll-card/ActionRollCardDocumentItem.svelte";
 import type {ActionRollLogItem} from "./stores/logStore";
-import {deserializeCharacter, serializeCharacter} from "./mechanics/character";
 
 export enum DraggableElementType {
   ActionRollCard,
@@ -14,9 +13,61 @@ const draggedElementStore = writable<undefined | {
   props: any,
 }>(undefined)
 
+export const draggableElementTypeToTag = (type: DraggableElementType): string => {
+  switch (type) {
+    case DraggableElementType.ActionRollCard:
+      return "action-roll-card";
+    default:
+      throw new Error(`Invalid DraggableElementType "${type}".`);
+  }
+}
+
+const draggableElementTypeToComponent = (type: DraggableElementType) => {
+  switch (type) {
+    case DraggableElementType.ActionRollCard:
+      return ActionRollCardDocumentItem;
+    default:
+      throw new Error(`Invalid DraggableElementType "${type}".`);
+  }
+}
+
+type Serializers =
+  | ((type: DraggableElementType.ActionRollCard, props: ActionRollLogItem["props"]) => string)
+
+type Deserializers =
+  | ((type: DraggableElementType.ActionRollCard, serialized: string) => ActionRollLogItem["props"])
+
+const serializeDraggableElementProps: Serializers = (type, props) => {
+  switch (type) {
+    case DraggableElementType.ActionRollCard:
+      return JSON.stringify({
+        roll: props.roll,
+        characterId: props.characterId,
+      });
+    default:
+      throw new Error(`Invalid DraggableElementType "${type}".`);
+  }
+}
+
+const deserializeDraggableElementProps: Deserializers = (type, serialized) => {
+  switch (type) {
+    case DraggableElementType.ActionRollCard:
+      const parsed = JSON.parse(serialized);
+      return {
+        roll: parsed.roll,
+        characterId: parsed.characterId,
+      };
+    default:
+      throw new Error(`Invalid DraggableElementType "${type}".`);
+  }
+}
+
 export const draggableElement = (node, {type, props}) => {
+  console.log("draggableElement", props);
+
   const handleDragStart = () => {
     draggedElementStore.set({type, props})
+    console.log("handleDragStart", props);
   };
 
   const handleDragEnd = () => {
@@ -34,58 +85,13 @@ export const draggableElement = (node, {type, props}) => {
       node.setAttribute("draggable", "false");
       node.removeEventListener("dragstart", handleDragStart);
       node.removeEventListener("dragend", handleDragEnd);
+    },
+    update({ type: newType, props: newProps }) {
+      type = newType;
+      props = newProps;
     }
   }
 };
-
-export const draggableElementTypeToTag = (type: DraggableElementType): string => {
-  switch (type) {
-    case DraggableElementType.ActionRollCard:
-      return "action-roll-card";
-    default:
-      throw new Error(`Invalid DraggableElementType "${type}".`);
-  }
-}
-
-const draggableElementTypeToComponent = (type: DraggableElementType) => {
-  switch (type) {
-    case DraggableElementType.ActionRollCard:
-      return ActionRollCard;
-    default:
-      throw new Error(`Invalid DraggableElementType "${type}".`);
-  }
-}
-
-type Serializer =
-  | ((type: DraggableElementType.ActionRollCard, props: ActionRollLogItem["props"]) => string)
-
-type Deserializer =
-  | ((type: DraggableElementType.ActionRollCard, serialized: string) => ActionRollLogItem["props"])
-
-const serializeDraggableElementProps: Serializer = (type, props) => {
-  switch (type) {
-    case DraggableElementType.ActionRollCard:
-      return JSON.stringify({
-        roll: props.roll,
-        character: serializeCharacter(props.character),
-      });
-    default:
-      throw new Error(`Invalid DraggableElementType "${type}".`);
-  }
-}
-
-const deserializeDraggableElementProps: Deserializer = (type, serialized) => {
-  switch (type) {
-    case DraggableElementType.ActionRollCard:
-      const parsed = JSON.parse(serialized);
-      return {
-        roll: parsed.roll,
-        character: deserializeCharacter(parsed.character),
-      };
-    default:
-      throw new Error(`Invalid DraggableElementType "${type}".`);
-  }
-}
 
 export const DraggableElement = Extension.create({
   addProseMirrorPlugins() {
