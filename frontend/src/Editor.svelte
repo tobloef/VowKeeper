@@ -15,11 +15,16 @@
         createNodeView(DraggableElementType.ActionRollCard),
         DraggableElement
       ],
-      content: '',
+      content: localStorage.getItem("document") || '',
       autofocus: true,
       onTransaction: () => {
         // Force re-render so `editor.isActive` works as expected
         editor = editor
+      },
+      onUpdate: () => {
+        const html = editor.getHTML();
+        console.log("Saving document", html);
+        localStorage.setItem("document", html);
       },
     });
 
@@ -49,6 +54,7 @@
       .run(),
   };
 </script>
+
 <div id="editor">
   <div id="menu">
     {#if editor !== undefined}

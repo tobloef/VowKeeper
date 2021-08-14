@@ -7,10 +7,6 @@
 
   export let logItem: ActionRollLogItem;
 
-  $: {
-    console.log("Result:", logItem.props.roll.result);
-  }
-
   let characterStore;
   let latestActionRollLogItem;
 

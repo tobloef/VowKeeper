@@ -17,10 +17,7 @@ const existingLogJson = localStorage.getItem(logKey);
 
 const characterStore = getCharacterStore(characterId);
 
-if (
-  (existingCharacterJson != null || existingLogJson != null) &&
-  confirm("Previous data found, do you want to load it?")
-) {
+if (existingCharacterJson != null || existingLogJson != null) {
   if (existingCharacterJson != null) {
     const existingCharacter = deserializeCharacter(JSON.parse(existingCharacterJson));
     characterStore.set(existingCharacter);

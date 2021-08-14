@@ -63,11 +63,8 @@ const deserializeDraggableElementProps: Deserializers = (type, serialized) => {
 }
 
 export const draggableElement = (node, {type, props}) => {
-  console.log("draggableElement", props);
-
   const handleDragStart = () => {
     draggedElementStore.set({type, props})
-    console.log("handleDragStart", props);
   };
 
   const handleDragEnd = () => {
