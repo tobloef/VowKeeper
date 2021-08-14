@@ -28,12 +28,10 @@ if (existingCharacterJson != null || existingLogJson != null) {
 }
 
 logStore.subscribe((newLog) => {
-  console.log("Saving log", newLog);
   localStorage.setItem(logKey, JSON.stringify(newLog));
 });
 
 getCharacterStore(characterId).subscribe((newChar) => {
-  console.log("Saving character", newChar);
   const serializedCharacter = serializeCharacter(newChar);
   localStorage.setItem(characterKey, JSON.stringify(serializedCharacter));
 });

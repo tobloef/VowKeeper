@@ -23,7 +23,6 @@
       },
       onUpdate: () => {
         const html = editor.getHTML();
-        console.log("Saving document", html);
         localStorage.setItem("document", html);
       },
     });
