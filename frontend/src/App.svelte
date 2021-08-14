@@ -30,6 +30,9 @@
     flex: 1;
     height: 100%;
     margin-right: 20px;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
   }
 
   #tools-wrapper {

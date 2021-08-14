@@ -2,7 +2,7 @@
   import {onDestroy, onMount} from "svelte";
   import {Editor} from "@tiptap/core"
   import StarterKit from "@tiptap/starter-kit"
-  import {createNodeView, DraggableElementType, draggableElementTypeToTag, DraggableElement} from "./draggableElements";
+  import {createNodeView, DraggableElementType, DraggableElement} from "./draggableElements";
 
   let documentElement;
   let editor;
@@ -21,7 +21,11 @@
         // Force re-render so `editor.isActive` works as expected
         editor = editor
       },
-    })
+    });
+
+    const spacer = document.createElement("div");
+    spacer.className = "spacer";
+    documentElement.appendChild(spacer);
   });
 
   onDestroy(() => {
@@ -72,7 +76,8 @@
   <div
     id="document"
     bind:this={documentElement}
-  ></div>
+  >
+  </div>
 </div>
 
 <style>
@@ -80,6 +85,8 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
+    max-width: 800px;
   }
 
   #menu {
@@ -98,13 +105,25 @@
     box-sizing: border-box;
     background: white;
     box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-    padding: 10px 20px;
     height: 100%;
     overflow: auto;
+    padding: 10px 0px 10px 20px;
+    display: flex;
   }
 
-  :global(#document > div) {
+
+  :global(#document > .ProseMirror) {
+    flex: 1;
     height: calc(100% - 10px * 2);
+    width: calc(100% - 20px);
+    min-width: 400px;
+  }
+
+  :global(#document > .spacer:after) {
+    display: block;
+    width: 20px;
+    height: 1px;
+    content: "";
   }
 
   :global(#document .dice) {
