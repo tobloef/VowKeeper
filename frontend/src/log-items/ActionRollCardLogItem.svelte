@@ -1,6 +1,6 @@
 <script lang="ts">
   import {DraggableElementType, draggableElement} from "../draggableElements";
-  import ActionRollCard from "../components/action-roll-card/ActionRollCard.svelte";
+  import ActionRollCard from "../components/ActionRollCard.svelte";
   import {logStore} from "../stores/logStore";
   import type {ActionRollLogItem} from "../stores/logStore";
   import {getCharacterStore} from "../stores/characterStore";

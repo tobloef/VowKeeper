@@ -1,12 +1,44 @@
 import App from './App.svelte';
 import {getCharacterStore} from "./stores/characterStore";
 import {logStore} from "./stores/logStore";
+import {deserializeCharacter, serializeCharacter} from "./mechanics/character";
 
 const app = new App({
   target: document.body,
 });
 
-getCharacterStore("mock").subscribe((newChar) => console.log("newChar", newChar));
-logStore.subscribe((newLog) => console.log("newLog", newLog));
+const characterId = "mock";
 
-export default app;
+const characterKey = `character_${characterId}`;
+const logKey = "log";
+
+const existingCharacterJson = localStorage.getItem(characterKey);
+const existingLogJson = localStorage.getItem(logKey);
+
+const characterStore = getCharacterStore(characterId);
+
+if (
+  (existingCharacterJson != null || existingLogJson != null) &&
+  confirm("Previous data found, do you want to load it?")
+) {
+  if (existingCharacterJson != null) {
+    const existingCharacter = deserializeCharacter(JSON.parse(existingCharacterJson));
+    characterStore.set(existingCharacter);
+  }
+  if (existingLogJson != null) {
+    const existingLog = deserializeLog(JSON.parse(existingLogJson));
+    logStore.set(existingLog);
+  }
+}
+
+logStore.subscribe((newLog) => {
+  console.log("Saving log", newLog);
+  const serializedLog = serializeLog(newLog);
+  localStorage.setItem(logKey, JSON.stringify(serializedLog));
+});
+
+getCharacterStore(characterId).subscribe((newChar) => {
+  console.log("Saving character", newChar);
+  const serializedCharacter = serializeCharacter(newChar);
+  localStorage.setItem(characterKey, JSON.stringify(serializedCharacter));
+});

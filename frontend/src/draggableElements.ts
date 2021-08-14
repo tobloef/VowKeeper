@@ -1,7 +1,7 @@
 import {get, writable} from 'svelte/store';
 import {Extension, mergeAttributes, Node} from "@tiptap/core";
 import {Plugin} from "prosemirror-state";
-import ActionRollCard from "./components/action-roll-card/ActionRollCard.svelte";
+import ActionRollCard from "./components/ActionRollCard.svelte";
 import type {ActionRollLogItem} from "./stores/logStore";
 import {deserializeCharacter, serializeCharacter} from "./mechanics/character";
 

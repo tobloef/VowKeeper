@@ -1,11 +1,11 @@
 <script lang="ts">
-  import ActionRollDice from "../ActionRollDice.svelte";
-  import {considerBurningMomentum} from "../../mechanics/rolls";
-  import type {ActionRoll} from "../../mechanics/rolls";
-  import type {Character} from "../../mechanics/character";
-  import Popup from "../Popup.svelte";
-  import {formatNumber} from "../../utils";
-  import {burnMomentum} from "../../mechanics/rolls";
+  import ActionRollDice from "./ActionRollDice.svelte";
+  import {considerBurningMomentum} from "../mechanics/rolls";
+  import type {ActionRoll} from "../mechanics/rolls";
+  import type {Character} from "../mechanics/character";
+  import Popup from "./Popup.svelte";
+  import {formatNumber} from "../utils";
+  import {burnMomentum} from "../mechanics/rolls";
 
   export let roll: ActionRoll;
   export let character: Character;
