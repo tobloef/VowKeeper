@@ -2,6 +2,9 @@
   import Editor from "./Editor.svelte";
   import Tools from "./Tools.svelte";
   import {Route} from "tinro";
+  import Modal from "./components/Modal.svelte";
+
+  let showModal = true;
 </script>
 
 <main>
@@ -12,6 +15,16 @@
     <Tools/>
   </div>
 </main>
+
+<Modal
+  open={showModal}
+  title="Modal Title"
+  onClose={() => showModal = false}
+>
+  <div style="width: 600px; height: 450px;">
+
+  </div>
+</Modal>
 
 <Route path="/" redirect="/log"/>
 
