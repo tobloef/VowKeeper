@@ -76,6 +76,7 @@
 
   .body {
     flex: 1;
+    padding: 20px 30px;
   }
 
   .title {
