@@ -1,4 +1,5 @@
 <script lang="ts">
+  import {StatNames} from "../mechanics/stat";
   import {ChallengeRanks} from "../mechanics/progress";
   import ProgressTrack from "../components/ProgressTrackComponent.svelte";
   import StatInput from "../components/StatInput.svelte";
@@ -71,7 +72,7 @@
   <Divider text="Stats"/>
 
   <div class="stats stats-wrapper">
-    {#each ["edge", "heart", "iron", "shadow", "wits"] as stat}
+      {#each StatNames as stat}
       <StatInput
         stat={$characterStore.stats[stat]}
         onBaseValueChange={(newBaseValue) => $characterStore.stats[stat].baseValue = newBaseValue}

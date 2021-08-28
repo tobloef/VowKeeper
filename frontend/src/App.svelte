@@ -14,7 +14,14 @@
   </div>
 </main>
 
-<FaceDanger />
+<FaceDanger
+  showModal={true}
+  onRoll={console.log}
+  defaultAdds={{
+  	value: 1,
+  	reason: "Make Camp",
+  }}
+/>
 
 <Route path="/" redirect="/log"/>
 
@@ -33,7 +40,7 @@
     flex: 1;
     height: 100%;
     margin-right: 20px;
-    overflow: auto;
+    overflow: visible;
     display: flex;
     justify-content: center;
   }

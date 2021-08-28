@@ -92,12 +92,13 @@
     height: 100%;
     width: 100%;
     max-width: 800px;
+    box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   }
 
   #menu {
     background: white;
-    box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     padding: 10px 20px;
+    border-bottom: 1px solid lightgrey;
   }
 
   #menu button.active {
@@ -109,7 +110,6 @@
     flex: 1;
     box-sizing: border-box;
     background: white;
-    box-shadow: rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     height: 100%;
     overflow: auto;
     padding: 10px 0px 10px 20px;

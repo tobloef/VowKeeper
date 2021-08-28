@@ -3,8 +3,11 @@ import type {Character} from "./character";
 
 type StatValidator = (character: Character, value: number) => string | undefined;
 
+export const StatNames = ["edge", "heart", "iron", "shadow", "wits"];
+export type StatName = typeof StatNames[number];
+
 export type Stat = {
-  name: string;
+  name: StatName;
   baseValue: number;
   modifiers: StatModifier[];
   validator?: StatValidator;

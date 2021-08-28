@@ -75,7 +75,7 @@
   anchor={momentumPopupAnchor}
   offsetY={-10}
 >
-  <span>Burn momentum ({formatNumber(roll.momentumAtRoll, true)}) for a {resultIfBurnMomentum}.</span>
+  <span>Burn momentum ({formatNumber(roll.momentumAtRoll)}) for a {resultIfBurnMomentum}.</span>
 </Popup>
 
 <style>

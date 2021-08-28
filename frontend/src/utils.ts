@@ -11,7 +11,7 @@ export const capitalizeFirstLetter = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const formatNumber = (x, showSign) => {
+export const formatNumber = (x: number, showSign: boolean = true) => {
   if (!showSign || x <= 0) {
     return String(x);
   }
