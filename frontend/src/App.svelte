@@ -2,7 +2,6 @@
   import Editor from "./Editor.svelte";
   import Tools from "./Tools.svelte";
   import {Route} from "tinro";
-  import FaceDanger from "./moves/FaceDanger.svelte";
 </script>
 
 <main>
@@ -13,15 +12,6 @@
     <Tools/>
   </div>
 </main>
-
-<FaceDanger
-  showModal={true}
-  onRoll={console.log}
-  defaultAdds={{
-  	value: 1,
-  	reason: "Make Camp",
-  }}
-/>
 
 <Route path="/" redirect="/log"/>
 

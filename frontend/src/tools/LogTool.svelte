@@ -3,7 +3,7 @@
   import Fa from "svelte-fa";
   import {
     faTrash,
-  } from "@fortawesome/free-solid-svg-icons";
+  } from "@fortawesome/pro-solid-svg-icons";
   import {logStore, getLogItemComponent} from "../stores/logStore";
 
   let logElement;

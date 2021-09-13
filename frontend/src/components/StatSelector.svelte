@@ -1,13 +1,13 @@
 <script lang="ts">
-  import {StatName} from "../mechanics/stat";
+  import type {StatName} from "../mechanics/stat";
   import Fa from "svelte-fa";
   import {
-    faFistRaised,
+    faBowArrow,
     faHeart,
-    faFastForward,
-    faMoon,
+    faSword,
+    faHoodCloak,
     faBrain,
-  } from "@fortawesome/free-solid-svg-icons";
+  } from "@fortawesome/pro-solid-svg-icons";
   import {capitalizeFirstLetter} from "../utils";
   import {StatNames} from "../mechanics/stat";
 
@@ -16,10 +16,10 @@
   export let statToUse: StatName;
 
   const statIcons: {[key: StatName]: string} = {
-    "edge": faFastForward,
+    "edge": faBowArrow,
     "heart": faHeart,
-    "iron": faFistRaised,
-    "shadow": faMoon,
+    "iron": faSword,
+    "shadow": faHoodCloak,
     "wits": faBrain,
   }
 </script>

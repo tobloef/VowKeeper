@@ -3,7 +3,7 @@
   import Fa from "svelte-fa";
   import {
     faTimes,
-  } from "@fortawesome/free-solid-svg-icons";
+  } from "@fortawesome/pro-solid-svg-icons";
 
   export let open: boolean;
   export let onClose: () => void;
@@ -76,7 +76,7 @@
 
   .body {
     flex: 1;
-    padding: 20px 30px;
+    padding: 25px 30px;
   }
 
   .title {

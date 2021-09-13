@@ -1,13 +1,13 @@
 <script>
 	import {Route, router, active} from "tinro";
-	import CharacterTool from "./tools/CharacterTool.svelte";
-	import Fa from "svelte-fa";
 	import {
 		faList,
-		faUser,
-		faDice,
-    faQuestion,
-	} from "@fortawesome/free-solid-svg-icons";
+    faUser,
+		faDiceD6,
+    faCrystalBall,
+  } from "@fortawesome/pro-solid-svg-icons";
+	import CharacterTool from "./tools/CharacterTool.svelte";
+	import Fa from "svelte-fa";
 	import {getCharacterStore} from "./stores/characterStore";
 	import LogTool from "./tools/LogTool.svelte";
 	import OraclesTool from "./tools/OraclesTool.svelte";
@@ -25,10 +25,10 @@
       <span><Fa icon={faUser}/>Character</span>
     </a>
     <a href="/#/moves" use:active>
-      <span><Fa icon={faDice}/>Moves</span>
+      <span><Fa icon={faDiceD6}/>Moves</span>
     </a>
     <a href="/#/oracles" use:active>
-      <span><Fa icon={faQuestion}/>Oracles</span>
+      <span><Fa icon={faCrystalBall}/>Oracles</span>
     </a>
   </nav>
   <section>

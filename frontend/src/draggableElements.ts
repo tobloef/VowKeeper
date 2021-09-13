@@ -3,6 +3,7 @@ import {Extension, mergeAttributes, Node} from "@tiptap/core";
 import {Plugin} from "prosemirror-state";
 import ActionRollCardDocumentItem from "./components/action-roll-card/ActionRollCardDocumentItem.svelte";
 import type {ActionRollLogItem} from "./stores/logStore";
+import type {SvelteComponent} from "svelte";
 
 export enum DraggableElementType {
   ActionRollCard,
@@ -13,22 +14,20 @@ const draggedElementStore = writable<undefined | {
   props: any,
 }>(undefined)
 
+const draggableElementTypeToTagMap: {[key in DraggableElementType]: string} = {
+  [DraggableElementType.ActionRollCard]: "action-roll-card",
+};
+
+const draggableElementTypeToComponentMap: {[key in DraggableElementType]: typeof SvelteComponent} = {
+  [DraggableElementType.ActionRollCard]: ActionRollCardDocumentItem,
+};
+
 export const draggableElementTypeToTag = (type: DraggableElementType): string => {
-  switch (type) {
-    case DraggableElementType.ActionRollCard:
-      return "action-roll-card";
-    default:
-      throw new Error(`Invalid DraggableElementType "${type}".`);
-  }
+  return draggableElementTypeToTagMap[type];
 }
 
-const draggableElementTypeToComponent = (type: DraggableElementType) => {
-  switch (type) {
-    case DraggableElementType.ActionRollCard:
-      return ActionRollCardDocumentItem;
-    default:
-      throw new Error(`Invalid DraggableElementType "${type}".`);
-  }
+const draggableElementTypeToComponent = (type: DraggableElementType): typeof SvelteComponent => {
+  return draggableElementTypeToComponentMap[type];
 }
 
 type Serializers =
