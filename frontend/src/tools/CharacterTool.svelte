@@ -1,33 +1,19 @@
 <script lang="ts">
-  import {StatNames} from "../mechanics/stat";
+  import {StatName, StatNames} from "../mechanics/stat";
   import {ChallengeRanks} from "../mechanics/progress";
   import ProgressTrack from "../components/ProgressTrackComponent.svelte";
   import StatInput from "../components/StatInput.svelte";
   import Divider from "../components/Divider.svelte";
-  import {nanoid} from "nanoid";
-  import {rollActionRoll} from "../mechanics/rolls";
-  import {capitalizeFirstLetter} from "../utils"
-  import type {CharacterStore} from "../stores/characterStore";
-  import type {ActionRollLogItem} from "../stores/logStore";
-  import {LogItemType} from "../stores/logStore";
-  import type {Stat} from "../mechanics/stat";
-  import {logStore} from "../stores/logStore";
+  import {
+    capitalizeFirstLetter,
+  } from "../utils"
   import {calculateValue} from "../mechanics/stat";
+  import StatRollModal from "../components/StatRollModal.svelte";
+  import {getCharacterStore} from "../stores/characterStore";
 
-  export let characterStore: CharacterStore;
+  const characterStore = getCharacterStore("mock");
 
-  const createActionRollLogEntry = (stat: Stat): ActionRollLogItem => {
-    const roll = rollActionRoll(stat, 1, $characterStore); // TODO
-
-    return {
-      id: nanoid(),
-      type: LogItemType.ActionRoll,
-      props: {
-        roll,
-        characterId: $characterStore.id,
-      },
-    };
-  }
+  let statNameToRoll: StatName | undefined;
 
   const debilityGroups = [
     {
@@ -72,20 +58,15 @@
   <Divider text="Stats"/>
 
   <div class="stats stats-wrapper">
-      {#each StatNames as stat}
+      {#each StatNames as statName}
       <StatInput
-        stat={$characterStore.stats[stat]}
-        onBaseValueChange={(newBaseValue) => $characterStore.stats[stat].baseValue = newBaseValue}
+        stat={$characterStore.stats[statName]}
+        onBaseValueChange={(newBaseValue) => $characterStore.stats[statName].baseValue = newBaseValue}
         character={$characterStore}
         showButtons={false}
         showSign={true}
         canEdit={true}
-        onClick={(stat) => {
-          logStore.update((prevLog) => [
-            ...prevLog,
-            createActionRollLogEntry(stat),
-          ]);
-        }}
+        onClick={() => statNameToRoll = statName}
       />
     {/each}
   </div>
@@ -194,6 +175,14 @@
     {/each}
   </div>
 </div>
+
+{#if statNameToRoll}
+  <StatRollModal
+    statName={statNameToRoll}
+    character={$characterStore}
+    onClose={() => statNameToRoll = undefined}
+  />
+{/if}
 
 <style>
   .character {

@@ -14,8 +14,8 @@
   export let canEdit: boolean = true;
   export let showSign: boolean = true;
   export let vertical: boolean = false;
-  export let label: string = null;
-  export let onClick: (stat: Stat) => void = null;
+  export let label: string = undefined;
+  export let onClick: (stat: Stat) => void = undefined;
 
   let prevInputValue;
   let prevSelectionStart;
@@ -57,14 +57,14 @@
 <div
   class="statInput"
   class:vertical
-  class:error={validateResult !== null}
+  class:error={validateResult !== undefined}
   bind:this={statInputElement}
 >
   <div class="wrapper">
     <button
       class="decrease"
       class:visible={showButtons}
-      disabled={validateDecreaseResult !== null}
+      disabled={validateDecreaseResult !== undefined}
       on:click={() => onBaseValueChange(stat.baseValue - 1)}
     >
       -
@@ -83,13 +83,13 @@
               e.preventDefault();
               return;
             case "ArrowUp":
-            	if (validateIncreaseResult === null) {
+            	if (validateIncreaseResult === undefined) {
                 onBaseValueChange(stat.baseValue + 1);
               }
               e.preventDefault();
               return;
             case "ArrowDown":
-            	if (validateDecreaseResult === null) {
+            	if (validateDecreaseResult === undefined) {
                 onBaseValueChange(stat.baseValue - 1);
               }
               e.preventDefault();
@@ -108,20 +108,20 @@
       >
       <span
         class="name"
-        class:clickable={onClick !== null}
-        on:click={() => onClick !== null && onClick(stat)}
-      >{label || stat.name}</span>
+        class:clickable={onClick !== undefined}
+        on:click={() => onClick !== undefined && onClick(stat)}
+      >{label ?? stat.name}</span>
     </div>
     <button
       class="increase"
       class:visible={showButtons}
-      disabled={validateIncreaseResult !== null}
+      disabled={validateIncreaseResult !== undefined}
       on:click={() => onBaseValueChange(stat.baseValue + 1)}
     >
       +
     </button>
   </div>
-  {#if validateResult !== null}
+  {#if validateResult !== undefined}
     <span class="errorText">{validateResult}</span>
   {/if}
 </div>

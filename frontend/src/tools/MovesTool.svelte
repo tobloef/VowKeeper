@@ -1,6 +1,9 @@
 <script lang="ts">
   import {MoveType} from "../mechanics/moves";
   import {moveToModalComponent} from "../mechanics/moves";
+  import {getCharacterStore} from "../stores/characterStore";
+
+  const characterStore = getCharacterStore("mock");
 
   let moveInProgress: MoveType
 
@@ -9,7 +12,7 @@
   }
 
   const closeMoveModal = () => {
-    moveInProgress = null;
+    moveInProgress = undefined;
   }
 </script>
 
@@ -17,10 +20,11 @@
   <li><button on:click={() => makeMove(MoveType.FaceDanger)}>Face Danger</button></li>
 </ul>
 
-{#if moveInProgress !== null}
+{#if moveInProgress !== undefined}
   <svelte:component
     this={moveToModalComponent(moveInProgress)}
     onClose={closeMoveModal}
+    character={$characterStore}
   >
   </svelte:component>
 {/if}

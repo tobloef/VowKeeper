@@ -7,18 +7,22 @@
   import type {StatName} from "../mechanics/stat";
   import {formatNumber} from "../utils";
   import StatSelector from "../components/StatSelector.svelte";
+  import {makeStatRoll} from "../mechanics/rolls";
+  import type {Character} from "../mechanics/character";
 
   export let onClose;
+  export let character: Character;
   export let defaultAdds: {
     value: number,
     reason: string,
-  } | null = null;
+  } | undefined = undefined;
 
-  let statToUse: StatName;
+  let statNameToRoll: StatName | undefined;
   let adds: number = defaultAdds?.value ?? 0;
 
-  const onRoll = (statToUse: StatName, adds: number): void => {
-
+  const onRoll = () => {
+    makeStatRoll(character, statNameToRoll, adds);
+    onClose();
   }
 </script>
 
@@ -38,7 +42,7 @@
       <div class="statsWrapper">
         <span class="header">Stat</span>
         <StatSelector
-          bind:statToUse
+          bind:statToUse={statNameToRoll}
           statDescriptions={{
             "edge": "Speed, agility, or precision",
             "heart": "Charm, loyalty, or courage",
@@ -57,9 +61,9 @@
           <input
             type="number"
             bind:value={adds}
-            class:highlighted={defaultAdds !== null}
+            class:highlighted={defaultAdds !== undefined}
           />
-          {#if defaultAdds !== null}
+          {#if defaultAdds !== undefined}
             <span class="addsExplainer deemphasized">
               ({formatNumber(defaultAdds.value)} from <i>{defaultAdds.reason}</i>)
             </span>
@@ -71,12 +75,12 @@
     <section>
       <div class="rollWrapper">
         <button
-          on:click={() => onRoll(statToUse, adds)}
-          disabled={statToUse === null}
+          on:click={onRoll}
+          disabled={statNameToRoll === undefined}
         >
           <Fa icon={faDiceD6} /> Roll
         </button>
-        {#if statToUse === null}
+        {#if statNameToRoll === undefined}
           <span class="deemphasized rollDisabledExplainer">
             (Select stat first)
           </span>

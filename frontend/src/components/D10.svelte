@@ -4,7 +4,7 @@
   const coloredResults = true;
 
   export let number: number;
-  export let isHit: true | false | null;
+  export let isHit: true | false | undefined;
 
   const numberPositions = {
     0: {

@@ -2,8 +2,10 @@ import _ from "lodash";
 import type {Stat} from "./stat";
 import type {ProgressTrack} from "./progress";
 import type {Character} from "./character";
-import {calculateValue} from "./stat";
+import {calculateValue, StatName} from "./stat";
 import {progressTrackToScore} from "./progress";
+import {ActionRollLogItem, LogItemType, logStore} from "../stores/logStore";
+import {nanoid} from "nanoid";
 
 export enum RollResult {
   StrongHit = "Strong Hit",
@@ -224,4 +226,20 @@ export const considerBurningMomentum = (roll) => {
     resultIfBurnMomentum,
     canUpgradeResult,
   }
+}
+
+export const makeStatRoll = (character: Character, statName: StatName, adds: number): void => {
+  const stat: Stat = character.stats[statName];
+  const roll = rollActionRoll(stat, adds, character);
+
+  const actionRollLogItem: ActionRollLogItem = {
+    id: nanoid(),
+    type: LogItemType.ActionRoll,
+    props: {
+      roll,
+      characterId: character.id,
+    },
+  };
+
+  logStore.addItem(actionRollLogItem);
 }

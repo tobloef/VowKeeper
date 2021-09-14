@@ -17,3 +17,11 @@ export const formatNumber = (x: number, showSign: boolean = true) => {
   }
   return `+${x}`;
 }
+
+export const possessiveForm = (str) => {
+  if (str.toLowerCase().endsWith("s")) {
+    return str + '\'';
+  }
+
+  return str + '\'s'
+};

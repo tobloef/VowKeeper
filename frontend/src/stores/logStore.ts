@@ -22,9 +22,16 @@ const writableStore = writable<LogItem[]>([]);
 
 export const logStore: (
   & Writable<LogItem[]>
+  & { addItem: (newItem: LogItem) => void }
   & { replaceItem: (id: string, newItem: LogItem) => void }
 ) = {
   ...writableStore,
+  addItem: (newItem: LogItem): void => {
+    writableStore.update((prev: LogItem[]): LogItem[] => [
+      ...prev,
+      newItem,
+    ])
+  },
   replaceItem: (id: string, newItem: LogItem): void => {
     writableStore.update((prev: LogItem[]): LogItem[] => {
       const index = prev.findIndex((item) => item.id === id);

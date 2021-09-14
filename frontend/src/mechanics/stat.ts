@@ -1,7 +1,7 @@
 import type {StatModifier} from "./stat-modifier";
 import type {Character} from "./character";
 
-type StatValidator = (character: Character, value: number) => string | null;
+type StatValidator = (character: Character, value: number) => string | undefined;
 
 export const StatNames = ["edge", "heart", "iron", "shadow", "wits"];
 export type StatName = typeof StatNames[number];
@@ -19,58 +19,58 @@ export const calculateValue = (stat: Stat): number => {
   return stat.modifiers.reduce((acc, mod) => mod.apply(acc), stat.baseValue);
 }
 
-export const validate = (stat: Stat, character: Character): string | null => {
-  if (stat.validator === null) {
-    return null;
+export const validate = (stat: Stat, character: Character): string | undefined => {
+  if (stat.validator === undefined) {
+    return undefined;
   }
 
   return stat.validator(character, calculateValue(stat));
 }
 
-export const validateIncrease = (stat: Stat, character: Character): string | null => {
-  if (stat.validator !== null) {
+export const validateIncrease = (stat: Stat, character: Character): string | undefined => {
+  if (stat.validator !== undefined) {
     const res = stat.validator(character, calculateValue(stat) + 1);
-    if (res !== null) {
+    if (res !== undefined) {
       return res;
     }
   }
 
-  if (stat.increaseValidator !== null) {
+  if (stat.increaseValidator !== undefined) {
     const res = stat.increaseValidator(character, calculateValue(stat) + 1);
-    if (res !== null) {
+    if (res !== undefined) {
       return res;
     }
   }
 
-  return null;
+  return undefined;
 }
 
-export const validateDecrease = (stat: Stat, character: Character): string | null => {
-  if (stat.validator !== null) {
+export const validateDecrease = (stat: Stat, character: Character): string | undefined => {
+  if (stat.validator !== undefined) {
     const res = stat.validator(character, calculateValue(stat) - 1);
-    if (res !== null) {
+    if (res !== undefined) {
       return res;
     }
   }
 
-  if (stat.decreaseValidator !== null) {
+  if (stat.decreaseValidator !== undefined) {
     const res = stat.decreaseValidator(character, calculateValue(stat) - 1);
-    if (res !== null) {
+    if (res !== undefined) {
       return res;
     }
   }
 
-  return null;
+  return undefined;
 }
 
 export const minMaxValidator = (min?: number, max?: number): StatValidator => (
   (character: Character, value: number) => {
-    if (min !== null && value < min) {
+    if (min !== undefined && value < min) {
       return `Minimum ${min}`;
     }
-    if (max !== null && value > max) {
+    if (max !== undefined && value > max) {
       return `Maximum ${max}`;
     }
-    return null;
+    return undefined;
   }
 );

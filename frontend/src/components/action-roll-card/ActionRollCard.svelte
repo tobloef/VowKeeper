@@ -9,8 +9,8 @@
 
   export let roll: ActionRoll;
   export let character: Character;
-  export let updateRoll: (roll: ActionRoll) => void = null;
-  export let updateCharacter: (character: Character) => void = null;
+  export let updateRoll: (roll: ActionRoll) => void = undefined;
+  export let updateCharacter: (character: Character) => void = undefined;
   export let canBurnMomentum = false;
 
   let momentumPopupAnchor;
@@ -32,11 +32,11 @@
     <span class="name">
       {character.name}
       rolls
-      {#if roll.move !== null}
+      {#if roll.move !== undefined}
         <i>{roll.move}</i>
         ({statText})
       {/if}
-      {#if roll.move === null}
+      {#if roll.move === undefined}
         {statText}
       {/if}
     </span>

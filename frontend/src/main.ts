@@ -17,14 +17,13 @@ const existingLogJson = localStorage.getItem(logKey);
 
 const characterStore = getCharacterStore(characterId);
 
-if (existingCharacterJson != null || existingLogJson != null) {
-  if (existingCharacterJson != null) {
-    const existingCharacter = deserializeCharacter(JSON.parse(existingCharacterJson));
-    characterStore.set(existingCharacter);
-  }
-  if (existingLogJson != null) {
-    logStore.set(JSON.parse(existingLogJson));
-  }
+if (existingCharacterJson != null) {
+  const existingCharacter = deserializeCharacter(JSON.parse(existingCharacterJson));
+  characterStore.set(existingCharacter);
+}
+
+if (existingLogJson != null) {
+  logStore.set(JSON.parse(existingLogJson));
 }
 
 logStore.subscribe((newLog) => {

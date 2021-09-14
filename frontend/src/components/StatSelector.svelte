@@ -12,7 +12,7 @@
   import {StatNames} from "../mechanics/stat";
 
   export let statDescriptions: {[key: StatName]: string};
-  export let statsToShow: StatName[] = null;
+  export let statsToShow: StatName[] = undefined;
   export let statToUse: StatName;
 
   const statIcons: {[key: StatName]: string} = {

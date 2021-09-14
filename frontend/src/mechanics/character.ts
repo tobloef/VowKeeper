@@ -1,6 +1,5 @@
 import {calculateValue, minMaxValidator, Stat} from "./stat";
 import type {ProgressTrack} from "./progress";
-import {ModifierRule, ModifierRules} from "./stat-modifier";
 
 export type Character = {
   id: string,
@@ -122,41 +121,41 @@ export const deserializeCharacter = (serialized: SerializedCharacter): Character
         name: "Iron",
         baseValue: serialized.stats.ironBaseValue,
         modifiers: [],
-        validator: null,
-        increaseValidator: null,
-        decreaseValidator: null,
+        validator: undefined,
+        increaseValidator: undefined,
+        decreaseValidator: undefined,
       },
       heart: {
         name: "Heart",
         baseValue: serialized.stats.heartBaseValue,
         modifiers: [],
-        validator: null,
-        increaseValidator: null,
-        decreaseValidator: null,
+        validator: undefined,
+        increaseValidator: undefined,
+        decreaseValidator: undefined,
       },
       edge: {
         name: "Edge",
         baseValue: serialized.stats.edgeBaseValue,
         modifiers: [],
-        validator: null,
-        increaseValidator: null,
-        decreaseValidator: null,
+        validator: undefined,
+        increaseValidator: undefined,
+        decreaseValidator: undefined,
       },
       shadow: {
         name: "Shadow",
         baseValue: serialized.stats.shadowBaseValue,
         modifiers: [],
-        validator: null,
-        increaseValidator: null,
-        decreaseValidator: null,
+        validator: undefined,
+        increaseValidator: undefined,
+        decreaseValidator: undefined,
       },
       wits: {
         name: "Wits",
         baseValue: serialized.stats.witsBaseValue,
         modifiers: [],
-        validator: null,
-        increaseValidator: null,
-        decreaseValidator: null,
+        validator: undefined,
+        increaseValidator: undefined,
+        decreaseValidator: undefined,
       },
     },
     statuses: {
@@ -169,9 +168,9 @@ export const deserializeCharacter = (serialized: SerializedCharacter): Character
           if (character.debilities.conditions.wounded) {
             return "Wounded: Cannot increase Health."
           }
-          return null;
+          return undefined;
         },
-        decreaseValidator: null,
+        decreaseValidator: undefined,
       },
       spirit: {
         name: "Spirit",
@@ -182,9 +181,9 @@ export const deserializeCharacter = (serialized: SerializedCharacter): Character
           if (character.debilities.conditions.shaken) {
             return "Shaken: Cannot increase Spirit."
           }
-          return null;
+          return undefined;
         },
-        decreaseValidator: null,
+        decreaseValidator: undefined,
       },
       supply: {
         name: "Supply",
@@ -195,9 +194,9 @@ export const deserializeCharacter = (serialized: SerializedCharacter): Character
           if (character.debilities.conditions.unprepared) {
             return "Unprepared: Cannot increase Supply."
           }
-          return null;
+          return undefined;
         },
-        decreaseValidator: null,
+        decreaseValidator: undefined,
       },
     },
     momentum: {

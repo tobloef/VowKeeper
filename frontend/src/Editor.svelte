@@ -56,7 +56,7 @@
 
 <div id="editor">
   <div id="menu">
-    {#if editor !== null}
+    {#if editor !== undefined}
       <button
         on:click={menu.h1}
         class:active={editor.isActive('heading', { level: 1 })}

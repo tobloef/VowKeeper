@@ -5,38 +5,34 @@
     faTimes,
   } from "@fortawesome/pro-solid-svg-icons";
 
-  export let open: boolean;
   export let onClose: () => void;
   export let title: string;
-  export let closable = true;
 </script>
 
-{#if open}
-  <Portal>
-    <div class="overlay" on:click={onClose}></div>
-    <div class="wrapper">
-      <div class="modal">
-        <div class="header">
-          <span class="title">{title}</span>
-          {#if closable}
-            <div
-              class="closeButton"
-              on:click={onClose}
-            >
-              <Fa
-                icon={faTimes}
-                size="lg"
-              />
-            </div>
-          {/if}
-        </div>
-        <div class="body">
-          <slot></slot>
-        </div>
+<Portal>
+  <div class="overlay" on:click={onClose}></div>
+  <div class="wrapper">
+    <div class="modal">
+      <div class="header">
+        <span class="title">{title}</span>
+        {#if onClose !== undefined}
+          <div
+            class="closeButton"
+            on:click={onClose}
+          >
+            <Fa
+              icon={faTimes}
+              size="lg"
+            />
+          </div>
+        {/if}
+      </div>
+      <div class="body">
+        <slot></slot>
       </div>
     </div>
-  </Portal>
-{/if}
+  </div>
+</Portal>
 
 <style>
   .overlay {
@@ -77,6 +73,8 @@
   .body {
     flex: 1;
     padding: 25px 30px;
+    min-width: 140px;
+    min-height: 80px;
   }
 
   .title {
