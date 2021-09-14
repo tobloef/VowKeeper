@@ -7,6 +7,10 @@
   const makeMove = (moveType: MoveType) => {
     moveInProgress = moveType;
   }
+
+  const closeMoveModal = () => {
+    moveInProgress = null;
+  }
 </script>
 
 <ul>
@@ -16,7 +20,7 @@
 {#if moveInProgress !== null}
   <svelte:component
     this={moveToModalComponent(moveInProgress)}
-    showModal={true}
+    onClose={closeMoveModal}
   >
   </svelte:component>
 {/if}

@@ -9,10 +9,10 @@ export enum DraggableElementType {
   ActionRollCard,
 }
 
-const draggedElementStore = writable<undefined | {
+const draggedElementStore = writable<null | {
   type: DraggableElementType,
   props: any,
-}>(undefined)
+}>(null)
 
 const draggableElementTypeToTagMap: {[key in DraggableElementType]: string} = {
   [DraggableElementType.ActionRollCard]: "action-roll-card",
@@ -67,7 +67,7 @@ export const draggableElement = (node, {type, props}) => {
   };
 
   const handleDragEnd = () => {
-    draggedElementStore.set(undefined)
+    draggedElementStore.set(null)
   };
 
   node.style.userSelect = "none";
@@ -96,7 +96,7 @@ export const DraggableElement = Extension.create({
         props: {
           handleDOMEvents: {
             drop: (view, event) => {
-              if (get(draggedElementStore) === undefined) {
+              if (get(draggedElementStore) === null) {
                 return false;
               }
               const {type, props} = get(draggedElementStore);

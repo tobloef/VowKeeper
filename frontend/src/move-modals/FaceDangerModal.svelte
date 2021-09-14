@@ -8,21 +8,24 @@
   import {formatNumber} from "../utils";
   import StatSelector from "../components/StatSelector.svelte";
 
-  export let showModal: boolean;
-  export let onRoll: (statToUse: StatName, adds: number) => void;
+  export let onClose;
   export let defaultAdds: {
     value: number,
     reason: string,
-  } | undefined = undefined;
+  } | null = null;
 
   let statToUse: StatName;
   let adds: number = defaultAdds?.value ?? 0;
+
+  const onRoll = (statToUse: StatName, adds: number): void => {
+
+  }
 </script>
 
 <Modal
-  open={showModal}
+  open={true}
   title="Move - Face Danger"
-  onClose={() => showModal = false}
+  onClose={onClose}
 >
   <div class="wrapper">
     <section>
@@ -54,9 +57,9 @@
           <input
             type="number"
             bind:value={adds}
-            class:highlighted={defaultAdds !== undefined}
+            class:highlighted={defaultAdds !== null}
           />
-          {#if defaultAdds !== undefined}
+          {#if defaultAdds !== null}
             <span class="addsExplainer deemphasized">
               ({formatNumber(defaultAdds.value)} from <i>{defaultAdds.reason}</i>)
             </span>
@@ -69,11 +72,11 @@
       <div class="rollWrapper">
         <button
           on:click={() => onRoll(statToUse, adds)}
-          disabled={statToUse === undefined}
+          disabled={statToUse === null}
         >
           <Fa icon={faDiceD6} /> Roll
         </button>
-        {#if statToUse === undefined}
+        {#if statToUse === null}
           <span class="deemphasized rollDisabledExplainer">
             (Select stat first)
           </span>
