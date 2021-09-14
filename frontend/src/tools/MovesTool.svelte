@@ -1,5 +1,4 @@
 <script lang="ts">
-  import FaceDanger from "../move-modals/FaceDangerModal.svelte";
   import {MoveType} from "../mechanics/moves";
   import {moveToModalComponent} from "../mechanics/moves";
 

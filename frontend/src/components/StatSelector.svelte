@@ -6,7 +6,7 @@
     faHeart,
     faSword,
     faHoodCloak,
-    faBrain,
+    faHeadSideBrain,
   } from "@fortawesome/pro-solid-svg-icons";
   import {capitalizeFirstLetter} from "../utils";
   import {StatNames} from "../mechanics/stat";
@@ -20,7 +20,7 @@
     "heart": faHeart,
     "iron": faSword,
     "shadow": faHoodCloak,
-    "wits": faBrain,
+    "wits": faHeadSideBrain,
   }
 </script>
 
