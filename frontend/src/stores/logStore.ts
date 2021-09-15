@@ -1,13 +1,20 @@
 import {Writable, writable} from "svelte/store";
 import type {ActionRoll} from "../mechanics/rolls";
 import ActionRollCardLogItem from "../components/action-roll-card/ActionRollCardLogItem.svelte";
+import {nanoid} from "nanoid";
 
 export enum LogItemType {
   ActionRoll,
 }
 
-export type ActionRollLogItem = {
+type BaseLogItem = {
   id: string,
+  dateCreated: Date,
+  type: LogItemType,
+  props: object
+}
+
+export type ActionRollLogItem = BaseLogItem & {
   type: LogItemType.ActionRoll,
   props: {
     roll: ActionRoll,
@@ -55,3 +62,16 @@ export const getLogItemComponent = (type: LogItemType) => {
       throw new Error(`Invalid LogItemType "${type}".`);
   }
 }
+
+export const createLogItem = <T extends LogItem>(type: T['type'], props: T['props']): {
+  dateCreated: Date;
+  id: string;
+  type: T["type"];
+  props: T["props"];
+} => ({
+  id: nanoid(),
+  type,
+  dateCreated: new Date(),
+  props,
+})
+

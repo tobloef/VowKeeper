@@ -9,6 +9,8 @@
   import StatSelector from "../components/StatSelector.svelte";
   import {makeStatRoll} from "../mechanics/rolls";
   import type {Character} from "../mechanics/character";
+  import {router} from "tinro";
+
 
   export let onClose;
   export let character: Character;
@@ -23,6 +25,7 @@
   const onRoll = () => {
     makeStatRoll(character, statNameToRoll, adds);
     onClose();
+    router.goto('/log')
   }
 </script>
 

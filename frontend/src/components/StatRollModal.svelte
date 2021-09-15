@@ -13,6 +13,7 @@
   import {Character} from "../mechanics/character";
   import {calculateValue} from "../mechanics/stat";
   import {makeStatRoll} from "../mechanics/rolls";
+  import {router} from "tinro";
 
   export let statName: StatName;
   export let character: Character;
@@ -23,6 +24,7 @@
   const onRoll = () => {
     makeStatRoll(character, statName, adds);
     onClose();
+    router.goto('/log');
   }
 </script>
 

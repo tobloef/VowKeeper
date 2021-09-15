@@ -4,7 +4,7 @@ import type {ProgressTrack} from "./progress";
 import type {Character} from "./character";
 import {calculateValue, StatName} from "./stat";
 import {progressTrackToScore} from "./progress";
-import {ActionRollLogItem, LogItemType, logStore} from "../stores/logStore";
+import {ActionRollLogItem, createLogItem, LogItemType, logStore} from "../stores/logStore";
 import {nanoid} from "nanoid";
 
 export enum RollResult {
@@ -232,14 +232,10 @@ export const makeStatRoll = (character: Character, statName: StatName, adds: num
   const stat: Stat = character.stats[statName];
   const roll = rollActionRoll(stat, adds, character);
 
-  const actionRollLogItem: ActionRollLogItem = {
-    id: nanoid(),
-    type: LogItemType.ActionRoll,
-    props: {
-      roll,
-      characterId: character.id,
-    },
-  };
+  const actionRollLogItem: ActionRollLogItem = createLogItem(LogItemType.ActionRoll, {
+    roll,
+    characterId: character.id,
+  })
 
   logStore.addItem(actionRollLogItem);
 }
