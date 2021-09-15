@@ -11,9 +11,15 @@
   import {capitalizeFirstLetter} from "../utils";
   import {StatNames} from "../mechanics/stat";
 
-  export let statDescriptions: {[key: StatName]: string};
+  export let selectedStat: StatName;
+  export let statDescriptions: {[key: StatName]: string} = {
+    "edge": "Speed, agility, or precision",
+    "heart": "Charm, loyalty, or courage",
+    "iron": "Aggressive action, forceful defense, strength, or endurance",
+    "shadow": "Deception, stealth, or trickery",
+    "wits": "Expertise, insight, or observation",
+  };
   export let statsToShow: StatName[] = undefined;
-  export let statToUse: StatName;
 
   const statIcons: {[key: StatName]: string} = {
     "edge": faBowArrow,
@@ -28,7 +34,7 @@
   <div class="statOptions">
       {#each (statsToShow ?? StatNames) as statName}
         <label>
-          <input type="radio" bind:group={statToUse} value={statName}>
+          <input type="radio" bind:group={selectedStat} value={statName}>
           <Fa icon={statIcons[statName]} fw={true} />
           <span class="stat">{capitalizeFirstLetter(statName)}</span>
           <span class="deemphasized"> - {statDescriptions[statName]}</span>

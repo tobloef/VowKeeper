@@ -16,8 +16,10 @@
   }
 </script>
 
+<span>Adventure Moves</span>
 <ul>
   <li><button on:click={() => makeMove(MoveType.FaceDanger)}>Face Danger</button></li>
+  <li><button on:click={() => makeMove(MoveType.SecureAnAdvantage)}>Secure an Advantage</button></li>
 </ul>
 
 {#if moveInProgress !== undefined}

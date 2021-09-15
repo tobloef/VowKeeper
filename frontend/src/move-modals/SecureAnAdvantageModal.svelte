@@ -31,13 +31,13 @@
 
 <Modal
   open={true}
-  title="Move - Face Danger"
+  title="Move - Secure an Advantage"
   onClose={onClose}
 >
   <div class="wrapper">
     <section>
       <span class="moveText">
-        When you attempt something risky or react to an imminent threat, envision your action and roll.
+        When you assess a situation, make preparations, or attempt to gain leverage, envision your action and roll.
       </span>
     </section>
 
