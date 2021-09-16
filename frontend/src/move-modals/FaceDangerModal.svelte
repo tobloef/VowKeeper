@@ -60,94 +60,98 @@
 >
   <div class="wrapper">
     {#if actionRoll === undefined}
-      <section>
-        <span class="moveText">
-          When <b>you attempt something risky or react to an imminent threat</b>, envision your action and roll.
-        </span>
-      </section>
+      <div class="rollPage">
+        <section>
+          <span class="moveText">
+            When you attempt something risky or react to an imminent threat, envision your action and roll.
+          </span>
+        </section>
 
-      <section>
-        <div class="statsWrapper">
-          <span class="header">Stat</span>
-          <StatSelector
-            bind:selectedStat={statNameToRoll}
-          />
-        </div>
-      </section>
-
-      <section>
-        <div class="addsWrapper">
-          <span class="header">Adds</span>
-          <div>
-            <input
-              type="number"
-              bind:value={adds}
-              class:highlighted={defaultAdds !== undefined}
+        <section>
+          <div class="statsWrapper">
+            <span class="header">Stat</span>
+            <StatSelector
+              bind:selectedStat={statNameToRoll}
             />
-            {#if defaultAdds !== undefined}
-              <span class="addsExplainer deemphasized">
-                ({formatNumber(defaultAdds.value)} from <i>{defaultAdds.reason}</i>)
+          </div>
+        </section>
+
+        <section>
+          <div class="addsWrapper">
+            <span class="header">Adds</span>
+            <div>
+              <input
+                type="number"
+                bind:value={adds}
+                class:highlighted={defaultAdds !== undefined}
+              />
+              {#if defaultAdds !== undefined}
+                <span class="addsExplainer deemphasized">
+                  ({formatNumber(defaultAdds.value)} from <i>{defaultAdds.reason}</i>)
+                </span>
+              {/if}
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="rollWrapper">
+            <button
+              on:click={onRoll}
+              disabled={statNameToRoll === undefined}
+            >
+              <Fa icon={faDiceD6} /> Roll
+            </button>
+            {#if statNameToRoll === undefined}
+              <span class="deemphasized rollDisabledExplainer">
+                (Select stat first)
               </span>
             {/if}
           </div>
-        </div>
-      </section>
-
-      <section>
-        <div class="rollWrapper">
-          <button
-            on:click={onRoll}
-            disabled={statNameToRoll === undefined}
-          >
-            <Fa icon={faDiceD6} /> Roll
-          </button>
-          {#if statNameToRoll === undefined}
-            <span class="deemphasized rollDisabledExplainer">
-              (Select stat first)
-            </span>
-          {/if}
-        </div>
-      </section>
+        </section>
+      </div>
     {/if}
 
     {#if actionRoll !== undefined}
-      <section class="rollResultContainer">
-        <ActionRollResult
-          roll={actionRoll}
-          character={character}
-          updateRoll={updateRoll}
-          updateCharacter={updateCharacter}
-          canBurnMomentum={true}
-        />
-      </section>
+      <div class="resultPage">
+        <section class="rollResultContainer">
+          <ActionRollResult
+            roll={actionRoll}
+            character={character}
+            updateRoll={updateRoll}
+            updateCharacter={updateCharacter}
+            canBurnMomentum={true}
+          />
+        </section>
 
-      <section>
-        {#if actionRoll.result === RollResult.StrongHit}
-          <span>
-            On a <b>strong hit</b>, you are successful. Take +1 momentum.
-          </span>
-        {/if}
-        {#if actionRoll.result === RollResult.WeakHit}
-          <span>
-            On a <b>weak hit</b>, you succeed, but face a troublesome cost. Choose one.
-          </span>
-          <ul>
-            <li>You are delayed, lose advantage, or face a new danger: Suffer -1 momentum.</li>
-            <li>You are tired or hurt: <i>Endure Harm</i> (1 harm).</li>
-            <li>You are dispirited or afraid: <i>Endure Stress</i> (1 stress).</li>
-            <li>You sacrifice resources: Suffer -1 supply.</li>
-          </ul>
-        {/if}
-        {#if actionRoll.result === RollResult.Miss}
-          <span>
-            On a <b>miss</b>, you fail, or your progress is undermined by a dramatic and costly turn of events. <i>Pay the Price</i>.
-          </span>
-        {/if}
-      </section>
+        <section>
+          {#if actionRoll.result === RollResult.StrongHit}
+            <span>
+              On a strong hit, you are successful. Take +1 momentum.
+            </span>
+          {/if}
+          {#if actionRoll.result === RollResult.WeakHit}
+            <span>
+              On a weak hit, you succeed, but face a troublesome cost. Choose one:
+            </span>
+            <ul>
+              <li>You are delayed, lose advantage, or face a new danger: Suffer -1 momentum.</li>
+              <li>You are tired or hurt: <i>Endure Harm</i> (1 harm).</li>
+              <li>You are dispirited or afraid: <i>Endure Stress</i> (1 stress).</li>
+              <li>You sacrifice resources: Suffer -1 supply.</li>
+            </ul>
+          {/if}
+          {#if actionRoll.result === RollResult.Miss}
+            <span>
+              On a miss, you fail, or your progress is undermined by a dramatic and costly turn of events. <i>Pay the Price</i>.
+            </span>
+          {/if}
+        </section>
 
-      <section class="finishWrapper">
-        <button>Finish</button>
-      </section>
+        <section class="finishWrapper">
+          <button on:click={onClose}>Finish</button>
+        </section>
+      </div>
     {/if}
   </div>
 </Modal>
@@ -156,10 +160,6 @@
   .wrapper {
     width: 600px;
     height: 375px;
-  }
-
-  section:not(:last-child) {
-    margin-bottom: 30px;
   }
 
   .moveText {
@@ -213,5 +213,17 @@
   .finishWrapper button {
     height: 2em;
     min-width: 100px;
+  }
+
+  .rollPage section:not(:last-child) {
+    margin-bottom: 30px;
+  }
+
+  .resultPage section:not(:last-child) {
+    margin-bottom: 40px;
+  }
+
+  .resultPage {
+    padding-top: 20px;
   }
 </style>
