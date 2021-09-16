@@ -4,6 +4,7 @@
   import {logStore} from "../../stores/logStore";
   import type {ActionRollLogItem} from "../../stores/logStore";
   import {getCharacterStore} from "../../stores/characterStore";
+  import type { ActionRoll } from "../../mechanics/rolls";
 
   export let logItem: ActionRollLogItem;
 
@@ -16,7 +17,7 @@
 
   $: characterStore = getCharacterStore(logItem.props.characterId)
 
-  const updateRoll = (newRoll) => {
+  const updateRoll = (newRoll: ActionRoll) => {
     logStore.replaceItem(
       logItem.id,
       {

@@ -244,7 +244,6 @@
     flex-direction: row;
     justify-content: space-evenly;
     font-size: 1em;
-    align-items: center;
   }
 
   :global(.momentum .separator) {

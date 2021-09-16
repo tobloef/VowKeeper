@@ -7,14 +7,9 @@ export enum LogItemType {
   ActionRoll,
 }
 
-type BaseLogItem = {
+export type ActionRollLogItem = {
   id: string,
   dateCreated: Date,
-  type: LogItemType,
-  props: object
-}
-
-export type ActionRollLogItem = BaseLogItem & {
   type: LogItemType.ActionRoll,
   props: {
     roll: ActionRoll,
@@ -63,12 +58,7 @@ export const getLogItemComponent = (type: LogItemType) => {
   }
 }
 
-export const createLogItem = <T extends LogItem>(type: T['type'], props: T['props']): {
-  dateCreated: Date;
-  id: string;
-  type: T["type"];
-  props: T["props"];
-} => ({
+export const createLogItem = (type, props): LogItem => ({
   id: nanoid(),
   type,
   dateCreated: new Date(),

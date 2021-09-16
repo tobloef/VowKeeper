@@ -51,9 +51,9 @@ export const mockCharacter: Character = deserializeCharacter({
     }
   },
   momentum: {
-    resetBaseValue: 2,
+    resetBaseValue: 10,
     minBaseValue: -6,
     maxBaseValue: 10,
-    currentBaseValue: 2,
+    currentBaseValue: 10,
   }
 });

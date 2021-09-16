@@ -12,7 +12,7 @@
   import Modal from "./Modal.svelte";
   import {Character} from "../mechanics/character";
   import {calculateValue} from "../mechanics/stat";
-  import {makeStatRoll} from "../mechanics/rolls";
+  import {makeActionRoll} from "../mechanics/rolls";
   import {router} from "tinro";
 
   export let statName: StatName;
@@ -22,7 +22,8 @@
   let adds: number = 0;
 
   const onRoll = () => {
-    makeStatRoll(character, statName, adds);
+    // TODO: Momentum, result, etc., like Face Danger
+    makeActionRoll(character, statName, adds);
     onClose();
     router.goto('/log');
   }

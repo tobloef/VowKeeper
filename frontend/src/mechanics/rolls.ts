@@ -5,7 +5,6 @@ import type {Character} from "./character";
 import {calculateValue, StatName} from "./stat";
 import {progressTrackToScore} from "./progress";
 import {ActionRollLogItem, createLogItem, LogItemType, logStore} from "../stores/logStore";
-import {nanoid} from "nanoid";
 
 export enum RollResult {
   StrongHit = "Strong Hit",
@@ -228,14 +227,16 @@ export const considerBurningMomentum = (roll) => {
   }
 }
 
-export const makeStatRoll = (character: Character, statName: StatName, adds: number): void => {
+export const makeActionRoll = (character: Character, statName: StatName, adds: number): ActionRollLogItem => {
   const stat: Stat = character.stats[statName];
-  const roll = rollActionRoll(stat, adds, character);
+  const actionRoll = rollActionRoll(stat, adds, character);
 
   const actionRollLogItem: ActionRollLogItem = createLogItem(LogItemType.ActionRoll, {
-    roll,
+    roll: actionRoll,
     characterId: character.id,
   })
 
   logStore.addItem(actionRollLogItem);
+
+  return actionRollLogItem;
 }
