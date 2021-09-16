@@ -227,9 +227,14 @@ export const considerBurningMomentum = (roll) => {
   }
 }
 
-export const makeActionRoll = (character: Character, statName: StatName, adds: number): ActionRollLogItem => {
+export const makeActionRoll = (
+  character: Character,
+  statName: StatName,
+  adds: number,
+  move?: string
+): ActionRollLogItem => {
   const stat: Stat = character.stats[statName];
-  const actionRoll = rollActionRoll(stat, adds, character);
+  const actionRoll = rollActionRoll(stat, adds, character, move);
 
   const actionRollLogItem: ActionRollLogItem = createLogItem(LogItemType.ActionRoll, {
     roll: actionRoll,

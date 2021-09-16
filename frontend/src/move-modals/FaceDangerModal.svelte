@@ -32,7 +32,7 @@
   $: actionRoll = actionRollLogItem?.props.roll;
 
   const onRoll = () => {
-    actionRollLogItem = makeActionRoll(character, statNameToRoll, adds);
+    actionRollLogItem = makeActionRoll(character, statNameToRoll, adds, "Face Danger");
   }
 
   const updateRoll = (newRoll: ActionRoll) => {
@@ -95,8 +95,8 @@
       <section>
         <div class="rollWrapper">
           <button
-                  on:click={onRoll}
-                  disabled={statNameToRoll === undefined}
+            on:click={onRoll}
+            disabled={statNameToRoll === undefined}
           >
             <Fa icon={faDiceD6} /> Roll
           </button>

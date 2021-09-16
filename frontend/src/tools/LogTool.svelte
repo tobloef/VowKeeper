@@ -106,10 +106,10 @@
       background: transparent;
     }
     50% {
-      background: hsla(50, 100%, 61%, 0.5);
+      background: hsla(60, 100%, 70%, 0.5);
     }
     50% {
-      background: hsla(50, 100%, 61%, 0.5);
+      background: hsla(60, 100%, 70%, 0.5);
     }
     100% {
       background: transparent;
