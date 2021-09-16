@@ -17,6 +17,7 @@
   } from "../stores/logStore";
   import { getCharacterStore } from "../stores/characterStore";
   import { RollResult } from '../mechanics/rolls';
+  import { html } from "../htmlAction.js"
 
   export let onClose;
   export let character: Character;
@@ -27,8 +28,9 @@
 
   let statNameToRoll: StatName | undefined;
   let adds: number = defaultAdds?.value ?? 0;
-  let actionRollLogItem: ActionRollLogItem | undefined = undefined;
-  let actionRoll: ActionRoll | undefined = undefined;
+  let actionRollLogItem: ActionRollLogItem | undefined;
+  let actionRoll: ActionRoll | undefined;
+  let selectedResultIndex: number;
 
   $: actionRoll = actionRollLogItem?.props.roll;
 
@@ -51,6 +53,29 @@
     const characterStore = getCharacterStore(newCharacter.id);
     characterStore.set(newCharacter);
   }
+
+  const resultOptions = [
+    {
+      optionHtml: "<span>You are delayed, lose advantage, or face a new danger: Suffer -1 momentum.</span>",
+      rollResultText: "",
+      applyResult: () => {},
+    },
+    {
+      optionHtml: "<span>You are tired or hurt: <i>Endure Harm</i> (1 harm).</span>",
+      rollResultText: "",
+      applyResult: () => {},
+    },
+    {
+      optionHtml: "<span>You are dispirited or afraid: <i>Endure Stress</i> (1 stress).</span>",
+      rollResultText: "",
+      applyResult: () => {},
+    },
+    {
+      optionHtml: "<span>You sacrifice resources: Suffer -1 supply.</span>",
+      rollResultText: "",
+      applyResult: () => {},
+    },
+  ]
 </script>
 
 <Modal
@@ -135,12 +160,14 @@
               <span>
                 On a weak hit, you succeed, but face a troublesome cost. Choose one:
               </span>
-              <ul class="choiceList">
-                <li>You are delayed, lose advantage, or face a new danger: Suffer -1 momentum.</li>
-                <li>You are tired or hurt: <i>Endure Harm</i> (1 harm).</li>
-                <li>You are dispirited or afraid: <i>Endure Stress</i> (1 stress).</li>
-                <li>You sacrifice resources: Suffer -1 supply.</li>
-              </ul>
+              <div class="choiceList">
+                {#each resultOptions as resultOption, i}
+                  <label>
+                    <input type="radio" bind:group={selectedResultIndex} value={i}>
+                    <span use:html={resultOption.optionHtml}></span>
+                  </label>
+                {/each}
+              </div>
             {/if}
             {#if actionRoll.result === RollResult.Miss}
               <span>
@@ -201,7 +228,7 @@
 
   .rollResultContainer {
     display: flex;
-    background: hsl(0, 0%, 95%);
+    background: hsl(0, 0%, 97%);
     border: 2px solid hsl(0, 0%, 25%);
     border-radius: 5px;
     padding: 25px 20px;
@@ -212,7 +239,7 @@
   .finishWrapper {
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   .finishWrapper button {
@@ -240,10 +267,12 @@
   }
 
   .choiceList {
+    display: flex;
+    flex-direction: column;
     margin: 10px 0px;
   }
 
-  .choiceList li:not(:last-child) {
+  .choiceList > :not(:last-child) {
     margin-bottom: 5px;
   }
 </style>

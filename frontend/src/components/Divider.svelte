@@ -1,9 +1,8 @@
 <script lang="ts">
-  export let text = "";
   export let vertical = false;
 </script>
 
-<div class="separator" class:vertical>{text || ""}</div>
+<div class="separator" class:vertical><slot /></div>
 
 <style>
   .separator {

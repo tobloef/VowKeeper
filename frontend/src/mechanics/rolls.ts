@@ -32,6 +32,7 @@ export type ActionRoll = {
   },
   actionScore: ActionScore,
   result: RollResult,
+  resultText?: string,
   isMatch: boolean,
   momentumAtRoll: number,
   momentumBurned: boolean,

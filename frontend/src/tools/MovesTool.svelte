@@ -16,10 +16,12 @@
   }
 </script>
 
-<span>Adventure Moves</span>
-<ul>
-  <li><button on:click={() => makeMove(MoveType.FaceDanger)}>Face Danger</button></li>
-</ul>
+<div class="wrapper">
+  <span>Adventure Moves</span>
+  <ul>
+    <li><button on:click={() => makeMove(MoveType.FaceDanger)}>Face Danger</button></li>
+  </ul>
+</div>
 
 {#if moveInProgress !== undefined}
   <svelte:component
@@ -29,3 +31,9 @@
   >
   </svelte:component>
 {/if}
+
+<style>
+  .wrapper {
+    padding: 15px;
+  }
+</style>

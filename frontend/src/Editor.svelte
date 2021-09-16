@@ -131,9 +131,7 @@
     content: "";
   }
 
-  :global(#document .dice) {
-    width: 2.5em;
-    align-items: flex-end;
-    display: flex;
+  :global(#document .actionRollCard) {
+    max-width: 350px;
   }
 </style>

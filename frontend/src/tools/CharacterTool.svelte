@@ -55,7 +55,7 @@
     </div>
   </div>
 
-  <Divider text="Stats"/>
+  <Divider>Stats</Divider>
 
   <div class="stats stats-wrapper">
       {#each StatNames as statName}
@@ -71,7 +71,7 @@
     {/each}
   </div>
 
-  <Divider text="Status"/>
+  <Divider>Status</Divider>
 
   <div class="statuses stats-wrapper">
     {#each ["health", "spirit", "supply"] as status}
@@ -86,7 +86,7 @@
     {/each}
   </div>
 
-  <Divider text="Momentum"/>
+  <Divider>Momentum</Divider>
 
   <div class="momentum stats-wrapper">
     <StatInput
@@ -98,7 +98,7 @@
       canEdit={true}
       label="Current"
     />
-    <Divider vertical={true}/>
+    <Divider vertical={true} />
     <StatInput
       stat={$characterStore.momentum.max}
       onBaseValueChange={(newBaseValue) => $characterStore.momentum.max.baseValue = newBaseValue}
@@ -122,7 +122,7 @@
     />
   </div>
 
-  <Divider text="Bonds"/>
+  <Divider>Bonds</Divider>
 
   <div class="bonds">
     <ProgressTrack
@@ -131,7 +131,7 @@
     />
   </div>
 
-  <Divider text="Vows"/>
+  <Divider>Vows</Divider>
 
   <div>
     {#each $characterStore.vows as track}
@@ -152,7 +152,7 @@
     {/each}
   </div>
 
-  <Divider text="Debilities"/>
+  <Divider>Debilities</Divider>
 
   <div class="debilities">
     {#each debilityGroups as { groupKey, debilities }}
