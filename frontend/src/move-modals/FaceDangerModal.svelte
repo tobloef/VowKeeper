@@ -16,6 +16,7 @@
     logStore,
   } from "../stores/logStore";
   import { getCharacterStore } from "../stores/characterStore";
+  import { RollResult } from '../mechanics/rolls';
 
   export let onClose;
   export let character: Character;
@@ -61,7 +62,7 @@
     {#if actionRoll === undefined}
       <section>
         <span class="moveText">
-          When you attempt something risky or react to an imminent threat, envision your action and roll.
+          When <b>you attempt something risky or react to an imminent threat</b>, envision your action and roll.
         </span>
       </section>
 
@@ -110,16 +111,42 @@
     {/if}
 
     {#if actionRoll !== undefined}
+      <section class="rollResultContainer">
+        <ActionRollResult
+          roll={actionRoll}
+          character={character}
+          updateRoll={updateRoll}
+          updateCharacter={updateCharacter}
+          canBurnMomentum={true}
+        />
+      </section>
+
       <section>
-        <div>
-          <ActionRollResult
-            roll={actionRoll}
-            character={character}
-            updateRoll={updateRoll}
-            updateCharacter={updateCharacter}
-            canBurnMomentum={true}
-          />
-        </div>
+        {#if actionRoll.result === RollResult.StrongHit}
+          <span>
+            On a <b>strong hit</b>, you are successful. Take +1 momentum.
+          </span>
+        {/if}
+        {#if actionRoll.result === RollResult.WeakHit}
+          <span>
+            On a <b>weak hit</b>, you succeed, but face a troublesome cost. Choose one.
+          </span>
+          <ul>
+            <li>You are delayed, lose advantage, or face a new danger: Suffer -1 momentum.</li>
+            <li>You are tired or hurt: <i>Endure Harm</i> (1 harm).</li>
+            <li>You are dispirited or afraid: <i>Endure Stress</i> (1 stress).</li>
+            <li>You sacrifice resources: Suffer -1 supply.</li>
+          </ul>
+        {/if}
+        {#if actionRoll.result === RollResult.Miss}
+          <span>
+            On a <b>miss</b>, you fail, or your progress is undermined by a dramatic and costly turn of events. <i>Pay the Price</i>.
+          </span>
+        {/if}
+      </section>
+
+      <section class="finishWrapper">
+        <button>Finish</button>
       </section>
     {/if}
   </div>
@@ -166,5 +193,25 @@
   .addsExplainer,
   .rollDisabledExplainer {
     margin-left: 3px;
+  }
+
+  .rollResultContainer {
+    display: flex;
+    background: hsl(0, 0%, 95%);
+    border: 2px solid hsl(0, 0%, 25%);
+    border-radius: 5px;
+    padding: 25px 20px;
+    justify-content: center;
+    margin: 0px 75px;
+  }
+
+  .finishWrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .finishWrapper button {
+    height: 2em;
+    min-width: 100px;
   }
 </style>
