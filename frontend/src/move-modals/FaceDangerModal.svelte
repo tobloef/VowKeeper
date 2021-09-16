@@ -114,39 +114,41 @@
 
     {#if actionRoll !== undefined}
       <div class="resultPage">
-        <section class="rollResultContainer">
-          <ActionRollResult
-            roll={actionRoll}
-            character={character}
-            updateRoll={updateRoll}
-            updateCharacter={updateCharacter}
-            canBurnMomentum={true}
-          />
-        </section>
+        <div class="result">
+          <section class="rollResultContainer">
+            <ActionRollResult
+              roll={actionRoll}
+              character={character}
+              updateRoll={updateRoll}
+              updateCharacter={updateCharacter}
+              canBurnMomentum={true}
+            />
+          </section>
 
-        <section>
-          {#if actionRoll.result === RollResult.StrongHit}
-            <span>
-              On a strong hit, you are successful. Take +1 momentum.
-            </span>
-          {/if}
-          {#if actionRoll.result === RollResult.WeakHit}
-            <span>
-              On a weak hit, you succeed, but face a troublesome cost. Choose one:
-            </span>
-            <ul>
-              <li>You are delayed, lose advantage, or face a new danger: Suffer -1 momentum.</li>
-              <li>You are tired or hurt: <i>Endure Harm</i> (1 harm).</li>
-              <li>You are dispirited or afraid: <i>Endure Stress</i> (1 stress).</li>
-              <li>You sacrifice resources: Suffer -1 supply.</li>
-            </ul>
-          {/if}
-          {#if actionRoll.result === RollResult.Miss}
-            <span>
-              On a miss, you fail, or your progress is undermined by a dramatic and costly turn of events. <i>Pay the Price</i>.
-            </span>
-          {/if}
-        </section>
+          <section>
+            {#if actionRoll.result === RollResult.StrongHit}
+              <span>
+                On a strong hit, you are successful. Take +1 momentum.
+              </span>
+            {/if}
+            {#if actionRoll.result === RollResult.WeakHit}
+              <span>
+                On a weak hit, you succeed, but face a troublesome cost. Choose one:
+              </span>
+              <ul class="choiceList">
+                <li>You are delayed, lose advantage, or face a new danger: Suffer -1 momentum.</li>
+                <li>You are tired or hurt: <i>Endure Harm</i> (1 harm).</li>
+                <li>You are dispirited or afraid: <i>Endure Stress</i> (1 stress).</li>
+                <li>You sacrifice resources: Suffer -1 supply.</li>
+              </ul>
+            {/if}
+            {#if actionRoll.result === RollResult.Miss}
+              <span>
+                On a miss, you fail, or your progress is undermined by a dramatic and costly turn of events. <i>Pay the Price</i>.
+              </span>
+            {/if}
+          </section>
+        </div>
 
         <section class="finishWrapper">
           <button on:click={onClose}>Finish</button>
@@ -160,6 +162,8 @@
   .wrapper {
     width: 600px;
     height: 375px;
+    display: flex;
+    flex-direction: column;
   }
 
   .moveText {
@@ -208,6 +212,7 @@
   .finishWrapper {
     display: flex;
     justify-content: center;
+    margin-bottom: 10px;
   }
 
   .finishWrapper button {
@@ -225,5 +230,20 @@
 
   .resultPage {
     padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .result {
+    flex: 1;
+  }
+
+  .choiceList {
+    margin: 10px 0px;
+  }
+
+  .choiceList li:not(:last-child) {
+    margin-bottom: 5px;
   }
 </style>
