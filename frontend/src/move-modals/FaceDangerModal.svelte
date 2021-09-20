@@ -56,22 +56,22 @@
 
   const resultOptions = [
     {
-      optionHtml: "<span>You are delayed, lose advantage, or face a new danger: Suffer -1 momentum.</span>",
+      optionHtml: "<span><b>Suffer -1 Momentum</b> - You are delayed, lose advantage, or face a new danger</span>",
       rollResultText: "",
       applyResult: () => {},
     },
     {
-      optionHtml: "<span>You are tired or hurt: <i>Endure Harm</i> (1 harm).</span>",
+      optionHtml: "<span><b>Suffer -1 Supply</b> - You sacrifice resources</span>",
       rollResultText: "",
       applyResult: () => {},
     },
     {
-      optionHtml: "<span>You are dispirited or afraid: <i>Endure Stress</i> (1 stress).</span>",
+      optionHtml: "<span><b>Endure 1 Harm</b> - You are tired or hurt</span>",
       rollResultText: "",
       applyResult: () => {},
     },
     {
-      optionHtml: "<span>You sacrifice resources: Suffer -1 supply.</span>",
+      optionHtml: "<span><b>Endure 1 Stress</b> - You are dispirited or afraid</span>",
       rollResultText: "",
       applyResult: () => {},
     },
@@ -158,8 +158,11 @@
             {/if}
             {#if actionRoll.result === RollResult.WeakHit}
               <span>
-                On a weak hit, you succeed, but face a troublesome cost. Choose one:
+                <i>On a weak hit, you succeed, but face a troublesome cost.</i>
               </span>
+              <br/>
+              <br/>
+              <b>Choose one:</b>
               <div class="choiceList">
                 {#each resultOptions as resultOption, i}
                   <label>
@@ -187,7 +190,7 @@
 
 <style>
   .wrapper {
-    width: 600px;
+    width: 650px;
     height: 375px;
     display: flex;
     flex-direction: column;
@@ -252,11 +255,11 @@
   }
 
   .resultPage section:not(:last-child) {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
   }
 
   .resultPage {
-    padding-top: 20px;
+    padding-top: 15px;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -273,6 +276,6 @@
   }
 
   .choiceList > :not(:last-child) {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
   }
 </style>
