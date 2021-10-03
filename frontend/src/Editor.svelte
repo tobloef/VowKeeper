@@ -51,6 +51,14 @@
       .focus()
       .toggleHeading({level: 2})
       .run(),
+    h3: () => editor.chain()
+      .focus()
+      .toggleHeading({level: 3})
+      .run(),
+    h4: () => editor.chain()
+      .focus()
+      .toggleHeading({level: 4})
+      .run(),
   };
 </script>
 
@@ -68,6 +76,18 @@
         class:active={editor.isActive('heading', { level: 2 })}
       >
         H2
+      </button>
+      <button
+        on:click={menu.h3}
+        class:active={editor.isActive('heading', { level: 3 })}
+      >
+        H3
+      </button>
+      <button
+        on:click={menu.h4}
+        class:active={editor.isActive('heading', { level: 4 })}
+      >
+        H4
       </button>
       <button
         on:click={menu.paragraph}
