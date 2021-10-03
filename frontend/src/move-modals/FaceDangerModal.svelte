@@ -16,8 +16,8 @@
     logStore,
   } from "../stores/logStore";
   import { getCharacterStore } from "../stores/characterStore";
-  import { RollResult } from '../mechanics/rolls';
-  import { html } from "../htmlAction.js"
+  import { RollResult } from "../mechanics/rolls";
+  import { html } from "../htmlAction.js";
 
   export let onClose;
   export let character: Character;
@@ -25,6 +25,11 @@
     value: number,
     reason: string,
   } | undefined = undefined;
+
+  defaultAdds = {
+    value: 3,
+    reason: "For testing",
+  };
 
   let statNameToRoll: StatName | undefined;
   let adds: number = defaultAdds?.value ?? 0;
@@ -36,7 +41,7 @@
 
   const onRoll = () => {
     actionRollLogItem = makeActionRoll(character, statNameToRoll, adds, "Face Danger");
-  }
+  };
 
   const updateRoll = (newRoll: ActionRoll) => {
     actionRollLogItem = {
@@ -47,12 +52,12 @@
       },
     };
     logStore.replaceItem(actionRollLogItem.id, actionRollLogItem);
-  }
+  };
 
   const updateCharacter = (newCharacter) => {
     const characterStore = getCharacterStore(newCharacter.id);
     characterStore.set(newCharacter);
-  }
+  };
 
   const resultOptions = [
     {
@@ -75,207 +80,202 @@
       rollResultText: "",
       applyResult: () => {},
     },
-  ]
+  ];
 </script>
 
 <Modal
-  open={true}
-  title="Move - Face Danger"
-  onClose={onClose}
+	open={true}
+	title="Move - Face Danger"
+	onClose={onClose}
 >
-  <div class="wrapper">
-    {#if actionRoll === undefined}
-      <div class="rollPage">
-        <section>
-          <span class="moveText">
-            When you attempt something risky or react to an imminent threat, envision your action and roll.
-          </span>
-        </section>
+	<div class="content">
+		{#if actionRoll === undefined}
+			<section>
+				<p class="explainer">
+					When you attempt something risky or react to an imminent threat, envision your action and roll.
+				</p>
+			</section>
 
-        <section>
-          <div class="statsWrapper">
-            <span class="header">Stat</span>
-            <StatSelector
-              bind:selectedStat={statNameToRoll}
-            />
-          </div>
-        </section>
+			<section>
+				<h3>Stat</h3>
+				<StatSelector
+					bind:selectedStat={statNameToRoll}
+				/>
+			</section>
 
-        <section>
-          <div class="addsWrapper">
-            <span class="header">Adds</span>
-            <div>
-              <input
-                type="number"
-                bind:value={adds}
-                class:highlighted={defaultAdds !== undefined}
-              />
-              {#if defaultAdds !== undefined}
-                <span class="addsExplainer deemphasized">
-                  ({formatNumber(defaultAdds.value)} from <i>{defaultAdds.reason}</i>)
-                </span>
-              {/if}
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div class="rollWrapper">
-            <button
-              on:click={onRoll}
-              disabled={statNameToRoll === undefined}
-            >
-              <Fa icon={faDiceD6} /> Roll
-            </button>
-            {#if statNameToRoll === undefined}
-              <span class="deemphasized rollDisabledExplainer">
-                (Select stat first)
+			<section>
+				<h3>Adds</h3>
+				<div class="addsInputWrapper">
+					<input
+						type="number"
+						bind:value={adds}
+						class="addsInput"
+						class:highlighted={defaultAdds !== undefined}
+					/>
+					{#if defaultAdds !== undefined}
+              <span class="addsExplainer deemphasized">
+                ({formatNumber(defaultAdds.value)} from <i>{defaultAdds.reason}</i>)
               </span>
-            {/if}
-          </div>
-        </section>
-      </div>
-    {/if}
+					{/if}
+				</div>
+			</section>
 
-    {#if actionRoll !== undefined}
-      <div class="resultPage">
-        <div class="result">
-          <section class="rollResultContainer">
-            <ActionRollResult
-              roll={actionRoll}
-              character={character}
-              updateRoll={updateRoll}
-              updateCharacter={updateCharacter}
-              canBurnMomentum={true}
-            />
-          </section>
+			<section>
+				<div class="rollButtonWrapper">
+					<button
+						on:click={onRoll}
+						disabled={statNameToRoll === undefined}
+						class="nextStepButton"
+					>
+						<Fa icon={faDiceD6}/>
+						Roll
+					</button>
+					{#if statNameToRoll === undefined}
+            <span class="deemphasized rollDisabledExplainer">
+              (Select stat first)
+            </span>
+					{/if}
+				</div>
+			</section>
+		{/if}
 
-          <section>
-            {#if actionRoll.result === RollResult.StrongHit}
-              <span>
-                On a strong hit, you are successful. Take +1 momentum.
-              </span>
-            {/if}
-            {#if actionRoll.result === RollResult.WeakHit}
-              <span>
-                <i>On a weak hit, you succeed, but face a troublesome cost.</i>
-              </span>
-              <br/>
-              <br/>
-              <b>Choose one:</b>
-              <div class="choiceList">
-                {#each resultOptions as resultOption, i}
-                  <label>
-                    <input type="radio" bind:group={selectedResultIndex} value={i}>
-                    <span use:html={resultOption.optionHtml}></span>
-                  </label>
-                {/each}
-              </div>
-            {/if}
-            {#if actionRoll.result === RollResult.Miss}
-              <span>
-                On a miss, you fail, or your progress is undermined by a dramatic and costly turn of events. <i>Pay the Price</i>.
-              </span>
-            {/if}
-          </section>
-        </div>
+		{#if actionRoll !== undefined}
+			<section>
+				<div class="rollResultContainer">
+					<ActionRollResult
+						roll={actionRoll}
+						character={character}
+						updateRoll={updateRoll}
+						updateCharacter={updateCharacter}
+						canBurnMomentum={true}
+					/>
+				</div>
+			</section>
 
-        <section class="finishWrapper">
-          <button on:click={onClose}>Finish</button>
-        </section>
-      </div>
-    {/if}
-  </div>
+			<section>
+				<p class="explainer">
+					{#if actionRoll.result === RollResult.StrongHit}
+						On a strong hit, you are successful. Take +1 momentum.
+					{/if}
+					{#if actionRoll.result === RollResult.Miss}
+						On a miss, you fail, or your progress is undermined by a dramatic and costly turn of events. <i>Pay the
+						Price</i>.
+					{/if}
+					{#if actionRoll.result === RollResult.WeakHit}
+						On a weak hit, you succeed, but face a troublesome cost.
+					{/if}
+				</p>
+			</section>
+
+			{#if actionRoll.result === RollResult.WeakHit}
+				<section>
+					<h3>Choose one:</h3>
+					<div class="choiceList">
+						{#each resultOptions as resultOption, i}
+							<label>
+								<input type="radio" bind:group={selectedResultIndex} value={i}>
+								<span use:html={resultOption.optionHtml}></span>
+							</label>
+						{/each}
+					</div>
+				</section>
+			{/if}
+
+			<section>
+				<button
+					on:click={onClose}
+					class="nextStepButton"
+				>
+					Finish
+				</button>
+			</section>
+		{/if}
+	</div>
 </Modal>
 
 <style>
-  .wrapper {
-    width: 650px;
-    height: 375px;
-    display: flex;
-    flex-direction: column;
-  }
+    .content {
+        width: 650px;
+        height: 375px;
+        display: flex;
+        flex-direction: column;
+    }
 
-  .moveText {
-    font-style: italic;
-    display: block;
-  }
+    p {
+        margin: 0px;
+    }
 
-  .header {
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: block;
-    font-size: 1.1em;
-  }
+    h3 {
+        margin-top: 0px;
+        margin-bottom: 5px;
+    }
 
-  .deemphasized {
-    color: grey;
-    font-style: italic;
-  }
+    section {
+        margin-bottom: 20px;
+    }
 
-  .addsWrapper input.highlighted {
-    color: darkorange;
-    caret-color: black;
-    font-weight: bold;
-  }
+    .explainer {
+        font-style: italic;
+    }
 
-  .rollWrapper button {
-    min-width: 100px;
-    min-height: 25px;
-  }
+    .deemphasized {
+        color: grey;
+        font-style: italic;
+    }
 
-  .addsExplainer,
-  .rollDisabledExplainer {
-    margin-left: 3px;
-  }
+    .addsInput {
+        width: 150px;
+    }
 
-  .rollResultContainer {
-    display: flex;
-    background: hsl(0, 0%, 97%);
-    border: 2px solid hsl(0, 0%, 25%);
-    border-radius: 5px;
-    padding: 25px 20px;
-    justify-content: center;
-    margin: 0px 75px;
-  }
+    .addsInput.highlighted {
+        color: darkorange;
+        caret-color: black;
+        font-weight: bold;
+    }
 
-  .finishWrapper {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 5px;
-  }
+    .nextStepButton {
+        min-width: 100px;
+        min-height: 25px;
+    }
 
-  .finishWrapper button {
-    height: 2em;
-    min-width: 100px;
-  }
+    .addsExplainer,
+    .rollDisabledExplainer {
+        margin-left: 5px;
+    }
 
-  .rollPage section:not(:last-child) {
-    margin-bottom: 30px;
-  }
+    .rollButtonWrapper {
+        margin-top: 10px;
+        display: flex;
+    }
 
-  .resultPage section:not(:last-child) {
-    margin-bottom: 30px;
-  }
+    .addsInputWrapper {
+        display: flex;
+    }
 
-  .resultPage {
-    padding-top: 15px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
+    .rollResultContainer {
+        display: flex;
+        background: hsl(0, 0%, 97%);
+        border: 2px solid hsl(0, 0%, 25%);
+        border-radius: 5px;
+        padding: 25px 20px;
+        justify-content: center;
+        margin: 0px 75px;
+    }
 
-  .result {
-    flex: 1;
-  }
+    .rollPage section:not(:last-child) {
+        margin-bottom: 30px;
+    }
 
-  .choiceList {
-    display: flex;
-    flex-direction: column;
-    margin: 10px 0px;
-  }
+    .resultPage section:not(:last-child) {
+        margin-bottom: 30px;
+    }
 
-  .choiceList > :not(:last-child) {
-    margin-bottom: 10px;
-  }
+    .choiceList {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .choiceList > :not(:last-child) {
+        margin-bottom: 10px;
+    }
 </style>

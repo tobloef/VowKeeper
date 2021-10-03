@@ -14,7 +14,7 @@
   <div class="wrapper">
     <div class="modal">
       <div class="header">
-        <span class="title">{title}</span>
+        <h2 class="title">{title}</h2>
         {#if onClose !== undefined}
           <div
             class="closeButton"
@@ -66,7 +66,6 @@
     border-bottom: 1px solid grey;
     display: flex;
     padding: 15px;
-    font-size: 1.1em;
     font-weight: bold;
   }
 
@@ -78,8 +77,8 @@
   }
 
   .title {
-    font-size: 1em;
     flex: 1;
+    margin: 0px;
   }
 
   .closeButton {
