@@ -14,7 +14,7 @@
   <div class="wrapper">
     <div class="modal">
       <div class="header">
-        <h2 class="title">{title}</h2>
+        <h2 class="title">{title ?? ""}</h2>
         {#if onClose !== undefined}
           <div
             class="closeButton"
@@ -48,7 +48,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -60%);
+    transform: translate(-50%, -55%);
     display: flex;
     justify-content: center;
     align-items: center;

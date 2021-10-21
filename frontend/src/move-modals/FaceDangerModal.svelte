@@ -1,281 +1,142 @@
 <script lang="ts">
-  import Modal from "../components/Modal.svelte";
-  import Fa from "svelte-fa";
-  import { faDiceD6 } from "@fortawesome/pro-solid-svg-icons";
-  import type { StatName } from "../mechanics/stat";
-  import { formatNumber } from "../utils";
-  import StatSelector from "../components/StatSelector.svelte";
-  import {
-    ActionRoll,
-    makeActionRoll,
-  } from "../mechanics/rolls";
-  import type { Character } from "../mechanics/character";
-  import ActionRollResult from "../components/ActionRollResult.svelte";
-  import {
-    ActionRollLogItem,
-    logStore,
-  } from "../stores/logStore";
-  import { getCharacterStore } from "../stores/characterStore";
-  import { RollResult } from "../mechanics/rolls";
-  import { html } from "../htmlAction.js";
+  import MoveModal from "./MoveModal.svelte";
+  import type {ActionRollLogItem} from "../stores/logStore";
+  import {RollResult} from "../mechanics/rolls";
 
-  export let onClose;
-  export let character: Character;
-  export let defaultAdds: {
-    value: number,
-    reason: string,
-  } | undefined = undefined;
 
-  defaultAdds = {
-    value: 3,
-    reason: "For testing",
-  };
+  type Slides =
+    | "StatRoll"
+    | RollResult
 
-  let statNameToRoll: StatName | undefined;
-  let adds: number = defaultAdds?.value ?? 0;
-  let actionRollLogItem: ActionRollLogItem | undefined;
-  let actionRoll: ActionRoll | undefined;
-  let selectedResultIndex: number;
-
-  $: actionRoll = actionRollLogItem?.props.roll;
-
-  const onRoll = () => {
-    actionRollLogItem = makeActionRoll(character, statNameToRoll, adds, "Face Danger");
-  };
-
-  const updateRoll = (newRoll: ActionRoll) => {
-    actionRollLogItem = {
-      ...actionRollLogItem,
-      props: {
-        ...actionRollLogItem.props,
-        roll: newRoll,
-      },
-    };
-    logStore.replaceItem(actionRollLogItem.id, actionRollLogItem);
-  };
-
-  const updateCharacter = (newCharacter) => {
-    const characterStore = getCharacterStore(newCharacter.id);
-    characterStore.set(newCharacter);
-  };
-
-  const resultOptions = [
-    {
-      optionHtml: "<span><b>Suffer -1 Momentum</b> - You are delayed, lose advantage, or face a new danger</span>",
-      rollResultText: "",
-      applyResult: () => {},
-    },
-    {
-      optionHtml: "<span><b>Suffer -1 Supply</b> - You sacrifice resources</span>",
-      rollResultText: "",
-      applyResult: () => {},
-    },
-    {
-      optionHtml: "<span><b>Endure 1 Harm</b> - You are tired or hurt</span>",
-      rollResultText: "",
-      applyResult: () => {},
-    },
-    {
-      optionHtml: "<span><b>Endure 1 Stress</b> - You are dispirited or afraid</span>",
-      rollResultText: "",
-      applyResult: () => {},
-    },
-  ];
+  let currentSlide: Slides = "StatRoll";
+  let actionRollLogItem: ActionRollLogItem;
 </script>
 
-<Modal
-	open={true}
-	title="Move - Face Danger"
-	onClose={onClose}
->
-	<div class="content">
-		{#if actionRoll === undefined}
-			<section>
-				<p class="explainer">
-					When you attempt something risky or react to an imminent threat, envision your action and roll.
-				</p>
-			</section>
+<MoveModal>
+  {#if currentSlide === "StatRoll"}
+    <section>
+      <p class="move-explainer">
+        When you attempt something risky or react to an imminent threat, envision your action and roll.
+      </p>
+    </section>
 
-			<section>
-				<h3>Stat</h3>
-				<StatSelector
-					bind:selectedStat={statNameToRoll}
-				/>
-			</section>
+    <section>
+      <h3>Stat</h3>
+      <Selector
+        bind:value={statToRoll}
+        options={}
+      />
+    </section>
 
-			<section>
-				<h3>Adds</h3>
-				<div class="addsInputWrapper">
-					<input
-						type="number"
-						bind:value={adds}
-						class="addsInput"
-						class:highlighted={defaultAdds !== undefined}
-					/>
-					{#if defaultAdds !== undefined}
-              <span class="addsExplainer deemphasized">
-                ({formatNumber(defaultAdds.value)} from <i>{defaultAdds.reason}</i>)
-              </span>
-					{/if}
-				</div>
-			</section>
+    <section>
+      <h3>Adds</h3>
+      <AddsInput
+        bind:adds={adds}
+      />
+    </section>
 
-			<section>
-				<div class="rollButtonWrapper">
-					<button
-						on:click={onRoll}
-						disabled={statNameToRoll === undefined}
-						class="nextStepButton"
-					>
-						<Fa icon={faDiceD6}/>
-						Roll
-					</button>
-					{#if statNameToRoll === undefined}
-            <span class="deemphasized rollDisabledExplainer">
-              (Select stat first)
-            </span>
-					{/if}
-				</div>
-			</section>
-		{/if}
+    <section class="move-footer">
+      <NextButton
+        icon={}
+        disabled={statToRoll === undefined}
+        on:click={() => {
+        	actionRollLogItem = makeActionRoll(character, statNameToRoll, adds, "Face Danger");
+        	currentSlide = actionRollLogItem.props.roll.result;
+        }}
+        disabledText="Select stat first"
+      />
+    </section>
 
-		{#if actionRoll !== undefined}
-			<section>
-				<div class="rollResultContainer">
-					<ActionRollResult
-						roll={actionRoll}
-						character={character}
-						updateRoll={updateRoll}
-						updateCharacter={updateCharacter}
-						canBurnMomentum={true}
-					/>
-				</div>
-			</section>
+  {/if}
 
-			<section>
-				<p class="explainer">
-					{#if actionRoll.result === RollResult.StrongHit}
-						On a strong hit, you are successful. Take +1 momentum.
-					{/if}
-					{#if actionRoll.result === RollResult.Miss}
-						On a miss, you fail, or your progress is undermined by a dramatic and costly turn of events. <i>Pay the
-						Price</i>.
-					{/if}
-					{#if actionRoll.result === RollResult.WeakHit}
-						On a weak hit, you succeed, but face a troublesome cost.
-					{/if}
-				</p>
-			</section>
+  {#if currentSlide === RollResult.StrongHit}
+    <section class="move-rollResult">
+      <ActionRollResult
+        roll={actionRoll}
+        character={character}
+        updateRoll={updateRoll}
+        updateCharacter={updateCharacter}
+        canBurnMomentum={true}
+      />
+    </section>
 
-			{#if actionRoll.result === RollResult.WeakHit}
-				<section>
-					<h3>Choose one:</h3>
-					<div class="choiceList">
-						{#each resultOptions as resultOption, i}
-							<label>
-								<input type="radio" bind:group={selectedResultIndex} value={i}>
-								<span use:html={resultOption.optionHtml}></span>
-							</label>
-						{/each}
-					</div>
-				</section>
-			{/if}
+    <section>
+      <p class="move-explainer">
+        On a strong hit, you are successful.
+      </p>
+    </section>
 
-			<section>
-				<button
-					on:click={onClose}
-					class="nextStepButton"
-				>
-					Finish
-				</button>
-			</section>
-		{/if}
-	</div>
-</Modal>
+    <section>
+      <NextButton
+        text="Take +1 Momentum"
+        icon={}
+        on:click={() => {
 
-<style>
-    .content {
-        width: 650px;
-        height: 375px;
-        display: flex;
-        flex-direction: column;
-    }
+        }}
+      />
+    </section>
+  {/if}
 
-    p {
-        margin: 0px;
-    }
+  {#if currentSlide === RollResult.WeakHit}
+    <section className="move-rollResult">
+      <ActionRollResult
+        roll={actionRoll}
+        character={character}
+        updateRoll={updateRoll}
+        updateCharacter={updateCharacter}
+        canBurnMomentum={true}
+      />
+    </section>
 
-    h3 {
-        margin-top: 0px;
-        margin-bottom: 5px;
-    }
+    <section>
+      <p className="move-explainer">
+        On a weak hit, you succeed, but face a troublesome cost.
+      </p>
+    </section>
 
-    section {
-        margin-bottom: 20px;
-    }
+    <section>
+      <h3>Choose one:</h3>
+      <Selector
+        bind:value={}
+        options={}
+      />
+    </section>
 
-    .explainer {
-        font-style: italic;
-    }
+    <section>
+      <NextButton
+        text={}
+        icon={}
+        on:click={() => {
 
-    .deemphasized {
-        color: grey;
-        font-style: italic;
-    }
+        }}
+      />
+    </section>
+  {/if}
+  {#if currentSlide === RollResult.Miss}
+    <section class="move-rollResult">
+      <ActionRollResult
+        roll={actionRoll}
+        character={character}
+        updateRoll={updateRoll}
+        updateCharacter={updateCharacter}
+        canBurnMomentum={true}
+      />
+    </section>
 
-    .addsInput {
-        width: 150px;
-    }
+    <section>
+      <p class="move-explainer">
+        On a miss, you fail, or your progress is undermined by a dramatic and costly turn of events.
+      </p>
+    </section>
 
-    .addsInput.highlighted {
-        color: darkorange;
-        caret-color: black;
-        font-weight: bold;
-    }
+    <section>
+      <NextButton
+        text="Move: Pay the Price"
+        icon={}
+        on:click={() => {
 
-    .nextStepButton {
-        min-width: 100px;
-        min-height: 25px;
-    }
-
-    .addsExplainer,
-    .rollDisabledExplainer {
-        margin-left: 5px;
-    }
-
-    .rollButtonWrapper {
-        margin-top: 10px;
-        display: flex;
-    }
-
-    .addsInputWrapper {
-        display: flex;
-    }
-
-    .rollResultContainer {
-        display: flex;
-        background: hsl(0, 0%, 97%);
-        border: 2px solid hsl(0, 0%, 25%);
-        border-radius: 5px;
-        padding: 25px 20px;
-        justify-content: center;
-        margin: 0px 75px;
-    }
-
-    .rollPage section:not(:last-child) {
-        margin-bottom: 30px;
-    }
-
-    .resultPage section:not(:last-child) {
-        margin-bottom: 30px;
-    }
-
-    .choiceList {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .choiceList > :not(:last-child) {
-        margin-bottom: 10px;
-    }
-</style>
+        }}
+      />
+    </section>
+  {/if}
+</MoveModal>

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-pro": "^6.0.0-beta1",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/pro-solid-svg-icons": "^6.0.0-beta1",
     "@tiptap/core": "^2.0.0-beta.85",
     "@tiptap/starter-kit": "^2.0.0-beta.81",
