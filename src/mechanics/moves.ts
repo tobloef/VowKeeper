@@ -1,12 +1,12 @@
 import type {SvelteComponent} from "svelte";
-import FaceDangerModal from "../move-modals/FaceDangerModal.svelte";
+// import FaceDangerModal from "../move-modals/FaceDangerModal.svelte";
 
 export enum MoveType {
-  FaceDanger,
+  // FaceDanger,
 }
 
 const moveToModalComponentMap: {[key in MoveType]: typeof SvelteComponent} = {
-  [MoveType.FaceDanger]: FaceDangerModal,
+  // [MoveType.FaceDanger]: FaceDangerModal,
 }
 
 export const moveToModalComponent = (type: MoveType): typeof SvelteComponent => {
